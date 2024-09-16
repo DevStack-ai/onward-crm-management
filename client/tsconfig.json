@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["vite/client"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"],
+      "definitions/*": ["./src/definitions/*"],
+      "utils/*": ["./src/utils/*"],
+      "metronic/*": ["./src/_metronic/*"],
+      "reduxReducers/*": ["./src/redux/reducers/*"],
+      "tableUtils/*": ["./src/providers/*"],
+      "formInputs/*": ["./src/_metronic/helpers/components/inputs/*"],
+      "table/*": ["./src/_metronic/helpers/components/table/*"],
+      "hooks/*": ["./src/hooks/*"], 
+
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

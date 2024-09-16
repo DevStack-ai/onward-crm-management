@@ -1,0 +1,51 @@
+//
+// Theme Modes
+//
+
+// Used for theme mode switching via JS
+[data-kt-theme-mode-switching="true"] * {
+	transition: none !important;
+}
+
+// Light mode
+@include color-mode(light) {
+	.loading-modal{
+		background-color: #FFF;
+	}
+	.theme-dark-show {
+		display: none !important;
+	}
+
+	.theme-light-bg-transparent {
+		background-color: transparent !important;
+	}
+
+	.theme-light-bg-body {
+		background-color: var(--#{$prefix}body-bg) !important;
+	}
+}
+
+// Dark mode
+@include color-mode(dark) {
+
+	.loading-modal{
+		background-color: #1A1C23;
+	}
+	.pagination-container .pagination-item .arrow::before {
+
+		border-right: 0.12em solid #92929F !important;
+		border-top: 0.12em solid #92929F !important;
+	}
+
+	.theme-light-show {
+		display: none !important;
+	}
+
+	.theme-dark-bg-transparent {
+		background-color: transparent !important;
+	}
+
+	.theme-dark-bg-body {
+		background-color: var(--#{$prefix}body-bg) !important;
+	}
+}

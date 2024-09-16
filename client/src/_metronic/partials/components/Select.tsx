@@ -1,0 +1,180 @@
+import React from "react";
+import clsx from "clsx";
+import { useCallback, useEffect, useState } from "react";
+import axios from "axios";
+import Select, { components, StylesConfig } from "react-select";
+import chroma from "chroma-js";
+import { Modal } from "react-bootstrap";
+import { KTIcon } from "metronic/helpers";
+
+type Props = {
+  name: string;
+  source: string;
+  type?: string;
+  placeholder?: string;
+  options?: Array<{}>;
+  optionsFilter?: Function;
+  parent?: string;
+  createOnScreen?: boolean;
+  onInputChange?: (option: { value: string, label: string }) => void;
+  autoSelect?: boolean;
+  createComponent?: any;
+  className?: string;
+  label?: string;
+  addNoOption?: boolean;
+};
+
+export default function Field({
+  addNoOption,
+  name,
+  placeholder = name,
+  source,
+  options = [],
+  optionsFilter,
+  createOnScreen = false,
+  onInputChange,
+  autoSelect = false,
+  createComponent,
+  className,
+  label
+}: Props) {
+
+  const [showCreate, setShowCreate] = useState(false);
+  const [_options, setOptions] = useState([...options]);
+  const [disabled, setDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(!!source);
+
+  const fetchOptions = useCallback(async () => {
+    setIsLoading(true);
+
+    const baseUrl = `${import.meta.env.VITE_API_URL}/${source}/select`;
+
+    const query = await axios.get(baseUrl);
+    const result = query.data;
+    const _options = result;
+    if (autoSelect && _options.length === 1) {
+      onInputChange && onInputChange({ value: _options[0].id, label: _options[0].name });
+      setDisabled(true);
+    }
+    if (!!addNoOption) {
+      _options.unshift({ id: "", name: "Seleccionar una opción" })
+    }
+    setOptions(_options);
+    setIsLoading(false);
+  }, [source]);
+
+  useEffect(() => {
+    if (source) {
+      fetchOptions();
+    }
+  }, [source]);
+
+  const MenuList = (
+    props: any,
+  ) => {
+    return (
+      <div>
+        <components.MenuList {...props} className="bg-app dark-text-white bg-select-hover">
+          {props.children}
+        </components.MenuList>
+        {!!createOnScreen && createComponent && (
+          <div className="bg-white" onClick={() => setShowCreate(true)}>
+            <div className="text-center text-primary cursor-pointer py-3 border-top border-primary">
+              <KTIcon iconName="plus" className="mt-1 " />{" "}
+              <span className="fw-1">Crear {placeholder}</span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const getOptions = (datalist: Array<{}>) => {
+    return [...datalist].filter((item: any) => {
+      if (typeof optionsFilter === "function") {
+        return optionsFilter(item);
+      }
+      return true;
+    })
+      .map((opt: any) => ({
+        label: opt.name,
+        value: opt.id,
+        original: opt
+      }));
+  };
+
+  const colorStyles: StylesConfig = {
+    option: (styles, { isDisabled, isFocused, isSelected }) => {
+      const data_color = "#EAEAEA"
+      const color = chroma(data_color);
+      return {
+        ...styles,
+        backgroundColor: isDisabled
+          ? undefined
+          : isSelected
+            ? "#0d6efd"
+            : isFocused
+              ? color.alpha(0.2).css()
+              : undefined,
+
+        cursor: isDisabled ? 'not-allowed' : 'default',
+
+
+      }
+    },
+  }
+  if (disabled) return null;
+  return (
+    <div>
+      {React.isValidElement(createComponent) &&
+        (<Modal show={showCreate} onHide={() => setShowCreate(false)} size="lg">
+          <Modal.Header closeButton>
+            <Modal.Title>Crear {placeholder}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {React.cloneElement(createComponent as React.ReactElement<any>, {
+              close: () => {
+                fetchOptions();
+                setShowCreate(false)
+              }
+            })}
+          </Modal.Body>
+        </Modal>)}
+      {label && <label className="form-label">{label}</label>}
+      <div>
+        <Select
+          isSearchable
+          className={className}
+          isDisabled={disabled}
+          isLoading={isLoading}
+          styles={colorStyles}
+          classNames={{
+            singleValue: () => clsx("text-gray-700"),
+            placeholder: () => clsx("bg-input-placeholder"),
+            input: () => clsx("bg-text"),
+            control: () => clsx("form-select form-select-solid p-1"),
+            container: () => "p-0 b-0 z-index-9999 ",
+          }}
+          onChange={(opt: any) => {
+            if (onInputChange) {
+              onInputChange(opt)
+            }
+          }}
+
+          placeholder={placeholder}
+          components={{ MenuList, NoOptionsMessage: NoOptionsMessage }}
+          options={getOptions(_options)}
+        />
+      </div>
+
+    </div>
+  );
+}
+
+function NoOptionsMessage() {
+  return (
+    <div className="text-center text-muted cursor-pointer py-3">
+      <span className="fw-1">No hay opciones</span>
+    </div>
+  );
+}
