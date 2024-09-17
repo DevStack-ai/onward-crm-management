@@ -44,7 +44,7 @@ const NewDocumentWrappeer = () => {
             }
           }
         return (
-          <Form>
+          <Form placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             <div className="px-10 pt-lg-10">
               <form onSubmit={formik.handleSubmit}>
                 <div className="row mb-6 ms-0 px-0">

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Column } from "react-table";
 import { IndexColumn } from "../../helpers/IndexColumn";
-import { unassignAccountant } from "../../company/components/_requests";
+// import { unassignAccountant } from "../../company/components/_requests";
 import { toast } from "react-toastify";
 
 const Columns = (state, props, actions): ReadonlyArray<Column<Object>> => [
@@ -44,7 +44,7 @@ const Columns = (state, props, actions): ReadonlyArray<Column<Object>> => [
     Cell: ({ row }) => {
       return (
         <div className="px-2">
-          <div
+          {/* <div
             onClick={async () => {
               await toast.promise(unassignAccountant(row.original.id, props.user), {
                 pending: "Desasignando",
@@ -56,7 +56,7 @@ const Columns = (state, props, actions): ReadonlyArray<Column<Object>> => [
             className="btn btn-light-danger btn-sm me-2 mb-2 hover-elevate-down"
           >
             Desasignar
-          </div>
+          </div> */}
         </div>
       );
     },

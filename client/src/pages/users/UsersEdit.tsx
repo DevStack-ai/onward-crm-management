@@ -69,7 +69,7 @@ const EditDocumentWrappeer = () => {
           }
         }
         return (
-          <Form>
+          <Form placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             {import.meta.env.DEV && JSON.stringify(formik.values)}
             {import.meta.env.DEV && JSON.stringify(formik.errors)}
             <div className="px-10 pt-lg-10">

@@ -11,7 +11,11 @@ export default function SelfClient() {
     const initialValues = {
         company_name: "",
         company_billing_address: "",
-        company_delivery_address: "",
+        company_delivery_address_1: "",
+        company_delivery_address_2: "",
+        company_city: "",
+        company_state: "",
+        company_zip: "",
         company_contact: "",
         company_email: "",
         company_phone: "",
@@ -61,16 +65,50 @@ export default function SelfClient() {
                                         />
                                     </div>
                                     <Label size="col-sm-12 col-lg-4">
-                                        Dirección de entrega
+                                        Dirección primera linea
                                     </Label>
                                     <div className="col-lg-8 fv-row mt-4">
                                         <Field
                                             form={formik}
-                                            name="company_delivery_address"
+                                            name="company_delivery_address_1"
                                             placeholder="Dirección de entrega"
                                             type="text"
                                         />
                                     </div>
+                                    <Label size="col-sm-12 col-lg-4">
+                                        Dirección segunda linea
+                                    </Label>
+                                    <div className="col-lg-8 fv-row mt-4">
+                                        <Field
+                                            form={formik}
+                                            name="company_delivery_address_2"
+                                            placeholder="Dirección de entrega"
+                                            type="text"
+                                        />
+                                    </div>
+                                    <Label size="col-sm-12 col-lg-4">
+                                        Estado
+                                    </Label>
+                                    <div className="col-lg-8 fv-row mt-4">
+                                        <Field
+                                            form={formik}
+                                            name="company_state"
+                                            placeholder="Estado"
+                                            type="text"
+                                        />
+                                    </div>
+                                    <Label size="col-sm-12 col-lg-4">
+                                        Ciudad
+                                    </Label>
+                                    <div className="col-lg-8 fv-row mt-4">
+                                        <Field
+                                            form={formik}
+                                            name="company_city"
+                                            placeholder="Ciudad"
+                                            type="text"
+                                        />
+                                    </div>
+                          
                                     <Label size="col-sm-12 col-lg-4">
                                         Contacto
                                     </Label>
@@ -115,7 +153,7 @@ export default function SelfClient() {
                                             type="text"
                                         />
                                     </div>
-                            
+
                                 </div>
                                 <div className="text-center mt-10">
                                     <button type="submit" className="btn btn-primary btn-lg">¡Registrate!</button>

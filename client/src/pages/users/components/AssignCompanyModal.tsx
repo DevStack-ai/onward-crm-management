@@ -1,7 +1,7 @@
 import React from "react";
 import { CompanySectionProps } from "./_types";
 import { notIn } from "./_requests";
-import { assignAccountant } from "../../company/components/_requests";
+// import { assignAccountant } from "../../company/components/_requests";
 
 import Select, { components, MultiValue, StylesConfig } from 'react-select'
 import clsx from "clsx";
@@ -62,14 +62,14 @@ const AssignCompanyModal = (props: CompanySectionProps) => {
         const queue = []
         for (const accountant of selectedAccountants) {
 
-            const query = assignAccountant(String(accountant.value), props.userId)
-            queue.push(query)
+            // const query = assignAccountant(String(accountant.value), props.userId)
+            // queue.push(query)
         }
-        await toast.promise(Promise.all(queue), {
-            pending: "Asignando",
-            success: "Asignado/s correctamente",
-            error: "Error al asignar",
-        })
+        // await toast.promise(Promise.all(queue), {
+        //     pending: "Asignando",
+        //     success: "Asignado/s correctamente",
+        //     error: "Error al asignar",
+        // })
 
         props.onAssign && props.onAssign()
 
