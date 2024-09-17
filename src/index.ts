@@ -14,6 +14,15 @@ import connection from "./middleware/connection";
 import ssl from "./middleware/ssl";
 // import forceHttps from "./middleware/forcehttps";
 import routes from "./routes";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from 'dayjs/plugin/timezone';
+
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault("America/Panama");
 
 const app = express();
 const upload = multer({
