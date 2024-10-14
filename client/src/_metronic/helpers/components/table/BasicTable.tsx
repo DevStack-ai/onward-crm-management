@@ -17,7 +17,7 @@ type BasicTableProps = {
   setItemsPerPage: (arg: any) => void;
   total: number;
   pages: number;
-  headerAddButton?: boolean;
+  headerAddButton?: boolean | string;
 
   customHeight?: number;
   customWidth?: number;

@@ -10,8 +10,19 @@ export class StatesController {
     }
 
     getStates = async (_req: Request, res: Response) => {
-        const states = await this.prisma.sis_estado.findMany()
-        res.status(200).json(states)
+        const states = await this.prisma.sis_estado.findMany({
+            orderBy: {
+                est_nombre: 'asc'
+            }
+        })
+
+        const mapped = states.map((state) => {
+            return {
+                id: state.est_codigo,
+                name: state.est_nombre
+            }
+        })
+        res.status(200).json(mapped)
     }
 
 }

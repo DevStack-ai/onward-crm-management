@@ -4,6 +4,6 @@ import { StatesController } from "../../controllers/system/states.controlle";
 const router = Router();
 const controller = new StatesController();
 
-router.get("/", controller.getStates);
+router.get("/select", controller.getStates);
 
 export default router;

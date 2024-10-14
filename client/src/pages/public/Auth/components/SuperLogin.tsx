@@ -101,7 +101,6 @@ export function SuperLogin() {
       id="kt_login_signin_form"
     >
       <div className="text-center mb-11">
-        <h1 className="text-dark fw-bolder mb-3">Bienvenido Super Admin</h1>
  
       </div>
 

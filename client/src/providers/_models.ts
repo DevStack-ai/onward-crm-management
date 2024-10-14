@@ -57,10 +57,14 @@ export interface ReduxState {
 }
 export interface UserModel {
   id: number;
-  name: string;
+  adm_nombre: string;
+  cli_nombre: string;
+  cli_codigo: number;
+  cli_usuario: string;
   email: string;
-  phone?: string;
+  adm_usuario: string;
   auth_profile_id: number;
+  role?: string
   permissions?: UserCompanyModel[];
   currentCompany?: UserCompanyModel;
   language?: "es" | "en" | "de" | "fr" | "ja" | "zh" | "ru";

@@ -13,12 +13,13 @@ import { useAuth } from "../providers";
 import { App } from "../App";
 import { Logout, AuthPage } from "../pages/public/Auth";
 import { PublicFormPage } from "../pages/public/forms/FormPage";
-
+import { StorePage } from "../pages/public/store/StorePage";
 
 const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL;
 
 const AppRoutes: FC = () => {
   const { currentUser } = useAuth();
+  console.log({ currentUser })
   return (
     <BrowserRouter basename={PUBLIC_URL}>
       <Routes>
@@ -28,8 +29,18 @@ const AppRoutes: FC = () => {
           {currentUser
             ? (
               <>
-                <Route path="/*" element={<PrivateRoutes />} />
-                <Route index element={<Navigate to="/dashboard" />} />
+                {currentUser.role === "customer" && (
+                  <>
+                    <Route path="store/*" element={<StorePage />} />
+                    <Route path="*" element={<Navigate to="/store" />} />
+                  </>
+                )}
+                {currentUser.role === "admin" && (
+                  <>
+                    <Route path="/*" element={<PrivateRoutes />} />
+                    <Route index element={<Navigate to="/dashboard" />} />
+                  </>
+                )}
               </>
             )
             : (

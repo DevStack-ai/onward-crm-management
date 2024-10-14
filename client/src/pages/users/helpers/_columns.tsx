@@ -3,11 +3,26 @@ import { Column } from "react-table";
 import { UserInfoCell } from "./UserInfoCell";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../../providers";
+// import { useAuth } from "../../../providers";
 import Dropdown from "react-bootstrap/Dropdown";
 import { getUserByToken, simulateLogin } from "../../../providers/_requests";
 import { toast } from "react-toastify";
 
+
+export function getTag(situacion: number){
+  if(situacion === 2){
+    return ["Activo", "success"];
+  }
+  if(situacion === 1){
+    return ["Pendiente", "warning"];
+  }
+  if(situacion === 0){
+    return ["Inactivo", "danger"];
+  }
+
+  return ["Desconocido", "dark"];
+
+}
 const usersColumns: ReadonlyArray<Column<Object>> = [
   {
     Header: "No",
@@ -15,28 +30,27 @@ const usersColumns: ReadonlyArray<Column<Object>> = [
     Cell: ({ row }) => <div>{row.index + 1}</div>,
   },
   {
-    Header: "Foto",
-    id: "photo",
-    Cell: ({ ...props }) => <UserInfoCell user={props.data[props.row.index]} />,
-  },
-  {
     Header: "Nombre",
-    accessor: "name",
+    accessor: "cli_nombre",
   },
   {
-    Header: "Email",
-    accessor: "email",
+    Header: "Abreviación",
+    accessor: "cli_abreviacion",
   },
   {
-    Header: "Perfil",
-    accessor: "auth_profile_name",
-    Cell: ({ row }) => {
-      return (<div>{row.original?.auth_profile?.name}</div>);
+    Header:"Estado",
+    accessor: "cli_situacion",
+    Cell: ({ value }) => {
+      const [text, color] = getTag(value);
+      return (
+        <span className={`badge badge-light-${color} badge-pill`}>{text}</span>
+      );
     },
+
   },
   {
     Header: "Última sesión",
-    accessor: "last_login",
+    accessor: "cli_inicio_sesion",
     Cell: ({ value }) => {
       return (<div>{value ? moment(value).format("DD/MM/YYYY hh:mm A") : ""}</div>);
     },
@@ -45,7 +59,7 @@ const usersColumns: ReadonlyArray<Column<Object>> = [
     Header: "Acciones",
     id: "actions",
     Cell: ({ row }) => {
-      const { currentUser, saveAuth, setCurrentUser, logout } = useAuth();
+      // const { currentUser, saveAuth, setCurrentUser, logout } = useAuth();
       return (
 
         <div className="px-2">
@@ -60,67 +74,24 @@ const usersColumns: ReadonlyArray<Column<Object>> = [
             <Dropdown.Menu>
               <Dropdown.Item
                 as={Link}
+                to={`/users/details/${row.original.cli_codigo}`}
+              >
+                Detalles
+              </Dropdown.Item>
+              {/* <Dropdown.Item
+                as={Link}
                 to={`/users/edit/${row.original.id}`}
               >
                 Editar
               </Dropdown.Item>
-              {currentUser?.auth_profile_id === 1 && (
-                <Dropdown.Item>
-                  <div onClick={async () => {
-                    const { data: auth } = await simulateLogin(row.original.email);
-                    const { data: user } = await getUserByToken(auth.token);
-                    if (user && user.permissions && user.permissions.length > 0) {
-                      const permissions = user.permissions || [];
-                      console.log('Permissions', permissions)
-                      if (permissions.length > 0) {
-                        console.log("has permissions")
-                        const previusCompany = localStorage.getItem('currentCompany') ? JSON.parse(localStorage.getItem('currentCompany') as string) : null;
-                        if (previusCompany) {
-                          console.log('Previous company found', previusCompany)
-                          const companyExists = permissions.find(company => company.id === previusCompany.id);
-                          console.log('Company exists', companyExists)
-                          if (!companyExists) {
-                            const currentCompany = permissions[0];
-                            console.log('Setting current company', currentCompany)
-                            localStorage.setItem('currentCompany', JSON.stringify(currentCompany));
-                            user.currentCompany = currentCompany;
-                          } else {
-                            user.currentCompany = previusCompany;
-                          }
-                        } else {
-                          console.log('No previous company')
-                          const currentCompany = permissions[0];
-                          localStorage.setItem('currentCompany', JSON.stringify(currentCompany));
-                          user.currentCompany = currentCompany;
-                        }
-                      }
-                      saveAuth(auth);
-                      setCurrentUser(user);
-                      window.location.reload();
-
-                    } else {
-
-                      toast.error('No se encontraron permisos');
-
-                      // setSubmitting(false);
-                      // setLoading(false);
-                    }
-                  }}>
-                    Ingresar como
-                  </div>
-                </Dropdown.Item>
-              )}
-              <Dropdown.Item>
+              */}
+              {/* <Dropdown.Item>
                 <div className="text-danger" onClick={async () => {
-
-
                 }}>
 
                   Eliminar
                 </div>
-              </Dropdown.Item>
-
-
+              </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
 

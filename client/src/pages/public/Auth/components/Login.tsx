@@ -9,7 +9,6 @@ import { useAuth } from "../../../../providers/Auth";
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Formato incorrecto")
     .min(3, "Minimo 3 digitos")
     .max(50, "Maximo 50 digitos")
     .required("Correo es obligatorio"),
@@ -36,52 +35,10 @@ export function Login() {
       setLoading(true);
       try {
         const { data: auth } = await login(values.email, values.password);
-
         const { data: user } = await getUserByToken(auth.token);
-
-        if (user && user.permissions && user.permissions.length > 0) {
-          const permissions = user.permissions || [];
-          console.log('Permissions', permissions)
-          if (permissions.length > 0) {
-            console.log("has permissions")
-            const previusCompany = localStorage.getItem('currentCompany') ? JSON.parse(localStorage.getItem('currentCompany') as string) : null;
-            if (previusCompany) {
-              console.log('Previous company found', previusCompany)
-
-              const companyExists = permissions.find(company => company.id === previusCompany.id);
-              console.log('Company exists', companyExists)
-
-              if (!companyExists) {
-
-                const currentCompany = permissions[0];
-                console.log('Setting current company', currentCompany)
-
-                localStorage.setItem('currentCompany', JSON.stringify(currentCompany));
-                user.currentCompany = currentCompany;
-              } else {
-
-                user.currentCompany = previusCompany;
-              }
-
-            } else {
-              console.log('No previous company')
-
-              const currentCompany = permissions[0];
-              localStorage.setItem('currentCompany', JSON.stringify(currentCompany));
-
-              user.currentCompany = currentCompany;
-            }
-          }
-          saveAuth(auth);
-          setCurrentUser(user);
-
-        } else {
-          console.log('No permissions found')
-          saveAuth(undefined);
-          setStatus("No tienes permisos configurados");
-          setSubmitting(false);
-          setLoading(false);
-        }
+        
+        saveAuth(auth);
+        setCurrentUser(user);
 
       } catch (error) {
         console.log(error);
@@ -103,17 +60,9 @@ export function Login() {
       {/* begin::Heading */}
       <div className="text-center mb-11">
         <h1 className="text-dark fw-bolder mb-3">Bienvenido</h1>
-        {
-          /* <div className="text-gray-500 fw-semibold fs-6">
-          Your Social Campaigns
-        </div> */
-        }
+
       </div>
 
-
-      {/* end::Login options */}
-
-      {/* begin::Separator */}
       <div className="separator separator-content my-14">
 
       </div>
@@ -139,7 +88,6 @@ export function Login() {
               "is-valid": formik.touched.email && !formik.errors.email,
             },
           )}
-          type="email"
           name="email"
           autoComplete="off"
         />

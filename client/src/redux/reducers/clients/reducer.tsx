@@ -2,7 +2,7 @@ import { generateBasicTypes, initialState } from "../helpers";
 
 
 const userReducers = (state = initialState, action: any) => {
-  const types = generateBasicTypes("users");
+  const types = generateBasicTypes("clients");
 
   switch (action.type) {
     case types.TABLE_DATA:

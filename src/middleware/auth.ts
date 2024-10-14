@@ -12,7 +12,7 @@ router.use(async (req: Request, res: Response, next: NextFunction) => {
         const url = req.originalUrl
         //seach value between v and /
         const value = url.match(/v(\d+)/)
-        const version = value ? String(value[1]) : "1"
+        // const version = value ? String(value[1]) : "1"
         const auth = req.headers.authorization;
         if (!auth) {
             res.status(403)

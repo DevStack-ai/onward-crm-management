@@ -2,8 +2,6 @@ export function numberToCurrency(n: number | number[] | string | string[], curre
 
 
 
-    const currentCompany = JSON.parse(localStorage.getItem('currentCompany') || '{}');
-    const currentCurrency = currentCompany.currency;
 
     const isArray = Array.isArray(n);
 
@@ -29,7 +27,7 @@ export function numberToCurrency(n: number | number[] | string | string[], curre
     const decimalPart = parts[1];
     const integerPartWithCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-    return `${currentCurrency}${integerPartWithCommas}.${decimalPart}`;
+    return `$ ${integerPartWithCommas}.${decimalPart}`;
 
 
 

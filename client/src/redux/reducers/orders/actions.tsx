@@ -1,6 +1,6 @@
 import { generateBasicTypes } from "../helpers";
 
-const types = generateBasicTypes("users");
+const types = generateBasicTypes("orders");
 type DataState = {
   dataList?: Array<{}>;
   filters?: Object,

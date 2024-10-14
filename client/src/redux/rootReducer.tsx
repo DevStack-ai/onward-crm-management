@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
-import users from "./reducers/users/reducer";
-
+import clients from "./reducers/clients/reducer";
+import orders from "./reducers/orders/reducer";
 
 export const rootReducer = combineReducers({
   // _permissions: _permisions,
-
-  users: users,
+  orders: orders,
+  users: clients,
 
 });

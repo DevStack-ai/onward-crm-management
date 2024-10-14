@@ -5,11 +5,11 @@ import { usersColumns } from "./helpers/_columns";
 import { Search } from "metronic/helpers/components/table/components/header/ListSearchComponent";
 import { useSelector } from "react-redux";
 import { BasicTableState, ReduxState } from "../../providers";
-import * as actions from "../../redux/reducers/users/actions";
+import * as actions from "../../redux/reducers/clients/actions";
 
 const UsersListWrapper = () => {
   const users: BasicTableState = useSelector((state: ReduxState) => state.users);
-  const { dataList, helpers } = useBasicTable("/users", users, actions);
+  const { dataList, helpers } = useBasicTable("/customers", users, actions);
 
   useEffect(() => {
     if (users.isFirstTime) {
@@ -19,11 +19,11 @@ const UsersListWrapper = () => {
   return (
     <BasicTable
       {...helpers}
-      headerAddButton
+      // headerAddButton
       columnsList={usersColumns}
       dataList={dataList}
     >
-      <Search
+      {/* <Search
         onChange={(term: string) => {
           if (term) {
             helpers.setFilters({
@@ -34,7 +34,7 @@ const UsersListWrapper = () => {
             helpers.setFilters({});
           }
         }}
-      />
+      /> */}
     </BasicTable>
   );
 };

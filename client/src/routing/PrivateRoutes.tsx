@@ -9,11 +9,11 @@ import { useAuth } from "../providers";
 
 const PrivateRoutes = () => {
 
-  const { hasRequiredRole } = useAuth()
+  // const { hasRequiredRole } = useAuth()
 
 
   const UsersPage = lazy(() => import("../pages/users/UsersPage"));
-
+  const OrdersPage = lazy(() => import("../pages/orders/WrapperPage"));
 
 
   return (
@@ -21,40 +21,21 @@ const PrivateRoutes = () => {
       <Route element={<MasterLayout />}>
         <Route path="auth/*" element={<Navigate to="/dashboard" />} />
         <Route path="dashboard" element={<DashboardWrapper />} />
-        {/* <Route
-          path="/profile/*"
-          element={
-            <SuspensedView>
-              <ProfilePage />
-            </SuspensedView>
-          }
-        /> */}
 
-        {/* {hasRequiredRole(1) && (
-          <>
-            <Route
-              path="/super/tenant/*"
-              element={
-                <SuspensedView>
-                  <Tenant />
-                </SuspensedView>
-              }
-            />
-            <Route
-              path="/super/plans/*"
-              element={
-                <SuspensedView>
-                  <Plans />
-                </SuspensedView>
-              }
-            />
-          </>
-        )} */}
         <Route
           path="/users/*"
           element={
             <SuspensedView>
               <UsersPage />
+            </SuspensedView>
+          }
+        />
+
+        <Route
+          path="/orders/*"
+          element={
+            <SuspensedView>
+              <OrdersPage />
             </SuspensedView>
           }
         />

@@ -29,9 +29,7 @@ const MasterLayout = () => {
     <PageDataProvider>
       <ThemeModeProvider>
         <div className='d-flex flex-column flex-root'>
-          {hasRequiredRole(1) && <div className='super-line'>
-            Super Admin
-          </div>}
+
           <div className='page d-flex flex-row flex-column-fluid'>
             <AsideDefault />
             <div className='wrapper d-flex flex-column flex-row-fluid' id='kt_wrapper'>

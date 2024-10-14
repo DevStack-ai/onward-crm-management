@@ -36,17 +36,9 @@ const AuthLayout = () => {
             <img
               alt="Logo"
               src={toAbsoluteUrl("/media/logos/default-dark.png")}
-              className="h-60px h-lg-75px"
+              className="h-60px h-lg-500px"
             />
           </a>
-
-          {/* <img
-            className="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
-            src={toAbsoluteUrl("/media/misc/auth-screens.png")}
-            alt=""
-          /> */}
-
-
         </div>
       </div>
     </div>

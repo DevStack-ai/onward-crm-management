@@ -1,0 +1,1645 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_certificacion {
+  cer_codigo       Int
+  cer_cliente      Int
+  cer_nombre       String @db.VarChar(250)
+  cer_certificador String @db.VarChar(250)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cli_cliente {
+  cli_codigo              Int
+  cli_codigo_interno      String    @db.VarChar(10)
+  cli_nit                 String    @db.VarChar(20)
+  cli_tipo                String    @db.VarChar(1)
+  cli_tipo_familia        Int
+  cli_sub_familia         Int
+  cli_sector              Int
+  cli_mercaderia          String    @db.VarChar(250)
+  cli_profesion           String    @db.VarChar(250)
+  cli_sufijo              String    @db.VarChar(20)
+  cli_nombre              String    @db.VarChar(100)
+  cli_razon_social        String    @db.VarChar(250)
+  cli_direccion_factura   String    @db.VarChar(250)
+  cli_direccion_comercial String    @db.VarChar(250)
+  cli_telefono1           String    @db.VarChar(50)
+  cli_telefono2           String    @db.VarChar(50)
+  cli_mail                String    @db.VarChar(50)
+  cli_pais                String    @db.VarChar(250)
+  cli_fecha_nacimiento    DateTime? @db.Date
+  cli_contacto            String    @db.VarChar(250)
+  cli_contacto_detalles   String    @db.VarChar(250)
+  cli_vendedor            BigInt
+  cli_ejecutivo           BigInt
+  cli_cobrador            BigInt?
+  cli_categoria           Int?
+  cli_fecha_registro      DateTime  @db.DateTime(0)
+  cli_fecha_update        DateTime? @db.DateTime(0)
+  cli_usuario             BigInt
+  cli_alias               String    @db.VarChar(250)
+  cli_situacion           Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_cobro {
+  cob_cliente                  Int
+  cob_nombre_cobro             String?  @db.VarChar(250)
+  cob_cargo_cobro              String?  @db.VarChar(250)
+  cob_mail_cobro               String?  @db.VarChar(250)
+  cob_telefono_cobro           String?  @db.VarChar(250)
+  cob_nombre_factura           String?  @db.VarChar(250)
+  cob_nit_factura              String?  @db.VarChar(250)
+  cob_direccion_factura        String?  @db.VarChar(250)
+  cob_agente_retenedor         Int?
+  cob_porcentaje_retenedor     Decimal? @db.Decimal(10, 2)
+  cob_orden_compra             String?  @db.VarChar(10)
+  cob_fecha_factura            String?  @db.VarChar(250)
+  cob_direccion_cobro          String?  @db.VarChar(250)
+  cob_dia_factura              String?  @db.VarChar(250)
+  cob_dia_pago                 String?  @db.VarChar(250)
+  cob_tipo_pago                String?  @db.VarChar(150)
+  cob_monto_credito            String?  @db.VarChar(150)
+  cob_tiempo_credito           Int?     @default(0)
+  cob_clasificacion_crediticia String?  @db.VarChar(1)
+  cob_usuario_registro         BigInt
+  cob_fecha_registro           DateTime @db.DateTime(0)
+  cob_fecha_update             DateTime @db.DateTime(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_contactos {
+  con_codigo           Int
+  con_cliente          Int
+  con_principal        Int
+  con_dpi              String    @db.VarChar(20)
+  con_tipo_dpi         String    @db.VarChar(20)
+  con_extendido        String    @db.VarChar(250)
+  con_genero           String    @db.VarChar(1)
+  con_tratamiento      String    @db.VarChar(150)
+  con_nombre           String    @db.VarChar(250)
+  con_fecha_nacimiento DateTime  @db.Date
+  con_relacion         String    @db.VarChar(250)
+  con_mail             String    @db.VarChar(100)
+  con_telefono_casa    String    @db.VarChar(10)
+  con_telefono_oficina String    @db.VarChar(10)
+  con_telefono_celular String    @db.VarChar(10)
+  con_fecha_registro   DateTime? @db.DateTime(0)
+  con_usuario          BigInt?
+  con_tecnico          Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_documentos {
+  doc_codigo         Int
+  doc_cliente        Int
+  doc_nombre         String   @db.VarChar(150)
+  doc_listado        Int
+  doc_tipo           String   @db.VarChar(100)
+  doc_archivo        String?  @db.Text
+  doc_extension      String?  @db.VarChar(150)
+  doc_obs            String   @db.Text
+  doc_fecha_registro DateTime @db.DateTime(0)
+  doc_usuario        Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_documentos_lista {
+  lis_codigo    Int
+  lis_tipo      String @db.VarChar(1)
+  lis_nombre    String @db.VarChar(250)
+  lis_situacion Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_gestion_riesgo {
+  ges_cliente          Int
+  ges_pregunta         Int
+  ges_respuesta        String   @db.Text
+  ges_fecha_registro   DateTime @db.DateTime(0)
+  ges_usuario_registro BigInt
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_gestion_riesgo_preguntas {
+  pre_codigo    Int
+  pre_pregunta  String @db.Text
+  pre_situacion Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_gremio {
+  gre_codigo  Int
+  gre_cliente Int
+  gre_gremio  String @db.VarChar(250)
+  gre_desde   String @db.VarChar(250)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cli_representante_legal {
+  repc_codigo             Int
+  repc_cliente            Int
+  repc_dpi                String    @db.VarChar(20)
+  repc_tipo_dpi           String    @db.VarChar(20)
+  repc_extendido          String    @db.VarChar(250)
+  repc_genero             String    @db.VarChar(1)
+  repc_tratamiento        String    @db.VarChar(150)
+  repc_nombre             String    @db.VarChar(250)
+  repc_nacionalidad       String    @db.VarChar(150)
+  repc_profesion          String    @db.VarChar(250)
+  repc_fecha_nacimiento   DateTime  @db.Date
+  repc_estado_civil       String    @db.VarChar(150)
+  repc_puesto             String    @db.VarChar(250)
+  repc_tipo_nombramiento  String    @db.VarChar(2)
+  repc_registrado_en      String    @db.VarChar(255)
+  repc_abogado            String    @db.VarChar(255)
+  repc_nombramiento       String    @db.VarChar(100)
+  repc_libro              String    @db.VarChar(100)
+  repc_folio              String    @db.VarChar(100)
+  repc_acta               String    @db.VarChar(250)
+  repc_fecha_nombramiento DateTime? @db.Date
+  repc_fecha_vencimiento  DateTime? @db.Date
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_sector {
+  sec_codigo    Int
+  sec_nombre    String @db.VarChar(250)
+  sec_situacion Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_seguro {
+  seg_codigo              Int
+  seg_cliente             String   @db.VarChar(20)
+  seg_poliza              String   @db.VarChar(100)
+  seg_aseguradora         String   @db.VarChar(100)
+  seg_plan                String   @db.VarChar(150)
+  seg_asegurado_principal String   @db.VarChar(150)
+  seg_instrucciones       String   @db.Text
+  seg_comentarios         String   @db.Text
+  seg_fecha_inicio        DateTime @db.Date
+  seg_fecha_fin           DateTime @db.Date
+  seg_fecha_registro      DateTime @db.DateTime(0)
+  seg_usuario_registro    BigInt
+  seg_situacion           Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_sub_familia {
+  sfa_codigo    Int
+  sfa_familia   Int
+  sfa_nombre    String @db.VarChar(150)
+  sfa_situacion Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_sucursal {
+  suc_codigo       Int
+  suc_cliente      Int
+  suc_nombre       String @db.VarChar(150)
+  suc_departamento String @db.VarChar(250)
+  suc_municipio    String @db.VarChar(250)
+  suc_direccion    String @db.VarChar(150)
+  suc_zona         Int
+  suc_latitud      String @db.VarChar(20)
+  suc_longitud     String @db.VarChar(20)
+  suc_situacion    Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cli_tipo_familia {
+  fat_codigo    Int
+  fat_nombre    String @db.VarChar(150)
+  fat_situacion Int
+
+  @@ignore
+}
+
+model com_compras {
+  com_codigo     Int
+  com_cotizacion Int
+  com_articulo   Int
+  com_proveedor  Int
+  com_centavos   Int
+  com_dias       Int
+  com_usuario    Int
+  com_fecha_hora DateTime @default(now()) @db.DateTime(0)
+  com_situacion  Int      @db.TinyInt
+
+  @@id([com_cotizacion, com_articulo, com_proveedor])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model com_det_requisicion {
+  dreq_codigo          Int
+  dreq_requisicion     BigInt
+  dreq_tipo            String  @db.VarChar(250)
+  dreq_detalle         String  @db.VarChar(100)
+  dreq_articulo        Int
+  dreq_compra          Int
+  dreq_cajas_palets    Float   @db.Float
+  dreq_cajas_cantidad  Float   @db.Float
+  dreq_palets_cantidad Float   @db.Float
+  dreq_peso_caja       Decimal @db.Decimal(10, 2)
+  dreq_peso            Decimal @db.Decimal(10, 2)
+
+  @@id([dreq_codigo, dreq_requisicion])
+}
+
+model com_proveedor {
+  pro_codigo              Int      @id
+  pro_nombre              String   @db.VarChar(255)
+  pro_razon_social        String   @db.VarChar(255)
+  pro_nit                 String   @db.VarChar(20)
+  pro_pais                Int
+  pro_direccion_fiscal    String   @db.VarChar(255)
+  pro_direccion_comercial String   @db.VarChar(255)
+  pro_telefono_principal  String   @db.VarChar(50)
+  pro_telefono_secundario String   @db.VarChar(50)
+  pro_origen              String   @db.VarChar(1)
+  pro_contacto            String   @db.VarChar(100)
+  pro_correo              String   @db.VarChar(50)
+  pro_condicion_pago      String   @db.VarChar(2)
+  pro_tiempo_entrega      Int
+  pro_pago_tarjeta        Boolean
+  pro_pago_transferencia  Boolean
+  pro_pago_efectivo       Boolean
+  pro_cuenta_pago         String   @db.VarChar(255)
+  pro_logistica_entrega   String   @db.VarChar(1)
+  pro_fecha_registro      DateTime @db.DateTime(0)
+  pro_usuario             Int
+  pro_situacion           Int      @db.TinyInt
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model com_proveedor_articulo {
+  proart_codigo     Int
+  proart_proveedor  Int
+  proart_articulo   Int
+  proart_precio     Decimal  @db.Decimal(10, 2)
+  proart_dias       Int
+  proart_usuario    Int
+  proart_fecha_hora DateTime @default(now()) @db.DateTime(0)
+  proart_situacion  Int
+
+  @@id([proart_proveedor, proart_articulo])
+}
+
+model com_requisicion {
+  req_codigo          BigInt   @id
+  req_referencia      String   @db.VarChar(150)
+  req_cliente         Int
+  req_fecha           DateTime @db.Date
+  req_tipo_contenedor Int
+  req_fecha_registro  DateTime @db.DateTime(0)
+  req_usuario         BigInt
+  req_situacion       Int
+}
+
+model conf_credenciales {
+  conf_codigo            Int     @id
+  conf_nombre            String  @db.VarChar(255)
+  conf_nombre_reporte    String  @db.VarChar(255)
+  conf_direccion1        String  @db.VarChar(255)
+  conf_direccion2        String  @db.VarChar(255)
+  conf_departamento      String  @db.VarChar(255)
+  conf_municipio         String  @db.VarChar(255)
+  conf_telefono          String  @db.VarChar(255)
+  conf_correo            String  @db.VarChar(255)
+  conf_website           String  @db.VarChar(255)
+  conf_servidor          String  @db.VarChar(100)
+  conf_bucket            String  @db.VarChar(150)
+  conf_moneda_cotiza     Int
+  conf_moneda_factura    Int
+  conf_moneda_local      Int
+  conf_moneda_extranjera Int
+  conf_tasa_cambio       Decimal @db.Decimal(15, 2)
+  conf_formato_iva       Int
+}
+
+model conf_modulos {
+  mod_codigo    Int    @id
+  mod_nombre    String @db.VarChar(250)
+  mod_clave     String @db.VarChar(15)
+  mod_situacion Int
+}
+
+model env_alerta {
+  ale_codigo           Int
+  ale_contenedor       Int
+  ale_descripcion      String   @db.VarChar(250)
+  ale_fecha_registro   DateTime @db.DateTime(0)
+  ale_usuario_registro BigInt
+  ale_situacion        Int
+
+  @@id([ale_codigo, ale_contenedor])
+}
+
+model env_carpeta {
+  car_codigo       Int    @id
+  car_nombre       String @db.VarChar(250)
+  car_departamento Int
+  car_situacion    Int
+}
+
+model env_contenedor {
+  con_codigo            Int       @id
+  con_numero            String    @db.VarChar(50)
+  con_descripcion       String    @db.VarChar(250)
+  con_fecha_naviera     DateTime? @db.Date
+  con_fecha_zarpe       DateTime  @db.Date
+  con_fecha_arribo      DateTime? @db.Date
+  con_fecha_entrega     DateTime? @db.Date
+  con_fecha_facturacion DateTime? @db.Date
+  con_cliente           Int
+  con_naviera           String    @db.VarChar(250)
+  con_status            Int
+  con_observaciones     String    @db.Text
+  con_fecha_registro    DateTime  @db.DateTime(0)
+  con_usuario_registro  BigInt
+  con_situacion         Int
+}
+
+model env_contenedor_status {
+  cons_contenedor       Int
+  cons_status           Int
+  cons_fecha_registro   DateTime @db.DateTime(0)
+  cons_usuario_registro BigInt
+
+  @@id([cons_contenedor, cons_status])
+}
+
+model env_detalle {
+  det_codigo           Int
+  det_contenedor       Int
+  det_descripcion      String   @db.VarChar(250)
+  det_monto            Decimal  @db.Decimal(10, 2)
+  det_moneda           Int
+  det_fecha_registro   DateTime @db.DateTime(0)
+  det_usuario_registro BigInt
+
+  @@id([det_codigo, det_contenedor])
+}
+
+model env_documento {
+  doc_codigo           Int
+  doc_contenedor       Int
+  doc_carpeta          Int
+  doc_observaciones    String   @db.Text
+  doc_archivo          String   @db.VarChar(250)
+  doc_extension        String   @db.VarChar(10)
+  doc_descripcion      String   @db.VarChar(250)
+  doc_fecha_registro   DateTime @db.DateTime(0)
+  doc_usuario_registro BigInt
+
+  @@id([doc_codigo, doc_contenedor])
+}
+
+model env_documento_orden {
+  doc_codigo           Int      @id
+  doc_archivo          String   @db.VarChar(250)
+  doc_extension        String   @db.VarChar(10)
+  doc_descripcion      String   @db.VarChar(250)
+  doc_fecha_registro   DateTime @db.DateTime(0)
+  doc_usuario_registro BigInt
+}
+
+model env_imagen {
+  img_codigo           Int
+  img_contenedor       Int
+  img_archivo          String   @db.VarChar(250)
+  img_extension        String   @db.VarChar(10)
+  img_descripcion      String   @db.VarChar(250)
+  img_fecha_registro   DateTime @db.DateTime(0)
+  img_usuario_registro BigInt
+
+  @@id([img_codigo, img_contenedor])
+}
+
+model env_status {
+  sta_codigo    Int    @id
+  sta_posicion  Int
+  sta_nombre    String @db.VarChar(250)
+  sta_color     String @db.VarChar(7)
+  sta_situacion Int
+}
+
+model env_tipo_contenedor {
+  tip_codigo      Int     @id
+  tip_descripcion String  @db.VarChar(250)
+  tip_pies        Int
+  tip_palets      Float   @db.Float
+  tip_peso        Decimal @db.Decimal(10, 2)
+  tip_situacion   Int
+}
+
+model fin_banco {
+  ban_codigo    Int    @id
+  ban_desc_ct   String @db.VarChar(25)
+  ban_desc_lg   String @db.VarChar(150)
+  ban_pais      Int
+  ban_situacion Int
+
+  @@index([ban_pais], map: "ban_pais")
+}
+
+model fin_caja {
+  caja_codigo      Int
+  caja_empresa     Int
+  caja_descripcion String @db.VarChar(150)
+  caja_moneda      Int
+  caja_saldo       Float  @db.Float
+  caja_situacion   Int
+
+  @@id([caja_codigo, caja_empresa])
+  @@index([caja_empresa], map: "caja_sucursal")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_cheque {
+  che_codigo         Int      @id @default(autoincrement())
+  che_cuenta         Int
+  che_banco          Int
+  che_numero_cheque  String   @db.VarChar(25)
+  che_fecha          DateTime @db.Date
+  che_monto          Float    @db.Float
+  che_quien          String   @db.VarChar(50)
+  che_concepto       String   @db.VarChar(150)
+  che_fecha_registro DateTime @db.DateTime(0)
+  che_usuario        BigInt
+  che_situacion      Int
+
+  @@index([che_banco], map: "che_banco")
+  @@index([che_cuenta], map: "che_cuenta")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_cuenta_banco {
+  cueb_codigo         Int
+  cueb_banco          Int
+  cueb_empresa        Int
+  cueb_ncuenta        String   @db.VarChar(25)
+  cueb_nombre         String   @db.VarChar(255)
+  cueb_tipo_cuenta    Int
+  cueb_saldo          Float    @db.Float
+  cueb_moneda         Int
+  cueb_tasa           Float    @db.Float
+  cueb_plazo          Int
+  cueb_forma_pago     String   @db.VarChar(2)
+  cueb_fecha_apertura DateTime @db.Date
+  cueb_situacion      Int
+
+  @@id([cueb_codigo, cueb_banco])
+  @@index([cueb_banco], map: "cueb_banco")
+  @@index([cueb_moneda], map: "cueb_moneda")
+  @@index([cueb_tipo_cuenta], map: "cueb_tipo_cuenta")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_ingresos {
+  ing_codigo    Int      @id
+  ing_reglon    Int
+  ing_partida   Int
+  ing_tipo      String   @db.VarChar(1)
+  ing_fechor    DateTime @db.DateTime(0)
+  ing_monto     Float    @db.Float
+  ing_moneda    Int
+  ing_cambio    Float    @db.Float
+  ing_usuario   BigInt
+  ing_situacion Int
+
+  @@index([ing_moneda], map: "ing_moneda")
+  @@index([ing_partida], map: "ing_partida")
+  @@index([ing_reglon, ing_partida], map: "ing_reglon")
+}
+
+model fin_moneda {
+  mon_codigo      Int     @id
+  mon_descripcion String  @db.VarChar(150)
+  mon_simbolo     String  @db.VarChar(1)
+  mon_pais        String  @db.VarChar(100)
+  mon_cambio      Decimal @db.Decimal(10, 4)
+  mon_minimo      Decimal @db.Decimal(10, 4)
+  mon_compra      Decimal @db.Decimal(10, 4)
+  mon_venta       Decimal @db.Decimal(10, 4)
+  mon_situacion   Int
+}
+
+model fin_moneda_cambio {
+  cam_codigo  Int      @id @default(autoincrement())
+  cam_moneda  Int
+  cam_cambio  Decimal  @db.Decimal(10, 4)
+  cam_minimo  Decimal  @db.Decimal(10, 4)
+  cam_compra  Decimal  @db.Decimal(10, 4)
+  cam_venta   Decimal  @db.Decimal(10, 4)
+  cam_fecha   DateTime @db.DateTime(0)
+  cam_usuario BigInt
+
+  @@index([cam_moneda], map: "sis_moneda_cambio_ibfk_1")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_movimiento_caja {
+  mcj_codigo         Int      @id @default(autoincrement())
+  mcj_caja           Int
+  mcj_empresa        Int
+  mcj_movimiento     String   @db.VarChar(1)
+  mcj_monto          Decimal  @db.Decimal(10, 2)
+  mcj_tipo           String   @db.VarChar(2)
+  mcj_motivo         String   @db.VarChar(255)
+  mcj_documento      String   @db.VarChar(100)
+  mcj_fecha          DateTime @db.Date
+  mcj_fecha_registro DateTime @db.DateTime(0)
+  mcj_usuario        BigInt
+  mcj_situacion      Int
+
+  @@index([mcj_caja], map: "mcj_caja")
+  @@index([mcj_empresa], map: "mcj_sucursal")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_movimiento_cuenta_banco {
+  mcb_codigo         Int      @id @default(autoincrement())
+  mcb_cuenta         Int
+  mcb_banco          Int
+  mcb_movimiento     String   @db.VarChar(1)
+  mcb_monto          Decimal  @db.Decimal(10, 2)
+  mcb_tipo           String   @db.VarChar(2)
+  mcb_motivo         String   @db.VarChar(255)
+  mcb_documento      String   @db.VarChar(100)
+  mcb_fecha          DateTime @db.Date
+  mcb_fecha_registro DateTime @db.DateTime(0)
+  mcb_usuario        BigInt
+  mcb_situacion      Int
+
+  @@index([mcb_banco], map: "mcb_banco")
+  @@index([mcb_cuenta], map: "mcb_cuenta")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_partida {
+  par_codigo      Int    @id
+  par_tipo        String @db.VarChar(2)
+  par_clase       Int
+  par_descripcion String @db.VarChar(100)
+  par_situacion   Int
+}
+
+model fin_partida_clase {
+  cla_codigo      Int    @id
+  cla_tipo        String @db.VarChar(2)
+  cla_descripcion String @db.VarChar(150)
+  cla_situacion   Int
+}
+
+model fin_poliza {
+  pol_codigo           Int      @id
+  pol_documento        String   @db.VarChar(150)
+  pol_empresa          Int
+  pol_descripcion      String   @db.Text
+  pol_fecha_contable   DateTime @db.Date
+  pol_fecha_registro   DateTime @db.DateTime(0)
+  pol_usuario_registro Int
+  pol_situacion        Int
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_poliza_detalle {
+  dpol_codigo     Int
+  dpol_poliza     Int
+  dpol_tipo       String  @db.VarChar(2)
+  dpol_clase      Int
+  dpol_partida    Int
+  dpol_reglon     Int
+  dpol_subreglon  Int
+  dpol_motivo     String  @db.Text
+  dpol_movimiento String  @db.VarChar(1)
+  dpol_monto      Decimal @db.Decimal(10, 2)
+  dpol_moneda     Int
+  dpol_tcambio    Decimal @db.Decimal(10, 2)
+
+  @@id([dpol_codigo, dpol_poliza])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_proveedor {
+  prov_codigo              BigInt    @id
+  prov_nit                 String    @db.VarChar(20)
+  prov_tipo                String    @db.VarChar(1)
+  prov_nombre_comercial    String    @db.VarChar(255)
+  prov_razon_social        String    @db.VarChar(255)
+  prov_direccion_factura   String    @db.VarChar(255)
+  prov_direccion_comercial String    @db.VarChar(255)
+  prov_telefono1           String    @db.VarChar(50)
+  prov_telefono2           String    @db.VarChar(50)
+  prov_mail                String    @db.VarChar(50)
+  prov_dias_credito        Int
+  prov_limite_credito      Decimal   @db.Decimal(10, 2)
+  prov_actividad_comercial String    @db.MediumText
+  prov_contacto            String    @db.VarChar(100)
+  prov_contacto_telefono   String    @db.VarChar(50)
+  prov_fecha_constitucion  DateTime  @db.Date
+  prov_logo                String    @db.VarChar(150)
+  prov_fecha_registro      DateTime? @db.DateTime(0)
+  prov_usuario             BigInt
+  prov_situacion           String    @db.Char(1)
+}
+
+model fin_reglon {
+  reg_codigo    Int
+  reg_partida   Int
+  reg_desc_ct   String @db.VarChar(25)
+  reg_desc_lg   String @db.VarChar(100)
+  reg_situacion Int
+
+  @@id([reg_codigo, reg_partida])
+  @@index([reg_partida], map: "reg_partida")
+}
+
+model fin_subreglon {
+  sub_codigo      Int
+  sub_partida     Int
+  sub_reglon      Int
+  sub_descripcion String @db.VarChar(150)
+  sub_situacion   Int
+
+  @@id([sub_codigo, sub_partida, sub_reglon])
+}
+
+model fin_tipo_cuenta {
+  tcue_codigo  Int    @id
+  tcue_desc_ct String @db.VarChar(25)
+  tcue_desc_lg String @db.VarChar(150)
+}
+
+model fin_tipo_pago {
+  tpago_codigo  Int    @id
+  tpago_desc_md String @db.VarChar(25)
+  tpago_desc_lg String @db.VarChar(150)
+}
+
+model inv_articulo {
+  art_codigo                Int                @id
+  art_codigo_interno        String             @db.VarChar(15)
+  art_pais                  Int
+  art_barcode               String             @db.VarChar(100)
+  art_categoria             Int?
+  art_marca                 Int?
+  art_proveedor             Int?               @default(0)
+  art_nombre                String             @db.VarChar(100)
+  art_descripcion           String?            @db.Text
+  art_descripcion_2         String?            @db.Text
+  art_perecedero            Int?
+  art_tiempo_vida           String?            @db.VarChar(150)
+  art_volumen               String?            @db.VarChar(250)
+  art_cuenta                String?            @db.VarChar(250)
+  art_cantidad              Decimal            @db.Decimal(10, 2)
+  art_unidad_medida         String?            @db.VarChar(250)
+  art_largo                 Decimal            @db.Decimal(10, 2)
+  art_ancho                 Decimal            @db.Decimal(10, 2)
+  art_alto                  Decimal            @db.Decimal(10, 2)
+  art_dimesiones_unidad     String             @db.VarChar(250)
+  art_moneda                Int
+  art_precio_compra         Decimal?           @default(0.00) @db.Decimal(10, 2)
+  art_precio_costo          Decimal?           @default(0.00) @db.Decimal(10, 2)
+  art_precio_venta          Decimal?           @default(0.00) @db.Decimal(10, 2)
+  art_peso_caja             Decimal            @db.Decimal(10, 2)
+  art_palet_caja            Decimal            @db.Decimal(10, 2)
+  art_cajas_nivel           Int
+  art_nivel_palets          Int
+  art_alto_palets           Float              @db.Float
+  art_etiquetas             Int
+  art_dimensiones_etiquetas String             @db.VarChar(150)
+  art_participacion         Int
+  art_numero_fda            String             @db.VarChar(150)
+  art_fce                   Int
+  art_hts                   Int
+  art_fda_producto          Int
+  art_observaciones         String             @db.Text
+  art_usuario_update        BigInt
+  art_fecha_update          DateTime           @db.DateTime(0)
+  art_situacion             Int
+  shp_cart                  shp_cart[]
+  shp_order_detail          shp_order_detail[]
+}
+
+model inv_articulo_imagen {
+  img_codigo           Int
+  img_articulo         Int
+  img_archivo          String   @db.VarChar(250)
+  img_previsualizacion Int      @db.TinyInt
+  img_tipo             Int
+  img_fecha_registro   DateTime @db.DateTime(0)
+  img_usuario_registro BigInt
+
+  @@id([img_codigo, img_articulo])
+}
+
+model inv_categoria {
+  cat_codigo    Int    @id
+  cat_nombre    String @db.VarChar(250)
+  cat_color     String @db.VarChar(7)
+  cat_situacion Int
+}
+
+model inv_costos {
+  cos_codigo    Int     @id @default(autoincrement())
+  cos_lote      Int
+  cos_articulo  Int
+  cos_compra    Int
+  cos_monto     Decimal @db.Decimal(10, 2)
+  cos_moneda    Int
+  cos_tcambio   Decimal @db.Decimal(10, 2)
+  cos_situacion Int
+
+  @@index([cos_articulo], map: "cos_articulo")
+  @@index([cos_compra], map: "cos_compra")
+  @@index([cos_lote], map: "cos_lote")
+  @@index([cos_moneda], map: "cos_moneda")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model inv_detalle_inventario {
+  det_codigo     Int
+  det_inventario Int
+  det_tipo       Int
+  det_articulo   Int
+  det_lote       BigInt
+  det_cantidad   Float  @db.Float
+
+  @@id([det_codigo, det_inventario, det_tipo])
+  @@index([det_articulo], map: "det_articulo")
+  @@index([det_inventario], map: "det_inventario")
+  @@index([det_lote], map: "det_lote")
+  @@index([det_tipo], map: "det_tipo")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model inv_detalle_temporal {
+  detemp_codigo       Int
+  detemp_usuario      Int
+  detemp_tipo         Int
+  detemp_barcode      String  @db.VarChar(100)
+  detemp_articulo     Int
+  detemp_proveedor    BigInt
+  detemp_cantidad     Float   @db.Float
+  detemp_precio_costo Decimal @db.Decimal(10, 2)
+  detemp_precio_venta Decimal @db.Decimal(10, 2)
+
+  @@id([detemp_codigo, detemp_usuario])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model inv_inventario {
+  inv_codigo         Int
+  inv_tipo           Int
+  inv_clase          String   @db.VarChar(3)
+  inv_documento      String   @db.VarChar(150)
+  inv_sede           Int
+  inv_empresa        Int
+  inv_fecha          DateTime @db.Date
+  inv_usuario        BigInt
+  inv_fecha_registro DateTime @db.DateTime(0)
+  inv_situacion      Int
+
+  @@id([inv_codigo, inv_tipo])
+  @@index([inv_empresa], map: "inv_sucursal")
+  @@index([inv_tipo], map: "inv_tipo")
+}
+
+model inv_lote {
+  lot_codigo         BigInt   @id
+  lot_barcode        String   @db.VarChar(100)
+  lot_articulo       Int
+  lot_proveedor      BigInt
+  lot_sede           Int
+  lot_empresa        Int
+  lot_precio_costo   Decimal  @db.Decimal(10, 2)
+  lot_precio_venta   Decimal  @db.Decimal(10, 2)
+  lot_cantidad       Float    @db.Float
+  lot_fecha_registro DateTime @db.DateTime(0)
+  lot_usuario        BigInt
+
+  @@index([lot_articulo], map: "lot_articulo")
+  @@index([lot_proveedor], map: "lot_proveedor")
+  @@index([lot_sede], map: "lot_sede")
+  @@index([lot_empresa], map: "lot_sucursal")
+}
+
+model inv_marca {
+  mar_codigo         Int      @id
+  mar_nombre         String   @db.VarChar(250)
+  mar_descripcion    String   @db.Text
+  mar_logo           String   @db.VarChar(250)
+  mar_posicion       Int
+  mar_usuario_update BigInt
+  mar_fecha_update   DateTime @db.DateTime(0)
+  mar_situacion      Int
+}
+
+model inv_servicio {
+  ser_codigo       Int
+  ser_grupo        Int
+  ser_barcode      String  @db.VarChar(50)
+  ser_nombre       String  @db.VarChar(100)
+  ser_desc         String  @db.VarChar(250)
+  ser_precio_costo Decimal @db.Decimal(10, 2)
+  ser_precio_venta Decimal @db.Decimal(10, 2)
+  ser_moneda       Int
+  ser_situacion    Int
+
+  @@id([ser_codigo, ser_grupo])
+  @@index([ser_grupo], map: "ser_grupo")
+  @@index([ser_moneda], map: "ser_moneda")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model mast_empresa {
+  emp_codigo              BigInt    @id
+  emp_nit                 String    @db.VarChar(20)
+  emp_tipo                String    @db.VarChar(1)
+  emp_nombre_comercial    String    @db.VarChar(255)
+  emp_razon_social        String    @db.VarChar(255)
+  emp_direccion_factura   String    @db.VarChar(255)
+  emp_direccion_comercial String    @db.VarChar(255)
+  emp_telefono1           String    @db.VarChar(50)
+  emp_telefono2           String    @db.VarChar(50)
+  emp_mail                String    @db.VarChar(50)
+  emp_gerente             String    @db.VarChar(250)
+  emp_regimen             String    @db.VarChar(250)
+  emp_actividad_comercial String    @db.MediumText
+  emp_representante       String    @db.VarChar(250)
+  emp_nombramiento        String    @db.VarChar(250)
+  emp_fecha_constitucion  DateTime  @db.Date
+  emp_logo                String    @db.VarChar(150)
+  emp_fecha_registro      DateTime? @db.DateTime(0)
+  emp_usuario             BigInt
+  emp_situacion           String    @db.Char(1)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model mast_mundep {
+  dm_codigo Int
+  dm_desc   String @db.VarChar(250)
+
+  @@ignore
+}
+
+model mast_paises {
+  pai_codigo           Int    @id
+  pai_descripcion      String @db.VarChar(250)
+  pai_conocido         String @db.VarChar(100)
+  pai_id_internacional String @db.VarChar(5)
+  pai_situacion        Int
+}
+
+model mast_unidad_medida {
+  umed_codigo      Int    @id
+  umed_descripcion String @db.VarChar(150)
+  umed_abreviatura String @db.VarChar(15)
+  umed_clase       String @db.VarChar(3)
+  umed_situacion   Int
+}
+
+model mast_version {
+  ver_codigo         Int      @id
+  ver_software       String   @db.VarChar(250)
+  ver_plataforma     String   @db.VarChar(10)
+  ver_version        String   @db.VarChar(5)
+  ver_fecha_update   DateTime @db.DateTime(0)
+  ver_usuario_update BigInt
+}
+
+model seg_ajustes {
+  aju_usuario        BigInt   @id
+  aju_idioma         String   @db.VarChar(10)
+  aju_notificaciones Int
+  aju_fecha_update   DateTime @db.DateTime(0)
+}
+
+model seg_asignacion {
+  aperm_usuario BigInt
+  aperm_permiso Int
+  aperm_grupo   Int
+  aperm_fecha   DateTime @db.DateTime(0)
+  aperm_quien   BigInt
+
+  @@id([aperm_usuario, aperm_permiso, aperm_grupo])
+  @@index([aperm_permiso, aperm_grupo], map: "seg_asignacion_ibfk_1")
+}
+
+model seg_det_rol {
+  drol_permiso Int
+  drol_grupo   Int
+  drol_rol     Int
+
+  @@id([drol_permiso, drol_grupo, drol_rol])
+  @@index([drol_rol], map: "seg_det_rol_ibfk_2")
+}
+
+model seg_foto_usuario {
+  fot_usuario          BigInt   @id
+  fot_string           String   @db.VarChar(255)
+  fot_fecha_registro   DateTime @db.DateTime(0)
+  fot_usuario_registro BigInt
+}
+
+model seg_grupo_permisos {
+  gperm_id        Int    @id
+  gperm_desc      String @db.VarChar(150)
+  gperm_clave     String @db.VarChar(10)
+  gperm_situacion Int
+}
+
+model seg_permisos {
+  perm_id    Int
+  perm_grupo Int
+  perm_desc  String @db.VarChar(150)
+  perm_clave String @db.VarChar(15)
+
+  @@id([perm_id, perm_grupo])
+  @@index([perm_grupo], map: "seg_permisos_ibfk_1")
+}
+
+model seg_rol {
+  rol_id        Int    @id
+  rol_nombre    String @db.VarChar(150)
+  rol_desc      String @db.Text
+  rol_situacion Int
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model seg_usuarios {
+  usu_codigo         BigInt   @id
+  usu_dpi            String   @db.VarChar(25)
+  usu_nombre         String   @db.VarChar(250)
+  usu_mail           String   @db.VarChar(100)
+  usu_telefono       String   @db.VarChar(50)
+  usu_rol            Int
+  usu_usuario        String   @db.VarChar(100)
+  usu_pass           String   @db.VarChar(250)
+  usu_pregunta       String   @db.VarChar(250)
+  usu_respuesta      String   @db.VarChar(255)
+  usu_habilita       Int
+  usu_seguridad      Int
+  usu_fecha_creacion DateTime @db.DateTime(0)
+  usu_situacion      Int
+}
+
+model sis_area {
+  are_codigo    Int    @id
+  are_sede      Int
+  are_sector    Int
+  are_nivel     String @db.VarChar(150)
+  are_nombre    String @db.VarChar(250)
+  are_situacion Int
+}
+
+model sis_categoria {
+  cat_codigo    Int    @id
+  cat_nombre    String @db.VarChar(250)
+  cat_color     String @db.VarChar(7)
+  cat_situacion Int
+}
+
+model sis_ciudad {
+  ciu_codigo    Int    @id
+  ciu_estado    Int
+  ciu_nombre    String @db.VarChar(150)
+  ciu_situacion Int
+
+  @@index([ciu_estado], map: "ciu_estado")
+}
+
+model sis_cliente {
+  cli_codigo                      Int      @id
+  cli_nombre                      String   @db.VarChar(150)
+  cli_abreviacion                 String   @db.VarChar(150)
+  cli_razon_legal                 String   @db.VarChar(150)
+  cli_estado                      Int
+  cli_ciudad                      Int
+  cli_zipcode                     String   @db.VarChar(150)
+  cli_duns                        String   @db.VarChar(150)
+  cli_nombre_contacto_principal   String   @db.VarChar(150)
+  cli_cargo_contacto_principal    String   @db.VarChar(150)
+  cli_telefono_contacto_principal String   @db.VarChar(150)
+  cli_email_contacto_principal    String   @db.VarChar(150)
+  cli_nombre_contacto_compras     String   @db.VarChar(150)
+  cli_telefono_contacto_compras   String   @db.VarChar(150)
+  cli_email_contacto_compras      String   @db.VarChar(150)
+  cli_nombre_contacto_cobros      String   @db.VarChar(150)
+  cli_telefono_contacto_cobros    String   @db.VarChar(150)
+  cli_email_contacto_cobros       String   @db.VarChar(150)
+  cli_nombre_contacto_logistico   String   @db.VarChar(150)
+  cli_telefono_contacto_logistico String   @db.VarChar(150)
+  cli_email_contacto_logistico    String   @db.VarChar(150)
+  cli_direccion_facturacion       String   @db.VarChar(150)
+  cli_direccion_entrega1          String   @db.VarChar(150)
+  cli_direccion_entrega2          String   @db.VarChar(150)
+  cli_monto_credito_asegurado     String   @db.VarChar(150)
+  cli_credito_autorizado          String   @db.VarChar(150)
+  cli_terms_credito               String   @db.VarChar(150)
+  cli_fecha_registro              DateTime @db.DateTime(0)
+  cli_usuario                     Int
+  cli_situacion                   Int
+}
+
+model sis_cliente_puerto_destino {
+  cpds_codigo           Int
+  cpds_cliente          Int
+  cpds_puerto           Int
+  cpds_ciudad           Int
+  cpds_fecha_registro   DateTime @db.DateTime(0)
+  cpds_usuario_registro Int
+
+  @@id([cpds_codigo, cpds_cliente])
+  @@index([cpds_ciudad], map: "cpds_ciudad")
+  @@index([cpds_cliente], map: "cpds_cliente")
+  @@index([cpds_puerto], map: "cpds_puerto")
+}
+
+model sis_cliente_puerto_origen {
+  cpor_codigo           Int
+  cpor_cliente          Int
+  cpor_puerto           Int
+  cpor_ciudad           Int
+  cpor_fecha_registro   DateTime @db.DateTime(0)
+  cpor_usuario_registro Int
+
+  @@id([cpor_codigo, cpor_cliente])
+  @@index([cpor_ciudad], map: "cpor_ciudad")
+  @@index([cpor_cliente], map: "cpor_cliente")
+  @@index([cpor_puerto], map: "cpor_puerto")
+}
+
+model sis_deparatamento {
+  dep_codigo    Int    @id
+  dep_nombre    String @db.VarChar(250)
+  dep_situacion Int
+}
+
+model sis_estado {
+  est_codigo           Int           @id
+  est_nombre           String        @db.VarChar(150)
+  est_abreviacion      String        @db.VarChar(5)
+  est_situacion        Int
+  est_usuario_registra Int
+  cus_address          cus_address[]
+}
+
+model sis_moneda {
+  mon_codigo      Int     @id
+  mon_descripcion String  @db.VarChar(100)
+  mon_simbolo     String  @db.VarChar(1)
+  mon_pais        String  @db.VarChar(100)
+  mon_cambio      Decimal @db.Decimal(10, 2)
+  mon_situacion   Int
+}
+
+model sis_moneda_cambio {
+  cam_codigo  Int      @id @default(autoincrement())
+  cam_moneda  Int
+  cam_cambio  Float    @db.Float
+  cam_fecha   DateTime @db.DateTime(0)
+  cam_usuario BigInt
+
+  @@index([cam_moneda], map: "sis_moneda_cambio_ibfk_1")
+}
+
+model sis_pais {
+  pai_codigo    Int           @id
+  pai_nombre    String        @db.VarChar(250)
+  pai_situacion Int
+  cus_address   cus_address[]
+}
+
+model sis_puerto_destino {
+  pdes_codigo    Int
+  pdes_ciudad    Int
+  pdes_nombre    String @db.VarChar(150)
+  pdes_situacion Int
+
+  @@id([pdes_codigo, pdes_ciudad])
+}
+
+model sis_puerto_origen {
+  pori_codigo    Int
+  pori_ciudad    Int
+  pori_nombre    String @db.VarChar(150)
+  pori_situacion Int
+
+  @@id([pori_codigo, pori_ciudad])
+}
+
+model sis_sede {
+  sed_codigo       Int    @id
+  sed_nombre       String @db.VarChar(150)
+  sed_departamento Int
+  sed_municipio    Int
+  sed_direccion    String @db.VarChar(150)
+  sed_zona         Int
+  sed_latitud      String @db.VarChar(20)
+  sed_longitud     String @db.VarChar(20)
+  sed_situacion    Int
+}
+
+model sis_usuario_departamento {
+  dus_codigo           Int
+  dus_usuario          BigInt
+  dus_departamento     Int
+  dus_fecha_registro   DateTime @db.DateTime(0)
+  dus_usuario_registro BigInt
+
+  @@id([dus_codigo, dus_usuario])
+  @@index([dus_departamento], map: "dus_departamento")
+  @@index([dus_usuario], map: "dus_usuario")
+}
+
+model sis_usuario_sede {
+  sus_codigo           Int
+  sus_usuario          BigInt
+  sus_sede             Int
+  sus_fecha_registro   DateTime @db.DateTime(0)
+  sus_usuario_registro BigInt
+
+  @@id([sus_codigo, sus_usuario])
+  @@index([sus_sede], map: "sus_sede")
+  @@index([sus_usuario], map: "sus_usuario")
+}
+
+model ven_categoria_servicios {
+  cat_codigo    Int    @id
+  cat_nombre    String @db.VarChar(250)
+  cat_color     String @db.VarChar(7)
+  cat_situacion Int
+}
+
+model ven_credito {
+  cred_codigo         Int      @id @default(autoincrement())
+  cred_venta          Int
+  cred_tipo_credito   Int
+  cred_monto          Decimal  @db.Decimal(10, 2)
+  cred_moneda         Int
+  cred_tcambio        Decimal  @db.Decimal(10, 2)
+  cred_operador       String   @db.VarChar(50)
+  cred_documento      String   @db.VarChar(50)
+  cred_fecha          DateTime @db.Date
+  cred_fecha_registro DateTime @db.DateTime(0)
+  cred_usuario        Int
+  cred_observaciones  String   @db.Text
+  cred_situacion      Int
+
+  @@index([cred_codigo], map: "cred_codigo")
+  @@index([cred_moneda], map: "cred_moneda")
+  @@index([cred_tipo_credito], map: "cred_tipo_credito")
+  @@index([cred_venta], map: "cred_venta")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ven_detalle_temporal {
+  dventempa_codigo    Int
+  dventempa_usuario   Int
+  dventempa_tipo      String  @db.VarChar(1)
+  dventempa_subreglon Int
+  dventempa_detalle   String  @db.VarChar(100)
+  dventempa_articulo  Int
+  dventempa_cantidad  Float   @db.Float
+  dventempa_precio    Decimal @db.Decimal(10, 2)
+  dventempa_moneda    Int
+  dventempa_tcambio   Decimal @db.Decimal(10, 2)
+  dventempa_subtotal  Decimal @db.Decimal(10, 2)
+  dventempa_descuento Decimal @db.Decimal(10, 2)
+  dventempa_total     Decimal @db.Decimal(10, 2)
+
+  @@id([dventempa_codigo, dventempa_usuario])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ven_detalle_venta {
+  dven_codigo    Int
+  dven_venta     Int
+  dven_tipo      String  @db.VarChar(1)
+  dven_subreglon Int
+  dven_detalle   String  @db.VarChar(100)
+  dven_articulo  Int
+  dven_cantidad  Float   @db.Float
+  dven_precio    Decimal @db.Decimal(10, 2)
+  dven_moneda    Int
+  dven_tcambio   Decimal @db.Decimal(10, 2)
+  dven_subtotal  Decimal @db.Decimal(10, 2)
+  dven_descuento Decimal @db.Decimal(10, 2)
+  dven_total     Decimal @db.Decimal(10, 2)
+  dven_descarga  Int
+
+  @@id([dven_codigo, dven_venta])
+  @@index([dven_venta], map: "dven_venta")
+}
+
+model ven_pago {
+  pag_codigo         Int      @id @default(autoincrement())
+  pag_venta          Int
+  pag_tipo_pago      Int
+  pag_monto          Decimal  @db.Decimal(10, 2)
+  pag_moneda         Int
+  pag_tcambio        Decimal  @db.Decimal(10, 2)
+  pag_operador       String   @db.VarChar(100)
+  pag_documento      String   @db.VarChar(100)
+  pag_fecha          DateTime @db.Date
+  pag_fecha_registro DateTime @db.DateTime(0)
+  pag_usuario        Int      @db.SmallInt
+  pag_observaciones  String   @db.Text
+  pag_situacion      Int
+
+  @@index([pag_codigo], map: "pag_codigo")
+  @@index([pag_moneda], map: "pag_moneda")
+  @@index([pag_tipo_pago], map: "pag_tipo_pago")
+  @@index([pag_venta], map: "pag_venta")
+}
+
+model ven_pago_temporal {
+  pagtemp_codigo         Int
+  pagtemp_usuario        Int
+  pagtemp_tipo_pago      Int
+  pagtemp_monto          Decimal  @db.Decimal(10, 2)
+  pagtemp_moneda         Int
+  pagtemp_tcambio        Decimal  @db.Decimal(10, 2)
+  pagtemp_operador       String   @db.VarChar(100)
+  pagtemp_documento      String   @db.VarChar(100)
+  pagtemp_fecha          DateTime @db.Date
+  pagtemp_banco          Int
+  pagtemp_cuenta         Int
+  pagtemp_caja           Int
+  pagtemp_fecha_registro DateTime @db.DateTime(0)
+  pagtemp_observaciones  String   @db.Text
+  pagtemp_situacion      Int
+
+  @@id([pagtemp_codigo, pagtemp_usuario])
+}
+
+model ven_servicio {
+  ser_codigo       Int     @id
+  ser_categoria    Int
+  ser_barcode      String  @db.VarChar(50)
+  ser_nombre       String  @db.VarChar(100)
+  ser_descripcion  String  @db.VarChar(250)
+  ser_precio_costo Decimal @db.Decimal(10, 2)
+  ser_precio_venta Decimal @db.Decimal(10, 2)
+  ser_moneda       Int
+  ser_situacion    Int
+
+  @@index([ser_categoria], map: "ser_grupo")
+  @@index([ser_moneda], map: "ser_moneda")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ven_venta {
+  ven_codigo         Int      @id
+  ven_requisicion    Int
+  ven_cliente        Int
+  ven_serie          String   @db.VarChar(100)
+  ven_numero         String   @db.VarChar(100)
+  ven_empresa        Int
+  ven_usuario        BigInt
+  ven_fecha          DateTime @db.Date
+  ven_fecha_registro DateTime @db.DateTime(0)
+  ven_subtotal       Decimal  @db.Decimal(10, 2)
+  ven_descuento      Decimal  @db.Decimal(10, 2)
+  ven_total          Decimal  @db.Decimal(10, 2)
+  ven_moneda         Int
+  ven_tcambio        Decimal  @db.Decimal(10, 2)
+  ven_situacion      Int
+
+  @@index([ven_cliente], map: "ven_cliente")
+  @@index([ven_moneda], map: "ven_moneda")
+}
+
+model vnt_articulo {
+  art_codigo         Int     @id
+  art_carga          Int
+  art_codigo_interno String  @db.VarChar(15)
+  art_tipo           String  @db.VarChar(250)
+  art_nombre         String  @db.VarChar(100)
+  art_descripcion    String  @db.VarChar(250)
+  art_volumen        String  @db.VarChar(250)
+  art_taxes          Decimal @db.Decimal(10, 2)
+  art_cuenta         String  @db.VarChar(250)
+  art_cantidad       Decimal @db.Decimal(10, 2)
+  art_unidad_medida  String  @db.VarChar(250)
+  art_precio_costo   Decimal @db.Decimal(10, 2)
+  art_precio_venta   Decimal @db.Decimal(10, 2)
+  art_peso_caja      Decimal @db.Decimal(10, 2)
+  art_palet_caja     Decimal @db.Decimal(10, 2)
+  art_status         String  @db.VarChar(15)
+  art_situacion      Int
+}
+
+model vnt_articulo_historial {
+  arth_codigo         Int
+  arth_carga          Int
+  arth_codigo_interno String  @db.VarChar(15)
+  arth_tipo           String  @db.VarChar(250)
+  arth_nombre         String  @db.VarChar(100)
+  arth_descripcion    String  @db.VarChar(250)
+  arth_volumen        String  @db.VarChar(250)
+  arth_taxes          Decimal @db.Decimal(10, 2)
+  arth_cuenta         String  @db.VarChar(250)
+  arth_cantidad       Decimal @db.Decimal(10, 2)
+  arth_unidad_medida  String  @db.VarChar(250)
+  arth_precio_costo   Decimal @db.Decimal(10, 2)
+  arth_precio_venta   Decimal @db.Decimal(10, 2)
+  arth_peso_caja      Decimal @db.Decimal(10, 2)
+  arth_palet_caja     Decimal @db.Decimal(10, 2)
+  arth_status         String  @db.VarChar(15)
+  arth_situacion      Int
+
+  @@id([arth_codigo, arth_carga])
+}
+
+model vnt_carga_detalle {
+  card_codigo         Int
+  card_carga          Int
+  card_codigo_interno String  @db.VarChar(15)
+  card_tipo           String  @db.VarChar(250)
+  card_nombre         String  @db.VarChar(100)
+  card_descripcion    String  @db.VarChar(250)
+  card_volumen        String  @db.VarChar(250)
+  card_taxes          Decimal @db.Decimal(10, 2)
+  card_cuenta         String  @db.VarChar(250)
+  card_cantidad       Decimal @db.Decimal(10, 2)
+  card_unidad_medida  String  @db.VarChar(250)
+  card_precio_costo   Decimal @db.Decimal(10, 2)
+  card_precio_venta   Decimal @db.Decimal(10, 2)
+  card_peso_caja      Decimal @db.Decimal(10, 2)
+  card_palet_caja     Decimal @db.Decimal(10, 2)
+  card_status         String  @db.VarChar(15)
+  card_situacion      Int
+
+  @@id([card_codigo, card_carga])
+}
+
+model vnt_carga_electronica {
+  car_codigo         Int      @id
+  car_descripcion    String   @db.VarChar(255)
+  car_archivo        String   @db.VarChar(255)
+  car_fecha_registro DateTime @db.DateTime(0)
+  car_usuario        BigInt
+  car_situacion      Int
+}
+
+model vnt_cotizacion {
+  ven_codigo             BigInt   @id
+  ven_carga              Int?
+  ven_factura            String   @db.VarChar(100)
+  ven_referencia         String   @db.VarChar(150)
+  ven_cliente            Int
+  ven_fecha              DateTime @db.Date
+  ven_tipo_contenedor    Int
+  ven_flete              Decimal? @db.Decimal(10, 2)
+  ven_total_costo        Decimal? @db.Decimal(10, 2)
+  ven_total_venta        Decimal? @db.Decimal(10, 2)
+  ven_total_total        Decimal? @db.Decimal(10, 2)
+  ven_margen_monto       Decimal? @db.Decimal(10, 2)
+  ven_margen_porcentaje  Decimal? @db.Decimal(10, 2)
+  ven_peso_total         Decimal? @db.Decimal(10, 2)
+  ven_codificado         String   @db.VarChar(1)
+  ven_tipo_carga         String   @db.VarChar(2)
+  ven_porcentaje_finance Decimal  @db.Decimal(10, 2)
+  ven_it_fee             Int
+  ven_onward             Int
+  ven_pais               Int
+  ven_fecha_registro     DateTime @db.DateTime(0)
+  ven_usuario            BigInt
+  ven_situacion          Int
+}
+
+model vnt_cotizacion_status {
+  vens_cotizacion       Int
+  vens_status           Int
+  vens_fecha_registro   DateTime @db.DateTime(0)
+  vens_usuario_registro BigInt
+
+  @@id([vens_cotizacion, vens_status])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vnt_detalle_cotizacion {
+  dven_codigo            Int
+  dven_cotizacion        BigInt
+  dven_tipo              String   @db.VarChar(250)
+  dven_detalle           String   @db.VarChar(100)
+  dven_articulo          Int
+  dven_carga             Int
+  dven_cajas_palets      Float    @db.Float
+  dven_cajas_cantidad    Float    @db.Float
+  dven_palets_cantidad   Float    @db.Float
+  dven_peso_caja         Decimal  @db.Decimal(10, 2)
+  dven_precio_costo      Decimal  @db.Decimal(10, 2)
+  dven_precio_real       Decimal? @db.Decimal(10, 2)
+  dven_precio_venta      Decimal  @db.Decimal(10, 2)
+  dven_margen_monto      Decimal  @db.Decimal(10, 2)
+  dven_margen_porcentaje Decimal  @db.Decimal(10, 2)
+  dven_peso              Decimal  @db.Decimal(10, 2)
+  dven_participacion     Decimal  @db.Decimal(10, 2)
+  dven_flete             Decimal  @db.Decimal(10, 2)
+  dven_costo             Decimal? @db.Decimal(10, 2)
+  dven_subtotal          Decimal  @db.Decimal(10, 2)
+  dven_total             Decimal  @db.Decimal(10, 2)
+
+  @@id([dven_codigo, dven_cotizacion])
+}
+
+model vnt_flete {
+  fle_codigo                    Int
+  fle_cliente                   Int
+  fle_puerto_destino            Int
+  fle_flete_terreste_origen     Decimal  @db.Decimal(10, 2)
+  fle_dias_terrestre_origen     Int
+  fle_seguro_mercancia          Decimal  @db.Decimal(10, 2)
+  fle_aduana_origen             Decimal  @db.Decimal(10, 2)
+  fle_dias_despacho_exportacion Int
+  fle_flete_maritimo            Decimal  @db.Decimal(10, 2)
+  fle_dias_maritimo             Int
+  fle_flete_terreste_destino    Decimal  @db.Decimal(10, 2)
+  fle_dias_terrestre_destino    Int
+  fle_broker                    Decimal  @db.Decimal(10, 2)
+  fle_fecha_registro            DateTime @db.DateTime(0)
+  fle_situacion                 Int
+
+  @@id([fle_codigo, fle_cliente])
+}
+
+model vnt_periodo_fiscal {
+  per_codigo      Int    @id
+  per_descripcion String @db.VarChar(150)
+  per_anio        Int
+  per_activo      Int
+  per_situacion   Int
+}
+
+model vnt_status {
+  sta_codigo    Int    @id
+  sta_posicion  Int
+  sta_nombre    String @db.VarChar(250)
+  sta_color     String @db.VarChar(7)
+  sta_situacion Int
+}
+
+model shp_customer {
+  cli_codigo       Int    @id @default(autoincrement())
+  cli_nombre       String @db.VarChar(150)
+  cli_abreviacion  String @db.VarChar(150)
+  cli_razon_social String @db.VarChar(150)
+
+  cli_duns                    String    @db.VarChar(150)
+  cli_ein                     String    @db.VarChar(150)
+  cli_monto_credito_asegurado String    @db.VarChar(150)
+  cli_credito_autorizado      String    @db.VarChar(150)
+  cli_terms_credito           String    @db.VarChar(150)
+  cli_fecha_registro          DateTime? @db.DateTime(0)
+
+  cli_usuario   String?
+  cli_password  String? @db.VarChar(150)
+  cli_situacion Int
+
+  cli_inicio_sesion DateTime?     @db.DateTime(0)
+  cus_address       cus_address[]
+  cus_contact       cus_contact[]
+  shp_order         shp_order[]
+}
+
+model cus_address {
+  add_codigo    Int    @id @default(autoincrement())
+  add_cliente   Int
+  add_tipo      Int
+  add_calle     String @db.VarChar(150)
+  add_calle_2   String @db.VarChar(150)
+  add_ciudad    String
+  add_estado    Int
+  add_pais      Int
+  add_zipcode   String @db.VarChar(150)
+  add_situacion Int
+  add_defecto   Int    @default(0)
+
+  cliente shp_customer     @relation(fields: [add_cliente], references: [cli_codigo])
+  pais    sis_pais         @relation(fields: [add_pais], references: [pai_codigo])
+  estado  sis_estado       @relation(fields: [add_estado], references: [est_codigo])
+  tipo    cus_address_type @relation(fields: [add_tipo], references: [cat_codigo])
+}
+
+model cus_contact {
+  con_codigo     Int     @id @default(autoincrement())
+  con_cliente    Int
+  con_nombre     String  @db.VarChar(150)
+  con_cargo      String  @db.VarChar(150)
+  con_telefono_1 String  @db.VarChar(150)
+  con_telefono_2 String? @db.VarChar(150)
+  con_email      String  @db.VarChar(150)
+  con_situacion  Int
+  con_defecto    Int     @default(0)
+
+  cliente shp_customer @relation(fields: [con_cliente], references: [cli_codigo])
+}
+
+model con_type {
+  cot_codigo      Int    @id @default(autoincrement())
+  cot_descripcion String @db.VarChar(150)
+}
+
+model cus_address_type {
+  cat_codigo      Int           @id @default(autoincrement())
+  cat_descripcion String        @db.VarChar(150)
+  cus_address     cus_address[]
+}
+
+model shp_admin {
+  adm_codigo    Int    @id @default(autoincrement())
+  adm_nombre    String @db.VarChar(150)
+  adm_usuario   String @db.VarChar(150)
+  adm_password  String @db.VarChar(150)
+  adm_tipo      Int
+  adm_situacion Int
+}
+
+model shp_cart {
+  car_codigo         Int      @id @default(autoincrement())
+  car_cliente        Int
+  car_articulo       Int
+  car_cantidad       Int
+  car_fecha_registro DateTime @db.DateTime(0)
+
+  artiulo inv_articulo @relation(fields: [car_articulo], references: [art_codigo])
+}
+
+model shp_price_penalty {
+  ppe_codigo     Int     @id @default(autoincrement())
+  ppe_percentage Decimal @db.Decimal(10, 2)
+  ppe_penalty    Decimal @db.Decimal(10, 2)
+  ppe_situacion  Int
+}
+
+model shp_order {
+  ord_codigo         Int                @id @default(autoincrement())
+  ord_cliente        Int
+  ord_fecha          DateTime           @db.DateTime(0)
+  ord_fecha_entrega  DateTime?          @db.DateTime(0)
+  ord_fecha_registro DateTime?          @db.DateTime(0)
+  ord_total          Decimal?           @db.Decimal(10, 2)
+  ord_situacion      Int
+  shp_order_detail   shp_order_detail[]
+
+  cliente shp_customer @relation(fields: [ord_cliente], references: [cli_codigo])
+}
+
+model shp_order_detail {
+  ord_codigo          Int     @id @default(autoincrement())
+  shp_order_codigo    Int
+  ord_articulo_codigo Int
+  ord_cantidad        Int
+  ord_precio          Decimal @db.Decimal(10, 2)
+  ord_total           Decimal @db.Decimal(10, 2)
+  ord_situacion       Int
+  percent_discount    Decimal @db.Decimal(10, 2)
+
+  order   shp_order    @relation(fields: [shp_order_codigo], references: [ord_codigo])
+  article inv_articulo @relation(fields: [ord_articulo_codigo], references: [art_codigo])
+}

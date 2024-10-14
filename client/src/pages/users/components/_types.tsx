@@ -1,11 +1,6 @@
-export interface AccountantsSectionProps {
-    companyId: string
+export interface BasicTableProps {
+    row: number
     refresh?: boolean,
     onAssign?: Function
 }
 
-export interface CompanySectionProps {
-    userId: string
-    refresh?: boolean,
-    onAssign?: Function
-}

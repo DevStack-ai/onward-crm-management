@@ -114,9 +114,9 @@ model cli_documentos {
   doc_nombre         String   @db.VarChar(150)
   doc_listado        Int
   doc_tipo           String   @db.VarChar(100)
-  doc_archivo        String?  @db.Text
+  doc_archivo        String?  @db.MediumText
   doc_extension      String?  @db.VarChar(150)
-  doc_obs            String   @db.Text
+  doc_obs            String   @db.MediumText
   doc_fecha_registro DateTime @db.DateTime(0)
   doc_usuario        Int
 
@@ -137,7 +137,7 @@ model cli_documentos_lista {
 model cli_gestion_riesgo {
   ges_cliente          Int
   ges_pregunta         Int
-  ges_respuesta        String   @db.Text
+  ges_respuesta        String   @db.MediumText
   ges_fecha_registro   DateTime @db.DateTime(0)
   ges_usuario_registro BigInt
 
@@ -147,7 +147,7 @@ model cli_gestion_riesgo {
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model cli_gestion_riesgo_preguntas {
   pre_codigo    Int
-  pre_pregunta  String @db.Text
+  pre_pregunta  String @db.MediumText
   pre_situacion Int
 
   @@ignore
@@ -209,8 +209,8 @@ model cli_seguro {
   seg_aseguradora         String   @db.VarChar(100)
   seg_plan                String   @db.VarChar(150)
   seg_asegurado_principal String   @db.VarChar(150)
-  seg_instrucciones       String   @db.Text
-  seg_comentarios         String   @db.Text
+  seg_instrucciones       String   @db.MediumText
+  seg_comentarios         String   @db.MediumText
   seg_fecha_inicio        DateTime @db.Date
   seg_fecha_fin           DateTime @db.Date
   seg_fecha_registro      DateTime @db.DateTime(0)
@@ -260,13 +260,13 @@ model com_compras {
   com_cotizacion Int
   com_articulo   Int
   com_proveedor  Int
-  com_centavos   Int
+  com_precio     Decimal  @db.Decimal(10, 2)
   com_dias       Int
   com_usuario    Int
   com_fecha_hora DateTime @default(now()) @db.DateTime(0)
   com_situacion  Int      @db.TinyInt
 
-  @@id([com_cotizacion, com_articulo, com_proveedor])
+  @@id([com_cotizacion, com_articulo])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -394,7 +394,7 @@ model env_contenedor {
   con_cliente           Int
   con_naviera           String    @db.VarChar(250)
   con_status            Int
-  con_observaciones     String    @db.Text
+  con_observaciones     String    @db.MediumText
   con_fecha_registro    DateTime  @db.DateTime(0)
   con_usuario_registro  BigInt
   con_situacion         Int
@@ -425,7 +425,7 @@ model env_documento {
   doc_codigo           Int
   doc_contenedor       Int
   doc_carpeta          Int
-  doc_observaciones    String   @db.Text
+  doc_observaciones    String   @db.MediumText
   doc_archivo          String   @db.VarChar(250)
   doc_extension        String   @db.VarChar(10)
   doc_descripcion      String   @db.VarChar(250)
@@ -636,7 +636,7 @@ model fin_poliza {
   pol_codigo           Int      @id
   pol_documento        String   @db.VarChar(150)
   pol_empresa          Int
-  pol_descripcion      String   @db.Text
+  pol_descripcion      String   @db.MediumText
   pol_fecha_contable   DateTime @db.Date
   pol_fecha_registro   DateTime @db.DateTime(0)
   pol_usuario_registro Int
@@ -652,7 +652,7 @@ model fin_poliza_detalle {
   dpol_partida    Int
   dpol_reglon     Int
   dpol_subreglon  Int
-  dpol_motivo     String  @db.Text
+  dpol_motivo     String  @db.MediumText
   dpol_movimiento String  @db.VarChar(1)
   dpol_monto      Decimal @db.Decimal(10, 2)
   dpol_moneda     Int
@@ -675,9 +675,12 @@ model fin_proveedor {
   prov_mail                String    @db.VarChar(50)
   prov_dias_credito        Int
   prov_limite_credito      Decimal   @db.Decimal(10, 2)
-  prov_actividad_comercial String    @db.MediumText
+  prov_actividad_comercial String    @db.LongText
   prov_contacto            String    @db.VarChar(100)
   prov_contacto_telefono   String    @db.VarChar(50)
+  prov_plazo_entrega       String    @db.VarChar(150)
+  prov_condicion_pago      String    @db.VarChar(150)
+  prov_via_pago            String    @db.VarChar(150)
   prov_fecha_constitucion  DateTime  @db.Date
   prov_logo                String    @db.VarChar(150)
   prov_fecha_registro      DateTime? @db.DateTime(0)
@@ -867,7 +870,7 @@ model inv_lote {
 model inv_marca {
   mar_codigo         Int      @id
   mar_nombre         String   @db.VarChar(250)
-  mar_descripcion    String   @db.Text
+  mar_descripcion    String   @db.MediumText
   mar_logo           String   @db.VarChar(250)
   mar_posicion       Int
   mar_usuario_update BigInt
@@ -905,7 +908,7 @@ model mast_empresa {
   emp_mail                String    @db.VarChar(50)
   emp_gerente             String    @db.VarChar(250)
   emp_regimen             String    @db.VarChar(250)
-  emp_actividad_comercial String    @db.MediumText
+  emp_actividad_comercial String    @db.LongText
   emp_representante       String    @db.VarChar(250)
   emp_nombramiento        String    @db.VarChar(250)
   emp_fecha_constitucion  DateTime  @db.Date
@@ -1002,7 +1005,7 @@ model seg_permisos {
 model seg_rol {
   rol_id        Int    @id
   rol_nombre    String @db.VarChar(150)
-  rol_desc      String @db.Text
+  rol_desc      String @db.MediumText
   rol_situacion Int
 }
 
@@ -1222,7 +1225,7 @@ model ven_credito {
   cred_fecha          DateTime @db.Date
   cred_fecha_registro DateTime @db.DateTime(0)
   cred_usuario        Int
-  cred_observaciones  String   @db.Text
+  cred_observaciones  String   @db.MediumText
   cred_situacion      Int
 
   @@index([cred_codigo], map: "cred_codigo")
@@ -1283,7 +1286,7 @@ model ven_pago {
   pag_fecha          DateTime @db.Date
   pag_fecha_registro DateTime @db.DateTime(0)
   pag_usuario        Int      @db.SmallInt
-  pag_observaciones  String   @db.Text
+  pag_observaciones  String   @db.MediumText
   pag_situacion      Int
 
   @@index([pag_codigo], map: "pag_codigo")
@@ -1306,7 +1309,7 @@ model ven_pago_temporal {
   pagtemp_cuenta         Int
   pagtemp_caja           Int
   pagtemp_fecha_registro DateTime @db.DateTime(0)
-  pagtemp_observaciones  String   @db.Text
+  pagtemp_observaciones  String   @db.MediumText
   pagtemp_situacion      Int
 
   @@id([pagtemp_codigo, pagtemp_usuario])

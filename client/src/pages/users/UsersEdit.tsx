@@ -9,7 +9,6 @@ import { Base64 } from "js-base64";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { checkAvailable, getUser, updateUser } from "./helpers/_requests";
-import AssignCompanySection from "./components/CompanySection";
 
 const EditDocumentWrappeer = () => {
   const navigate = useNavigate();
@@ -169,9 +168,9 @@ const EditDocumentWrappeer = () => {
 
                   </div>
                   <div className="tab-pane fade" id="companies" role="tabpanel">
-                    <AssignCompanySection
+                    {/* <AssignCompanySection
                       userId={id}
-                    />
+                    /> */}
                   </div>
                 </div>
                 <div className="text-right w-100 pt-15 d-flex justify-content-end">

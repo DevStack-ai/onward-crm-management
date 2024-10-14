@@ -1,3 +1,3 @@
-import userReducers from "./users/reducer";
+import userReducers from "./clients/reducer";
 
 export { userReducers };

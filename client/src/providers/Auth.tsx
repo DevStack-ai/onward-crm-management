@@ -57,15 +57,9 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   };
 
   function hasRequiredRole(role: number, exclusive: boolean = false) {
-    if (!currentUser) return false;
-    //check if is 1
-    if (exclusive && currentUser.auth_profile_id === 1) return false;
-    if (exclusive && currentUser.auth_profile_id < role) return true;
-
-    if (currentUser.auth_profile_id === 1) return true;
 
 
-    return currentUser?.auth_profile_id === role;
+    return true
   }
 
 
@@ -88,48 +82,9 @@ const AuthInit: FC<WithChildren> = ({ children }) => {
       try {
         if (!didRequest.current) {
           const { data } = await getUserByToken(apiToken);
-          if (data) {
-
-            const permissions = data.permissions || [];
-            console.log('Permissions', permissions)
-            if (permissions.length > 0) {
-              console.log("has permissions")
-              const previusCompany = localStorage.getItem('currentCompany') ? JSON.parse(localStorage.getItem('currentCompany') as string) : null;
-              if (previusCompany) {
-                console.log('Previous company found', previusCompany)
-
-                const companyExists = permissions.find(company => company.id === previusCompany.id);
-                console.log('Company exists', companyExists)
-
-                if (!companyExists) {
-
-                  const currentCompany = permissions[0];
-                  console.log('Setting current company', currentCompany)
-
-                  localStorage.setItem('currentCompany', JSON.stringify(currentCompany));
-                  data.currentCompany = currentCompany;
-                } else {
-
-                  data.currentCompany = previusCompany;
-                }
-
-              } else {
-                console.log('No previous company')
-
-                const currentCompany = permissions[0];
-                localStorage.setItem('currentCompany', JSON.stringify(currentCompany));
-
-                data.currentCompany = currentCompany;
-              }
-            } else {
-              console.log('No permissions found')
-              logout();
-            }
-            setCurrentUser(data);
-          }
+          setCurrentUser(data);
         }
       } catch (error) {
-        console.error(error);
         if (!didRequest.current) {
           logout();
         }

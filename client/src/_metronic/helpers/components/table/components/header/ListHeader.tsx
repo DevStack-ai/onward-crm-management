@@ -12,7 +12,7 @@ const ListHeader = ({ children, headerAddButton, toolbar }: any) => {
       <div className="card-toolbar">
         {/* <ListToolbar /> */}
         {toolbar}
-        {headerAddButton && <AddButton />}
+        {headerAddButton && <AddButton route={typeof headerAddButton === "string" ? headerAddButton : null} />}
       </div>
     </div>
   );

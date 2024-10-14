@@ -22,7 +22,7 @@ export function login(email: string, password: string, role: string = 'user') {
 
 export function simulateLogin(email: string) {
   console.log('Simulating login', email)
-  return axios.post<AuthModel>( `${API_URL}/simulate/login`, {
+  return axios.post<AuthModel>(`${API_URL}/simulate/login`, {
     email: email
   });
 }
@@ -52,7 +52,5 @@ export function requestPassword(email: string) {
 }
 
 export function getUserByToken(token: string) {
-  return axios.post<UserModel>(GET_USER_BY_ACCESSTOKEN_URL, {
-    api_token: token,
-  });
+  return axios.post<UserModel>(GET_USER_BY_ACCESSTOKEN_URL, {}, { headers: { Authorization: token } });
 }

@@ -10,7 +10,7 @@ const BackButton = () => {
   return (
     <button
       className="btn btn-secondary btn-sm me-2 mb-2 hover-elevate-down"
-      onClick={() => navigate(`/${url}/view`)}
+      onClick={() => navigate(-1)}
     >
       <KTIcon iconName="arrow-left" />
       Regresar

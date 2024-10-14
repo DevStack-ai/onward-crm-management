@@ -66,14 +66,8 @@ export function setupAxios(axios: any) {
     async (config: AxiosConfig) => {
       const auth = getAuth();
       if (auth && auth.token) {
-        const currentCompany = localStorage.getItem("currentCompany");
-        if (currentCompany) {
-          config.headers["currentCompany"] = currentCompany;
-        }
-        config.headers.Authorization = `Bearer ${auth.token}`;
+        config.headers.Authorization = `${auth.token}`;
       }
-
-
       //check if method is DELETE
       if (config.method === "delete") {
         const PromiseDelete = new Promise((resolve, reject) => {

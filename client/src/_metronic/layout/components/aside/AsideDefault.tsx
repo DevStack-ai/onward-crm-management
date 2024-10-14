@@ -14,7 +14,7 @@ import {
   ToggleComponent,
 } from "../../../assets/ts/components";
 import { useAuth } from "../../../../providers";
-import { CompanySelector } from "./CompanySelector";
+
 const AsideDefault = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -32,7 +32,6 @@ const AsideDefault = () => {
     }, 50);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
-
 
 
   return (
@@ -57,12 +56,12 @@ const AsideDefault = () => {
               <img
                 src={toAbsoluteUrl("/media/logos/default.png")}
                 alt="logo"
-                className="h-50px h-lg-50px d-none d-sm-inline app-sidebar-logo-default theme-light-show"
+                className="h-50px h-lg-100px d-none d-sm-inline app-sidebar-logo-default theme-light-show"
               />
               <img
                 src={toAbsoluteUrl("/media/logos/default-dark.png")}
                 alt="logo"
-                className="h-25px h-lg-50px d-none d-sm-inline app-sidebar-logo-default theme-dark-show"
+                className="h-25px h-lg-100px d-none d-sm-inline app-sidebar-logo-default theme-dark-show"
               />
             </div>
           </Link>
@@ -85,9 +84,6 @@ const AsideDefault = () => {
               data-kt-menu="true"
               data-kt-menu-expand="false"
             >
-
-              {!hasRequiredRole(1) && <CompanySelector />}
-
               <AsideMenuItem
                 to="/dashboard"
                 icon="element-11"
@@ -102,7 +98,7 @@ const AsideDefault = () => {
                   </span>
                 </div>
               </div>
-              {hasRequiredRole(1) && (
+              {/* {hasRequiredRole(1) && (
                 <>
                   <AsideMenuItem
                     to="/super/tenant"
@@ -125,100 +121,26 @@ const AsideDefault = () => {
                     hasBullet
                   />
                 </>
-              )}
+              )} */}
               {hasRequiredRole(1, true) && (<AsideMenuItemWithSub
                 to="/"
-                title="Administración"
-                icon="setting"
+                title="Clientes"
+                icon="user"
               >
-                <AsideMenuItem
-                  to="/company"
-                  title="Empresas"
-                  hasBullet
-                />
                 <AsideMenuItem
                   to="/users"
-                  title="Usuarios"
-                  hasBullet
-                />
-                <AsideMenuItem
-                  to="/branchs"
-                  title="Sucursales"
-                  hasBullet
-                />
-
-              </AsideMenuItemWithSub>)}
-
-              {hasRequiredRole(5, true) && (<AsideMenuItemWithSub
-                to="/purchases"
-                title="Compras"
-                icon="handcart"
-              >
-                <AsideMenuItem
-                  to="/purchases/providers"
-                  title="Proveedores"
-                  hasBullet
-                />
-                <AsideMenuItem
-                  to="/purchases/purchases"
-                  title="Compras"
-                  hasBullet
-                />
-                <AsideMenuItem
-                  to="/purchases/payments"
-                  title="Pagos"
-                  hasBullet
-                />
-                {/* <AsideMenuItem
-                  to="/purchases/history"
-                  title="Histórico de Compras"
-                  hasBullet
-                /> */}
-              </AsideMenuItemWithSub>)}
-              {hasRequiredRole(5, true) && (<AsideMenuItemWithSub
-                to="/sales"
-                title="Ventas"
-                icon="wallet"
-              >
-                <AsideMenuItem
-                  to="/sales/sales"
-                  title="Ventas"
-                  hasBullet
-                />
-                <AsideMenuItem
-                  to="/clients"
                   title="Clientes"
                   hasBullet
                 />
-              </AsideMenuItemWithSub>)}
-              {hasRequiredRole(5, true) && (<AsideMenuItemWithSub
-                to="/banks"
-                title="Bancos"
-                icon="bank"
-              >
                 <AsideMenuItem
-                  to="/banks/accounts"
-                  title="Cuentas Bancarias"
+                  to="/orders"
+                  title="Ordenes"
                   hasBullet
                 />
+
               </AsideMenuItemWithSub>)}
 
-              {hasRequiredRole(5, true) && (<AsideMenuItem
-                to="/reports"
-                title="Reportes"
-                icon="chart-line-down"
-              />)}
-              {hasRequiredRole(5, true) && (<AsideMenuItemWithSub
-                to="/accounting"
-                title="Contabilidad"
-                icon="book-open"
-              >
-                <AsideMenuItem
-                  to="/accounting/accounts"
-                  title="Cuentas"
-                  hasBullet
-                />
-              </AsideMenuItemWithSub>)}
+
 
             </div>
           </div>
@@ -250,7 +172,7 @@ const AsideDefault = () => {
                   `text-primary`,
                 )}
               >
-                {currentUser?.name?.[0]}
+                {currentUser?.adm_nombre?.[0]}
               </div>
             </div>
             <div className="d-flex flex-column align-items-start justify-content-center ms-3">
@@ -259,7 +181,7 @@ const AsideDefault = () => {
                 href="#"
                 className="text-gray-800 fs-7 fw-bold text-hover-primary"
               >
-                {currentUser?.name}
+                {currentUser?.adm_nombre}
               </a>
             </div>
           </div>
@@ -277,12 +199,12 @@ const AsideDefault = () => {
                       `text-primary`,
                     )}
                   >
-                    {currentUser?.name?.[0]}
+                    {currentUser?.adm_nombre?.[0]}
                   </div>
                 </div>
                 <div className="d-flex flex-column">
                   <div className="fw-bold d-flex align-items-center fs-5">
-                    {currentUser?.name}
+                    {currentUser?.adm_nombre}
                   </div>
                   <a
                     href="#"
@@ -294,11 +216,7 @@ const AsideDefault = () => {
               </div>
             </div>
             <div className="separator my-2"></div>
-            <div className="menu-item px-5 my-1">
-              <Link to="/profile" className="menu-link px-5">
-                Ajustes de Cuenta
-              </Link>
-            </div>
+
 
             <div className="menu-item px-5">
               <Link to="/logout" className="menu-link px-5">
