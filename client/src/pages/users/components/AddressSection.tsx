@@ -50,7 +50,8 @@ const AddressSection = (props: BasicTableProps) => {
                 })}
                 dataList={dataList}
             >
-
+                <>
+                </>
             </BasicTable>
         </div>
     )

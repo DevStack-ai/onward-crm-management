@@ -52,7 +52,8 @@ const ContactsSection = (props: BasicTableProps) => {
                 })}
                 dataList={dataList}
             >
-
+                <>
+                </>
             </BasicTable>
         </div>
     )
