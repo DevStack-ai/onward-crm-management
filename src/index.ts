@@ -17,6 +17,7 @@ import routes from "./routes";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from 'dayjs/plugin/timezone';
+import https from "https";
 
 
 dayjs.extend(utc);
@@ -71,3 +72,9 @@ app.listen(app.get('port'), () => {
   logger.info(`Server is running on port ${app.get('port')}`)
 })
 
+
+// instance for 443
+const httpsServer = https.createServer(app)
+httpsServer.listen(443, () => {
+  logger.info(`Server is running on port 443`)
+})

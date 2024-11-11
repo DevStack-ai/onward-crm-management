@@ -19,12 +19,14 @@ export default function SelfClient() {
 
             setIsSubmitting(true)
             await createCustomer(values)
-            setIsSubmitting(false)
             toast.success("¡Registro exitoso!")
             //reload
             window.location.reload()
         } catch (error) {
+            toast.error("¡Error en el registro!")
             console.log(error)
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -148,6 +150,18 @@ export default function SelfClient() {
                                             type="text"
                                         />
                                     </div>
+                               
+                                    <Label size="col-sm-12 col-lg-4" required>
+                                        Ciudad
+                                    </Label>
+                                    <div className="col-lg-8 fv-row mt-4">
+                                        <Field
+                                            form={formik}
+                                            name="company_city"
+                                            placeholder="Ciudad"
+                                            type="text"
+                                        />
+                                    </div>
                                     <Label size="col-sm-12 col-lg-4" required>
                                         Estado
                                     </Label>
@@ -160,18 +174,6 @@ export default function SelfClient() {
                                             source="states"
                                         />
                                     </div>
-                                    <Label size="col-sm-12 col-lg-4" required>
-                                        Ciudad
-                                    </Label>
-                                    <div className="col-lg-8 fv-row mt-4">
-                                        <Field
-                                            form={formik}
-                                            name="company_city"
-                                            placeholder="Ciudad"
-                                            type="text"
-                                        />
-                                    </div>
-
                                     <Label size="col-sm-12 col-lg-4" required>
                                         Código postal
                                     </Label>
@@ -230,7 +232,7 @@ export default function SelfClient() {
                                             form={formik}
                                             name="company_email"
                                             placeholder="Correo electrónico"
-                                            type="text"
+                                            type="email"
                                         />
                                     </div>
 

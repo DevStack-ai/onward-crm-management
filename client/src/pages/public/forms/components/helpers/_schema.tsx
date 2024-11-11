@@ -38,7 +38,7 @@ export const SelfClientSchema = yup.object().shape({
     company_zip: yup.string().required('Este campo es requerido'),
 
     company_contact: yup.string().required('Este campo es requerido'),
-    company_email: yup.string().required('Este campo es requerido'),
+    company_email: yup.string().email("Debe ser un email valido").required('Este campo es requerido'),
     company_phone: yup.string().required('Este campo es requerido'),
     company_job: yup.string().required('Este campo es requerido'),
 });

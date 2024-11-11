@@ -52,7 +52,7 @@ export class CustomerController {
         ])
 
 
- 
+
 
         res.status(200)
         res.json({
@@ -68,7 +68,7 @@ export class CustomerController {
 
         const codigo = Number(req.params.id);
 
-        console.log({payload})
+        console.log({ payload })
         const username = payload.usermame
         const password = payload.password
 
@@ -128,93 +128,101 @@ export class CustomerController {
 
     create = async (req: Request, res: Response) => {
 
-
-        const payload = req.body;
-
-        const company_name = payload.company_name;
-
-        const company_billing_address_1 = payload.company_billing_address_1;
-        const company_billing_address_2 = payload.company_billing_address_2;
-        const company_billing_city = payload.company_billing_city;
-        const company_billing_state = payload.company_billing_state;
-        const company_billing_zip = payload.company_billing_zip;
-
-        const company_delivery_address_1 = payload.company_delivery_address_1;
-        const company_delivery_address_2 = payload.company_delivery_address_2;
-        const company_city = payload.company_city;
-        const company_state = payload.company_state;
-        const company_zip = payload.company_zip;
-
-        const company_contact = payload.company_contact;
-        const company_email = payload.company_email;
-        const company_phone = payload.company_phone;
-        const company_job = payload.company_job;
+        try {
 
 
-        const customer = await this.prisma.shp_customer.create({
-            data: {
-                cli_nombre: company_name,
-                cli_abreviacion: "",
-                cli_razon_social: "",
-                cli_duns: "",
-                cli_ein: "",
 
-                cli_monto_credito_asegurado: '',
-                cli_credito_autorizado: '',
-                cli_terms_credito: '',
-                cli_fecha_registro: new Date(),
-                cli_situacion: 1
-            }
-        })
+            const payload = req.body;
 
-        await this.prisma.cus_address.create({
-            data: {
-                add_cliente: customer.cli_codigo,
-                add_tipo: 1,
-                add_calle: company_delivery_address_1,
-                add_calle_2: company_delivery_address_2,
-                add_ciudad: company_city,
-                add_estado: Number(company_state),
-                add_pais: 0,
-                add_zipcode: company_zip,
-                add_situacion: 1,
-                add_defecto: 1
-            }
-        })
+            const company_name = payload.company_name;
 
-        await this.prisma.cus_address.create({
-            data: {
-                add_cliente: customer.cli_codigo,
-                add_tipo: 2,
-                add_calle: company_billing_address_1,
-                add_calle_2: company_billing_address_2,
-                add_ciudad: company_billing_city,
-                add_estado: Number(company_billing_state),
-                add_pais: 0,
-                add_zipcode: company_billing_zip,
-                add_situacion: 1,
-                add_defecto: 1
-            }
-        })
+            const company_billing_address_1 = payload.company_billing_address_1;
+            const company_billing_address_2 = payload.company_billing_address_2;
+            const company_billing_city = payload.company_billing_city;
+            const company_billing_state = payload.company_billing_state;
+            const company_billing_zip = payload.company_billing_zip;
 
-        await this.prisma.cus_contact.create({
-            data: {
-                con_cargo: company_job,
-                con_cliente: customer.cli_codigo,
-                con_nombre: company_contact,
-                con_email: company_email,
-                con_telefono_1: company_phone,
-                con_situacion: 1,
-                con_defecto: 1
-            }
-        })
+            const company_delivery_address_1 = payload.company_delivery_address_1;
+            const company_delivery_address_2 = payload.company_delivery_address_2;
+            const company_city = payload.company_city;
+            const company_state = payload.company_state;
+            const company_zip = payload.company_zip;
 
-        res.status(201).json({
-            message: "Cliente creado exitosamente",
-            customer: customer.cli_codigo
-        })
+            const company_contact = payload.company_contact;
+            const company_email = payload.company_email;
+            const company_phone = payload.company_phone;
+            const company_job = payload.company_job;
 
 
+            const customer = await this.prisma.shp_customer.create({
+                data: {
+                    cli_nombre: company_name,
+                    cli_abreviacion: "",
+                    cli_razon_social: "",
+                    cli_duns: "",
+                    cli_ein: "",
+
+                    cli_monto_credito_asegurado: '',
+                    cli_credito_autorizado: '',
+                    cli_terms_credito: '',
+                    cli_fecha_registro: new Date(),
+                    cli_situacion: 1
+                }
+            })
+
+
+            await this.prisma.cus_address.create({
+                data: {
+                    add_cliente: customer.cli_codigo,
+                    add_tipo: 1,
+                    add_calle: company_delivery_address_1,
+                    add_calle_2: company_delivery_address_2,
+                    add_ciudad: company_city,
+                    add_estado: Number(company_state),
+                    add_pais: 0,
+                    add_zipcode: company_zip,
+                    add_situacion: 1,
+                    add_defecto: 1
+                }
+            })
+
+
+            await this.prisma.cus_address.create({
+                data: {
+                    add_cliente: customer.cli_codigo,
+                    add_tipo: 2,
+                    add_calle: company_billing_address_1,
+                    add_calle_2: company_billing_address_2,
+                    add_ciudad: company_billing_city,
+                    add_estado: Number(company_billing_state),
+                    add_pais: 0,
+                    add_zipcode: company_billing_zip,
+                    add_situacion: 1,
+                    add_defecto: 1
+                }
+            })
+
+            await this.prisma.cus_contact.create({
+                data: {
+                    con_cargo: company_job,
+                    con_cliente: customer.cli_codigo,
+                    con_nombre: company_contact,
+                    con_email: company_email,
+                    con_telefono_1: company_phone,
+                    con_situacion: 1,
+                    con_defecto: 1
+                }
+            })
+
+            res.status(201).json({
+                message: "Cliente creado exitosamente",
+                customer: customer.cli_codigo
+            })
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Error al crear cliente" });
+        }
     }
 
 
