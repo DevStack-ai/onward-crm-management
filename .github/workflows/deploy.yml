@@ -8,25 +8,81 @@ on:
     branches: [ "development" ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  setup:
+    runs-on: self-hosted
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
-        
+        steps:
+          - name: Checkout código
+            uses: actions/checkout@v3
+          - name: Configurar Node 18
+            uses: actions/setup-node@v3
+            with:
+              node-version: 18
+
+  install-api:
+    needs: setup
+    runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm i
-    - run: npm run build
-    - run: cd ./client
-    - run: npm i
-    - run: npm run build
-    - run: ..
-    - run: pm2 restart onward
+      - name: Install dependencies
+        run: npm install
+
+  set-env-api:
+    needs: install-api
+    runs-on: self-hosted
+    steps:
+      - name: Generate for API .env
+        run: |
+          touch .env
+          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+          cat .env
+
+  build-api:
+    needs: set-env-api
+    runs-on: self-hosted
+    steps:
+      - name: Generate Prisma client (if applicable)
+        run: npm run db:generate
+      - name: Build API
+        run: npm run build
+      - name: Delete api if process existing
+        run: pm2 delete onward
+        continue-on-error: true
+
+  install-client:
+    needs: setup
+    runs-on: self-hosted
+    steps:
+      - run: cd client
+      - name: Install dependencies
+        run: npm install
+
+  set-env-client:
+    needs:  install-client
+    runs-on: self-hosted
+    steps:
+      - name: Generate for API .env
+        run: |
+          touch .env
+          echo VITE_API_URL=${{ secrets.SECRET_KEY }} >> .env
+          cat .env
+          
+  build-client:
+    needs: set-env-client
+    runs-on: self-hosted
+    steps:
+      - name: Build client
+        run: npm run build
+  
+  serve:
+    needs: [ build-api, build-client ]
+    runs-on: self-hosted
+    steps:
+      - run: cd ..
+      - name: Start API
+        run: pm2 start dist/src/index.js --name "onward"
+
+  
