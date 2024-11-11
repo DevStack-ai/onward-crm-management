@@ -21,7 +21,11 @@ export default function SelfClient() {
             await createCustomer(values)
             toast.success("¡Registro exitoso!")
             //reload
-            window.location.reload()
+
+            setTimeout(() => {
+                window.location.reload()
+            }, 2000)
+
         } catch (error) {
             toast.error("¡Error en el registro!")
             console.log(error)
