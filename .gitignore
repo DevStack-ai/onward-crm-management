@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 .env
 *.env.development
+build
+client/build
+client/dist
