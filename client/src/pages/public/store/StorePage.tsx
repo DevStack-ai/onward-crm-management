@@ -22,7 +22,7 @@ const Wrapper = (props: WrapperProps) => {
         <>
             <section style={{ overflowY: "scroll" }} >
                 <Header refresh={props.refresh} />
-                <div className="container-fluid px-10 mt-10">
+                <div className="container-fluid h-100 px-10 mt-10">
                     <Outlet />
                 </div>
             </section>

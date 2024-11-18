@@ -27,11 +27,10 @@ export const initialValues = {
     auth_profile_id: "",
     password: "",
     confirm_password: "",
-
 }
 
 export const ApproveUserSchema = yup.object().shape({
-    usermame: yup.string().min(3, "Longitud minima 3 digitos").required("Campo obligatorio"),
+    usermame: yup.string().matches(/^[a-zA-Z0-9_]*$/, 'No se permiten espacios').min(3, "Longitud minima 3 digitos").required("Campo obligatorio"),
     password: yup.string().required("Campo obligatorio"),
     confirm_password: yup.string()
         .required("Campo obligatorio")

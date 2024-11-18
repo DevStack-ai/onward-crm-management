@@ -23,20 +23,22 @@ const ApproveUser = () => {
         //check email
         try {
 
-            console.log(values)
             const ApproveValues = {
                 usermame: values.usermame,
                 password: Base64.encode(values.password),
                 customer: Number(id)
             };
-            await toast.promise(approveUser(Number(id), ApproveValues), {
-                pending: "Aprobando usuario...",
-                success: "Usuario aprobado exitosamente",
-                error: "Error al aprobar usuario"
-            });
+           
+            toast.loading("Aprobando usuario...");
+            await approveUser(Number(id), ApproveValues)
+            toast.dismiss();
+            toast.success("Usuario aprobado exitosamente");
+
             navigate(-1);
-        } catch (error) {
+        } catch (error: any) {
+            const message = error?.response?.data?.message || "Error al aprobar usuario";
             console.log(error);
+            toast.error(message);
         }
     }
 
@@ -49,8 +51,8 @@ const ApproveUser = () => {
             {(formik) => {
                 return (
                     <Form placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        {import.meta.env.MODE === "development" && (JSON.stringify(formik.values))}
-                        {import.meta.env.MODE === "development" && (JSON.stringify(formik.errors))}
+                        {/* {import.meta.env.MODE === "development" && (JSON.stringify(formik.values))}
+                        {import.meta.env.MODE === "development" && (JSON.stringify(formik.errors))} */}
                         <div className="px-10 pt-lg-10">
                             <form onSubmit={formik.handleSubmit}>
                                 <div className="row mb-6 ms-0 px-0">

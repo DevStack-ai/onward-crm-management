@@ -7,9 +7,9 @@ import { toast } from 'react-toastify';
 import { addCart, getCartCount, getProducts } from './helpers/_requests';
 import { useAuth } from '../../../providers';
 import Loading from './components/Loading';
-import Header from './components/Header';
 import { Category, Product } from './helpers/_types';
 import ProductItem from './components/Product';
+import { KTIcon } from 'metronic/helpers';
 // const instance = axios.create({
 //     baseURL: "https://ilusion-server.vercel.app"
 // })
@@ -23,13 +23,13 @@ interface StoreProps {
 
 
 function Store(props: StoreProps) {
-    const { currentUser } = useAuth()
+    const { currentUser, logout } = useAuth()
 
     const [filter, setFilter] = useState("")
     const [debouncedInputValue, setDebouncedInputValue] = useState("");
 
     const [products, setProducts] = useState<Product[]>([])
-    const [categories, setCategories] = useState<Category[]>([])
+    // const [categories, setCategories] = useState<Category[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
     const [count, setCount] = useState(0)
@@ -51,7 +51,7 @@ function Store(props: StoreProps) {
         const query = await getProducts(filter)
         const datalist = query.data as Product[]
 
-        setCategories([])
+        // setCategories([])
         setCount(datalist.length)
         setProducts(datalist)
         setIsLoading(false)
@@ -67,6 +67,8 @@ function Store(props: StoreProps) {
     }, [props.refresh])
 
     async function onAddCart(product: Product) {
+
+
         try {
 
             toast.loading("Agregando al carrito")
@@ -85,37 +87,48 @@ function Store(props: StoreProps) {
     return (
         <>
             <div className="shop-sidebar-btn btn"><span>Filtros</span></div>
-            <div className="row ">
-                <div className="col-12 col-lg-2 shop-sidebar ">
-                    <ul className="widgets wigets-shop p-2">
-                        <div className='card p-2'>
-                            <li className="widget wiget-price">
-                                <h5 className="title">Filtros</h5>
-                                <div id="slider-range"></div>
-                                <input
-                                    className='form-control form-control-solid'
-                                    style={{ width: "250px" }}
-                                    type="text" id="amount-min" placeholder='Buscar producto' onChange={(ev) => handleInputChange(ev)} />
+            <div className="row" style={{ height: "90vh" }}>
+                <div className="col-12 col-lg-2  ">
+                    <div className='d-flex flex-column justify-content-between' style={{ height: "90vh" }}>
 
-                            </li>
-                            <li className="widget wiget-shop-category my-5">
+                        <ul className="widgets wigets-shop p-2 ">
+                            <div className='card p-2 mb-2'>
+                                <li className="widget wiget-price">
+                                    <h5 className="title">Filtros</h5>
+                                    <div id="slider-range"></div>
+                                    <input
+                                        className='form-control form-control-solid'
+                                        style={{ width: "250px" }}
+                                        type="text" id="amount-min" placeholder='Buscar producto' onChange={(ev) => handleInputChange(ev)} />
+
+                                </li>
+                                {/* <li className="widget wiget-shop-category my-5">
                                 <h5 className="title">Categorias</h5>
                                 <ul>
                                     {categories.map(cat => (
                                         <li key={cat._id}><p><input type="checkbox" className='form-check-input' name={cat._id} /><span>{cat.name}</span></p></li>
                                     ))}
                                 </ul>
-                            </li>
+                            </li> */}
+                            </div>
+                        </ul>
+                        <div>
+                            <div className='d-flex align-items-center pointer' onClick={logout}>
+                                <KTIcon iconName='arrow-left' className='h6' style={{ fontSize: "20px" }} />
+                                <h2 className='mx-4'>
+                                    Cerrar sesion
+                                </h2>
+                            </div>
                         </div>
+                    </div>
 
-                    </ul>
                 </div>
 
                 <div className="col-12 col-lg-8 shop-cover">
                     {isLoading ? <Loading /> : products.length === 0 ? <h1>No hay productos</h1> : <></>}
-                    {products.length && <>
+                    {!!products.length && <>
                         <h2 className="title">Resultados</h2>
-                        <div className="shop-sort-cover">
+                        <div className="shop-sort-cover mb-4">
                             <div className="sort-left">{count} productos encontrados</div>
                             <div className="sort-right">
                                 <span className="sort-name">Ordenar:</span>
@@ -125,6 +138,11 @@ function Store(props: StoreProps) {
                                     <option>Fecha de salida</option>
                                 </select>
                             </div>
+
+
+
+
+
                         </div>
                         <div className="row" style={{ overflowY: "scroll", maxHeight: "80vh" }}>
                             {products.map((product, idx) => (

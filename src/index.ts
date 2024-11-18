@@ -56,7 +56,7 @@ app.use(express.static('client/dist', { maxAge: 0 }))
 //seend index.html for all other requests
 app.get('*', (_req, res) => {
   // check if request is to api
-  if (_req.url.startsWith('/api')) {
+  if (_req.url.includes('/api')) {
     return res.status(404).json({ message: `Method not found ${_req.path}` })
   }
 

@@ -66,7 +66,7 @@ const columns = (state, actions): ReadonlyArray<Column<Object>> => [
               Acciones
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item
+              {/* <Dropdown.Item
                 as={Link}
                 to={`/orders/edit/${row.original.ord_codigo}`}
               >
@@ -74,10 +74,10 @@ const columns = (state, actions): ReadonlyArray<Column<Object>> => [
               </Dropdown.Item>
               <Dropdown.Item
                 as={Link}
-                to={`/orders/details/${row.original.cli_codigo}`}
+                to={`/orders/details/${row.original.ord_codigo}`}
               >
                 Detalles
-              </Dropdown.Item>
+              </Dropdown.Item> */}
               {actions.onApprove && <Dropdown.Item
                 onClick={async () => {
                   if (actions.onApprove) actions.onApprove(row.original.ord_codigo);

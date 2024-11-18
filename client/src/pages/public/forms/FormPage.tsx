@@ -34,13 +34,12 @@ const FormLayout = () => {
         }}
       >
         <div className="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
-          <a href="../../demo42/dist/index.html" className="mb-0 mb-lg-12">
-            <img
-              alt="Logo"
-              src={toAbsoluteUrl("/media/logos/default-dark.png")}
-              className="h-60px h-lg-750px"
-            />
-          </a>
+
+          <img
+            alt="Logo"
+            src={toAbsoluteUrl("/media/logos/default-dark.png")}
+            className="h-60px h-lg-750px"
+          />
         </div>
       </div>
     </div>

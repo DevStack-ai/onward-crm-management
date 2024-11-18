@@ -130,12 +130,12 @@ const DetailsWrapper = () => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item
+                {!documentData.cli_usuario && <Dropdown.Item
                   as={Link}
                   to={`/users/details/${id}/approve`}
                 >
                   Aprobar
-                </Dropdown.Item>
+                </Dropdown.Item>}
 
               </Dropdown.Menu>
             </Dropdown>

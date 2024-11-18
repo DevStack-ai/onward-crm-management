@@ -9,14 +9,14 @@ import { getUserByToken, simulateLogin } from "../../../providers/_requests";
 import { toast } from "react-toastify";
 
 
-export function getTag(situacion: number){
-  if(situacion === 2){
+export function getTag(situacion: number) {
+  if (situacion === 2) {
     return ["Activo", "success"];
   }
-  if(situacion === 1){
+  if (situacion === 1) {
     return ["Pendiente", "warning"];
   }
-  if(situacion === 0){
+  if (situacion === 0) {
     return ["Inactivo", "danger"];
   }
 
@@ -38,7 +38,7 @@ const usersColumns: ReadonlyArray<Column<Object>> = [
     accessor: "cli_abreviacion",
   },
   {
-    Header:"Estado",
+    Header: "Estado",
     accessor: "cli_situacion",
     Cell: ({ value }) => {
       const [text, color] = getTag(value);
@@ -78,6 +78,13 @@ const usersColumns: ReadonlyArray<Column<Object>> = [
               >
                 Detalles
               </Dropdown.Item>
+             {!row.original.cli_usuario && <Dropdown.Item
+                as={Link}
+                to={`/users/details/${row.original.cli_codigo}/approve`}
+              >
+                Aprobar
+              </Dropdown.Item>}
+
               {/* <Dropdown.Item
                 as={Link}
                 to={`/users/edit/${row.original.id}`}

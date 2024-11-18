@@ -18,7 +18,7 @@ export default function ProductItem({ product, onAdd }: ProductProps) {
             <div className="col-12 col-sm-3 prod-item-col mb-2">
                 <div className="card p-4">
 
-                    <a href="#" className="product-img"><img src={product.img || "https://via.assets.so/img.jpg?w=100&h=100&tc=&bg=#cecece"} alt="producto" width="100px" /></a>
+                    <a href="#" className="product-img"><img src={product.img || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"} alt="producto" width="100px" /></a>
                     <div className="product-item-wrap">
                         <div className="product-item-cover pt-2">
                             <div className="price-cover">

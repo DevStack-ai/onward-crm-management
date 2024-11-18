@@ -98,33 +98,10 @@ const AsideDefault = () => {
                   </span>
                 </div>
               </div>
-              {/* {hasRequiredRole(1) && (
-                <>
-                  <AsideMenuItem
-                    to="/super/tenant"
-                    title="Tenants"
-                    icon="people"
-                  />
-                  <AsideMenuItem
-                    to="/super/plans"
-                    title="Planes"
-                    icon="cheque"
-                  />
-                  <AsideMenuItem
-                    to="/departments"
-                    title="Departamentos"
-                    hasBullet
-                  />
-                  <AsideMenuItem
-                    to="/municipalities"
-                    title="Municipios"
-                    hasBullet
-                  />
-                </>
-              )} */}
+ 
               {hasRequiredRole(1, true) && (<AsideMenuItemWithSub
-                to="/"
-                title="Clientes"
+                to="/users"
+                title="Tienda"
                 icon="user"
               >
                 <AsideMenuItem
@@ -135,6 +112,18 @@ const AsideDefault = () => {
                 <AsideMenuItem
                   to="/orders"
                   title="Ordenes"
+                  hasBullet
+                />
+
+              </AsideMenuItemWithSub>)}
+              {hasRequiredRole(1, true) && (<AsideMenuItemWithSub
+                to="/products"
+                title="Inventario"
+                icon="lots-shopping"
+              >
+                <AsideMenuItem
+                  to="/products"
+                  title="Productos"
                   hasBullet
                 />
 

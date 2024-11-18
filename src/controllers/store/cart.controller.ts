@@ -167,10 +167,12 @@ export class CartController {
         //check that the total of pallets is less than 20
         const totalPallets = currentCart.reduce((acc, item) => {
             const product = item.artiulo
-            return acc + (Number(product.art_palet_caja) * item.car_cantidad)
+            return acc + Math.ceil(item.car_cantidad / Number(product.art_palet_caja))
         }, 0)
 
-        if (totalPallets + (Number(product.art_palet_caja) * cantidad) > contenedor.tip_palets) {
+        const newPallets = Math.ceil(cantidad / Number(product.art_palet_caja))
+        console.log(totalPallets)
+        if ((totalPallets + newPallets) > contenedor.tip_palets) {
             res.status(400)
             res.json({ message: "El carrito excede el limite de 20 palets" })
             return

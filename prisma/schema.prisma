@@ -27,14 +27,15 @@ model sis_estado {
 }
 
 model sis_pais {
-  pai_codigo    Int           @id
-  pai_nombre    String        @db.VarChar(250)
+  pai_codigo    Int            @id
+  pai_nombre    String         @db.VarChar(250)
   pai_situacion Int
   cus_address   cus_address[]
+  inv_articulo  inv_articulo[]
 }
 
 model inv_articulo {
-  art_codigo                Int                @id
+  art_codigo                Int                @id @default(autoincrement())
   art_codigo_interno        String             @db.VarChar(15)
   art_pais                  Int
   art_barcode               String             @db.VarChar(100)
@@ -71,11 +72,17 @@ model inv_articulo {
   art_hts                   Int
   art_fda_producto          Int
   art_observaciones         String             @db.Text
-  art_usuario_update        BigInt
-  art_fecha_update          DateTime           @db.DateTime(0)
+  art_usuario_update        BigInt?
+  art_fecha_update          DateTime?          @db.DateTime(0)
   art_situacion             Int
   shp_cart                  shp_cart[]
   shp_order_detail          shp_order_detail[]
+
+  inv_categoria inv_categoria? @relation(fields: [art_categoria], references: [cat_codigo])
+  inv_proveedor fin_proveedor? @relation(fields: [art_proveedor], references: [prov_codigo])
+  inv_marca     inv_marca?     @relation(fields: [art_marca], references: [mar_codigo])
+  inv_pais      sis_pais       @relation(fields: [art_pais], references: [pai_codigo])
+  inv_moneda    sis_moneda     @relation(fields: [art_moneda], references: [mon_codigo])
 }
 
 model inv_articulo_imagen {
@@ -91,59 +98,61 @@ model inv_articulo_imagen {
 }
 
 model shp_customer {
-  cli_codigo       Int    @id @default(autoincrement())
-  cli_nombre       String @db.VarChar(150)
-  cli_abreviacion  String @db.VarChar(150)
-  cli_razon_social String @db.VarChar(150)
-
-  cli_duns                    String    @db.VarChar(150)
-  cli_ein                     String    @db.VarChar(150)
-  cli_monto_credito_asegurado String    @db.VarChar(150)
-  cli_credito_autorizado      String    @db.VarChar(150)
-  cli_terms_credito           String    @db.VarChar(150)
-  cli_fecha_registro          DateTime? @db.DateTime(0)
-
-  cli_usuario   String?
-  cli_password  String? @db.VarChar(150)
-  cli_situacion Int
-
-  cli_inicio_sesion DateTime?     @db.DateTime(0)
-  cus_address       cus_address[]
-  cus_contact       cus_contact[]
-  shp_order         shp_order[]
+  cli_codigo                  Int           @id @default(autoincrement())
+  cli_nombre                  String        @db.VarChar(150)
+  cli_abreviacion             String        @db.VarChar(150)
+  cli_razon_social            String        @db.VarChar(150)
+  cli_duns                    String        @db.VarChar(150)
+  cli_ein                     String        @db.VarChar(150)
+  cli_monto_credito_asegurado String        @db.VarChar(150)
+  cli_credito_autorizado      String        @db.VarChar(150)
+  cli_terms_credito           String        @db.VarChar(150)
+  cli_fecha_registro          DateTime?     @db.DateTime(0)
+  cli_usuario                 String?
+  cli_password                String?       @db.VarChar(150)
+  cli_situacion               Int
+  cli_inicio_sesion           DateTime?     @db.DateTime(0)
+  cus_address                 cus_address[]
+  cus_contact                 cus_contact[]
+  shp_order                   shp_order[]
 }
 
 model cus_address {
-  add_codigo    Int    @id @default(autoincrement())
+  add_codigo    Int              @id @default(autoincrement())
   add_cliente   Int
   add_tipo      Int
-  add_calle     String @db.VarChar(150)
-  add_calle_2   String @db.VarChar(150)
+  add_calle     String           @db.VarChar(150)
+  add_calle_2   String           @db.VarChar(150)
   add_ciudad    String
   add_estado    Int
   add_pais      Int
-  add_zipcode   String @db.VarChar(150)
+  add_zipcode   String           @db.VarChar(150)
   add_situacion Int
-  add_defecto   Int    @default(0)
+  add_defecto   Int              @default(0)
+  cliente       shp_customer     @relation(fields: [add_cliente], references: [cli_codigo])
+  estado        sis_estado       @relation(fields: [add_estado], references: [est_codigo])
+  pais          sis_pais         @relation(fields: [add_pais], references: [pai_codigo])
+  tipo          cus_address_type @relation(fields: [add_tipo], references: [cat_codigo])
 
-  cliente shp_customer     @relation(fields: [add_cliente], references: [cli_codigo])
-  pais    sis_pais         @relation(fields: [add_pais], references: [pai_codigo])
-  estado  sis_estado       @relation(fields: [add_estado], references: [est_codigo])
-  tipo    cus_address_type @relation(fields: [add_tipo], references: [cat_codigo])
+  @@index([add_cliente], map: "cus_address_add_cliente_fkey")
+  @@index([add_estado], map: "cus_address_add_estado_fkey")
+  @@index([add_pais], map: "cus_address_add_pais_fkey")
+  @@index([add_tipo], map: "cus_address_add_tipo_fkey")
 }
 
 model cus_contact {
-  con_codigo     Int     @id @default(autoincrement())
+  con_codigo     Int          @id @default(autoincrement())
   con_cliente    Int
-  con_nombre     String  @db.VarChar(150)
-  con_cargo      String  @db.VarChar(150)
-  con_telefono_1 String  @db.VarChar(150)
-  con_telefono_2 String? @db.VarChar(150)
-  con_email      String  @db.VarChar(150)
+  con_nombre     String       @db.VarChar(150)
+  con_cargo      String       @db.VarChar(150)
+  con_telefono_1 String       @db.VarChar(150)
+  con_telefono_2 String?      @db.VarChar(150)
+  con_email      String       @db.VarChar(150)
   con_situacion  Int
-  con_defecto    Int     @default(0)
+  con_defecto    Int          @default(0)
+  cliente        shp_customer @relation(fields: [con_cliente], references: [cli_codigo])
 
-  cliente shp_customer @relation(fields: [con_cliente], references: [cli_codigo])
+  @@index([con_cliente], map: "cus_contact_con_cliente_fkey")
 }
 
 model con_type {
@@ -167,13 +176,14 @@ model shp_admin {
 }
 
 model shp_cart {
-  car_codigo         Int      @id @default(autoincrement())
+  car_codigo         Int          @id @default(autoincrement())
   car_cliente        Int
   car_articulo       Int
   car_cantidad       Int
-  car_fecha_registro DateTime @db.DateTime(0)
+  car_fecha_registro DateTime     @db.DateTime(0)
+  artiulo            inv_articulo @relation(fields: [car_articulo], references: [art_codigo])
 
-  artiulo inv_articulo @relation(fields: [car_articulo], references: [art_codigo])
+  @@index([car_articulo], map: "shp_cart_car_articulo_fkey")
 }
 
 model shp_price_penalty {
@@ -191,21 +201,79 @@ model shp_order {
   ord_fecha_registro DateTime?          @db.DateTime(0)
   ord_total          Decimal?           @db.Decimal(10, 2)
   ord_situacion      Int
+  cliente            shp_customer       @relation(fields: [ord_cliente], references: [cli_codigo])
   shp_order_detail   shp_order_detail[]
 
-  cliente shp_customer @relation(fields: [ord_cliente], references: [cli_codigo])
+  @@index([ord_cliente], map: "shp_order_ord_cliente_fkey")
 }
 
 model shp_order_detail {
-  ord_codigo          Int     @id @default(autoincrement())
+  ord_codigo          Int          @id @default(autoincrement())
   shp_order_codigo    Int
   ord_articulo_codigo Int
   ord_cantidad        Int
-  ord_precio          Decimal @db.Decimal(10, 2)
-  ord_total           Decimal @db.Decimal(10, 2)
+  ord_precio          Decimal      @db.Decimal(10, 2)
+  ord_total           Decimal      @db.Decimal(10, 2)
   ord_situacion       Int
-  percent_discount    Decimal @db.Decimal(10, 2)
+  percent_discount    Decimal      @db.Decimal(10, 2)
+  article             inv_articulo @relation(fields: [ord_articulo_codigo], references: [art_codigo])
+  order               shp_order    @relation(fields: [shp_order_codigo], references: [ord_codigo])
 
-  order   shp_order    @relation(fields: [shp_order_codigo], references: [ord_codigo])
-  article inv_articulo @relation(fields: [ord_articulo_codigo], references: [art_codigo])
+  @@index([ord_articulo_codigo], map: "shp_order_detail_ord_articulo_codigo_fkey")
+  @@index([shp_order_codigo], map: "shp_order_detail_shp_order_codigo_fkey")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model fin_proveedor {
+  prov_codigo              Int            @id @default(autoincrement())
+  prov_nit                 String         @db.VarChar(20)
+  prov_tipo                String         @db.VarChar(1)
+  prov_nombre_comercial    String         @db.VarChar(255)
+  prov_razon_social        String         @db.VarChar(255)
+  prov_direccion_factura   String         @db.VarChar(255)
+  prov_direccion_comercial String         @db.VarChar(255)
+  prov_telefono1           String         @db.VarChar(50)
+  prov_telefono2           String         @db.VarChar(50)
+  prov_mail                String         @db.VarChar(50)
+  prov_dias_credito        Int
+  prov_limite_credito      Decimal        @db.Decimal(10, 2)
+  prov_actividad_comercial String         @db.MediumText
+  prov_contacto            String         @db.VarChar(100)
+  prov_contacto_telefono   String         @db.VarChar(50)
+  prov_fecha_constitucion  DateTime       @db.Date
+  prov_logo                String         @db.VarChar(150)
+  prov_fecha_registro      DateTime?      @db.DateTime(0)
+  prov_usuario             BigInt
+  prov_situacion           String         @db.Char(1)
+  inv_articulo             inv_articulo[]
+}
+
+model inv_categoria {
+  cat_codigo    Int            @id
+  cat_nombre    String         @db.VarChar(250)
+  cat_color     String         @db.VarChar(7)
+  cat_situacion Int
+  inv_articulo  inv_articulo[]
+}
+
+model inv_marca {
+  mar_codigo         Int            @id
+  mar_nombre         String         @db.VarChar(250)
+  mar_descripcion    String         @db.Text
+  mar_logo           String         @db.VarChar(250)
+  mar_posicion       Int
+  mar_usuario_update BigInt
+  mar_fecha_update   DateTime       @db.DateTime(0)
+  mar_situacion      Int
+  inv_articulo       inv_articulo[]
+}
+
+model sis_moneda {
+  mon_codigo      Int            @id @default(autoincrement())
+  mon_descripcion String         @db.VarChar(100)
+  mon_simbolo     String         @db.VarChar(1)
+  mon_pais        String         @db.VarChar(100)
+  mon_cambio      Decimal        @db.Decimal(10, 2)
+  mon_situacion   Int
+  inv_articulo    inv_articulo[]
 }

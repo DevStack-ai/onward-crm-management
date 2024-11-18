@@ -9,6 +9,12 @@ import products from "./product.routes";
 import cart from "./cart.routes";
 import order from "./order.routes";
 
+import category from "./category.routes";
+import brand from "./brand.routes";
+import country from "./country.routes";
+import provider from "./provider.routes";
+import currency from "./currency.routes";
+
 const router = Router();
 
 
@@ -22,6 +28,12 @@ router.use("/customers", customers)
 router.use("/states", state)
 router.use("/contacts", contacts)
 router.use("/addresses", address)
+
+router.use("/categories", category)
+router.use("/brands", brand)
+router.use("/countries", country)
+router.use("/providers", provider)
+router.use("/currencies", currency)
 
 
 

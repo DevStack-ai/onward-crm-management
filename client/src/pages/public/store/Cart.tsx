@@ -53,7 +53,10 @@ export default function Cart(props: CartProps) {
             await deleteCart(item.car_codigo)
             toast.dismiss()
             toast.success("Producto eliminado del carrito")
-            props.doRefresh()
+            setTimeout(() => {
+                window.location.reload()
+            }, 1000)
+           
         } catch (err) {
             toast.dismiss()
             toast.error("Error al eliminar del carrito")
@@ -82,7 +85,7 @@ export default function Cart(props: CartProps) {
             toast.dismiss()
             toast.success("Orden creada")
             props.doRefresh()
-            navigate("/store/orders")
+            navigate("/store")
         } catch (err) {
             toast.dismiss()
             toast.error("Error al crear orden")

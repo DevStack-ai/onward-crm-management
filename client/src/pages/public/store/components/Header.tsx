@@ -10,7 +10,7 @@ interface HeaderProps {
 }
 export default function Header(props: HeaderProps) {
 
-    const { currentUser, logout } = useAuth()
+    const { currentUser } = useAuth()
     const [count, setCount] = useState(0)
     const [cubicFeet, setCubicFeet] = useState(0)
 
@@ -78,6 +78,12 @@ export default function Header(props: HeaderProps) {
                             </div>
                         </h1>
                         <div className='px-5 d-flex gap-5'>
+                            <div className='d-flex align-items-center pointer' onClick={() => naviate("/store")}>
+                                <KTIcon iconName='store' className='h1' style={{ fontSize: "30px" }} />
+                                <h2 className='mx-4'>
+                                    Tienda
+                                </h2>
+                            </div>
                             <div className='d-flex pointer' onClick={() => naviate("/store/cart")}>
                                 {cubicFeet > 0 && <span className='badge badge-success' style={{ minWidth: "20px", height: "20px" }}>{cubicFeet.toFixed(2)} ft³</span>}
                                 <KTIcon iconName='handcart' className='h1' style={{ fontSize: "30px", }} />
@@ -86,19 +92,19 @@ export default function Header(props: HeaderProps) {
                                     Carrito
                                 </h2>
                             </div>
-                            <div className='d-flex pointer' onClick={() => naviate("/orders")}>
+                            {/* <div className='d-flex pointer' onClick={() => naviate("/store/orders")}>
                                 <KTIcon iconName='paper-clip' className='h1' style={{ fontSize: "30px", }} />
                                 <h2>
                                     Mis Ordenes
                                 </h2>
-                            </div>
+                            </div> */}
 
-                            <div className='d-flex align-items-center pointer' onClick={logout}>
+                            {/* <div className='d-flex align-items-center pointer' onClick={logout}>
                                 <KTIcon iconName='arrow-left' className='h1' style={{ fontSize: "30px" }} />
                                 <h2 className='mx-4'>
                                     Cerrar sesion
                                 </h2>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
