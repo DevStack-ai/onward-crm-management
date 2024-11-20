@@ -56,7 +56,7 @@ const EditDocument = () => {
   return (
     <Formik
       validationSchema={NewSchhecma}
-      initialValues={document}
+      initialValues={values}
       onSubmit={onSubmit}
     >
       {(formik) => {
