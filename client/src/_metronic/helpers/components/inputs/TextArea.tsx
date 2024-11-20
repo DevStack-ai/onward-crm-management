@@ -1,6 +1,5 @@
 import { FormikValues } from "formik";
 import clsx from "clsx";
-import { checkStrength } from "./helpers";
 import { useEffect } from "react";
 type Props = {
   form: FormikValues;

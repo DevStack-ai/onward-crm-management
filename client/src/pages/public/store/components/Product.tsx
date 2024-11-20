@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Product } from "../helpers/_types"
 import { KTIcon } from "metronic/helpers"
+import axios from "axios"
 
 interface ProductProps {
     product: Product,
@@ -10,6 +11,31 @@ interface ProductProps {
 
 export default function ProductItem({ product, onAdd }: ProductProps) {
     const [quantity, setQuantity] = useState(product.art_cantidad ? 1 : 0)
+    const [preview, setPreview] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s")
+
+    useEffect(() => {
+        (async () => {
+            if (product.art_codigo) {
+                try {
+                    const url = `${import.meta.env.VITE_API_URL}/store/products/image?product=${product.art_codigo}&type=front`
+                    const file = await axios.post(url, {}, { responseType: "blob" });
+
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        console.log(reader.result)
+                        setPreview(reader.result as string);
+                    };
+
+                    reader.readAsDataURL(file.data);
+
+                } catch (e) {
+                    console.log(e)
+                    console.log("not found")
+                }
+            }
+        })();
+    }, [product.art_codigo]);
+
 
 
     return (
@@ -18,7 +44,7 @@ export default function ProductItem({ product, onAdd }: ProductProps) {
             <div className="col-12 col-sm-3 prod-item-col mb-2">
                 <div className="card p-4">
 
-                    <a href="#" className="product-img"><img src={product.img || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"} alt="producto" width="100px" /></a>
+                    <a href="#" className="product-img"><img src={preview} alt="producto" width="100px" /></a>
                     <div className="product-item-wrap">
                         <div className="product-item-cover pt-2">
                             <div className="price-cover">

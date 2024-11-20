@@ -29,7 +29,6 @@ export class CartController {
 
         const images = await this.prisma.inv_articulo_imagen.findMany({
             where: {
-                img_previsualizacion: 1,
                 img_articulo: {
                     in: codigos,
                 }
@@ -66,7 +65,7 @@ export class CartController {
                 car_codigo: item.car_codigo,
                 palet_percent: penalty,
 
-                img: img ? img.img_archivo : null
+                img: img ? img.img_imagen : null
             }
         })
 

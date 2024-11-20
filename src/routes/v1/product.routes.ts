@@ -4,6 +4,7 @@ import { ProductController } from "../../controllers/store/products.controller";
 const router = Router();
 const controller = new ProductController();
 
+router.post('/image', controller.getImage);
 router.post('/create', controller.create);
 router.post("/:id/activate", controller.activate);
 router.put('/:id', controller.update);

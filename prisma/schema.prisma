@@ -86,15 +86,11 @@ model inv_articulo {
 }
 
 model inv_articulo_imagen {
-  img_codigo           Int
-  img_articulo         Int
-  img_archivo          String   @db.VarChar(250)
-  img_previsualizacion Int      @db.TinyInt
-  img_tipo             Int
-  img_fecha_registro   DateTime @db.DateTime(0)
-  img_usuario_registro BigInt
-
-  @@id([img_codigo, img_articulo])
+  img_codigo         Int      @id @default(autoincrement())
+  img_articulo       Int
+  img_type           String
+  img_imagen         String   @db.VarChar(150)
+  img_fecha_registro DateTime @db.DateTime(0)
 }
 
 model shp_customer {

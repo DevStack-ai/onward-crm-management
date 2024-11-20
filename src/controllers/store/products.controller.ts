@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import prisma from "../../db"
-
-
+import fs from "fs"
+import os from "os"
+import path from "path"
 export class ProductController {
     private prisma: PrismaClient;
     constructor() {
@@ -16,7 +17,7 @@ export class ProductController {
 
 
         let where: any = {
-            status: 1
+            art_situacion: 1
         }
 
         if (filter) {
@@ -32,7 +33,7 @@ export class ProductController {
             take: take,
             where: where,
             orderBy: {
-                art_nombre: 'asc'
+                art_codigo: 'asc'
             }
         })
 
@@ -40,10 +41,10 @@ export class ProductController {
 
         const images = await this.prisma.inv_articulo_imagen.findMany({
             where: {
-                img_previsualizacion: 1,
                 img_articulo: {
                     in: codigos,
-                }
+                },
+                img_type: 'front'
             }
         })
 
@@ -53,7 +54,7 @@ export class ProductController {
                 ...product,
                 img_fecha_registro: 0,
                 art_usuario_update: 0,
-                img: img ? img.img_archivo : null
+                img: img ? img.img_imagen : null
             }
         })
 
@@ -80,7 +81,7 @@ export class ProductController {
             art_situacion: 1
         }
 
-        if(filters.name){
+        if (filters.name) {
             where = {
                 ...where,
                 art_nombre: {
@@ -212,6 +213,8 @@ export class ProductController {
 
 
 
+
+
             const product = await this.prisma.inv_articulo.create({
                 data: {
                     art_nombre: name,
@@ -258,6 +261,93 @@ export class ProductController {
                     art_fda_producto: parseInt(fda_product_code),
                 }
             })
+
+            //save at home /images
+            const baseDir = os.homedir()
+            if (!fs.existsSync(`${baseDir}/images`)) {
+                fs.mkdirSync(`${baseDir}/images`);
+            }
+
+            const files = req.files as Express.Multer.File[]
+            
+            const front = files.find((file) => file.fieldname === 'front')
+            const back = files.find((file) => file.fieldname === 'back')
+            const top = files.find((file) => file.fieldname === 'top')
+            const bottom = files.find((file) => file.fieldname === 'bottom')
+
+            const queue = []
+
+            if (front) {
+                const path = `${baseDir}/images/${product.art_codigo}_front.png`
+                fs.writeFileSync(path,
+                    front.buffer,
+                    'binary'
+                );
+
+                queue.push(this.prisma.inv_articulo_imagen.create({
+                    data: {
+                        img_articulo: product.art_codigo,
+                        img_imagen: path,
+                        img_type: 'front',
+                        img_fecha_registro: new Date(),
+                    }
+                }))
+            }
+
+            if (back) {
+                const path = `${baseDir}/images/${product.art_codigo}_back.png`
+                fs.writeFileSync(path,
+                    back.buffer,
+                    'binary'
+                );
+
+                queue.push(this.prisma.inv_articulo_imagen.create({
+                    data: {
+                        img_articulo: product.art_codigo,
+                        img_imagen: path,
+                        img_type: 'back',
+                        img_fecha_registro: new Date(),
+                    }
+                }))
+            }
+
+            if (top) {
+                const path = `${baseDir}/images/${product.art_codigo}_top.png`
+                fs.writeFileSync(path,
+                    top.buffer,
+                    'binary'
+                );
+
+                queue.push(this.prisma.inv_articulo_imagen.create({
+                    data: {
+                        img_articulo: product.art_codigo,
+                        img_imagen: path,
+                        img_type: 'top',
+                        img_fecha_registro: new Date(),
+                    }
+                })
+                )
+            }
+
+            if (bottom) {
+                const path = `${baseDir}/images/${product.art_codigo}_bottom.png`
+                fs.writeFileSync(path,
+                    bottom.buffer,
+                    'binary'
+                );
+
+                queue.push(this.prisma.inv_articulo_imagen.create({
+                    data: {
+                        img_articulo: product.art_codigo,
+                        img_imagen: path,
+                        img_type: 'bottom',
+                        img_fecha_registro: new Date(),
+                    }
+                }))
+            }
+
+            await Promise.all(queue)
+
 
 
 
@@ -380,6 +470,170 @@ export class ProductController {
                     art_fda_producto: parseInt(fda_product_code),
                 }
             })
+
+            const baseDir = os.homedir()
+            if (!fs.existsSync(`${baseDir}/images`)) {
+                fs.mkdirSync(`${baseDir}/images`);
+            }
+
+            const files = req.files as Express.Multer.File[]
+            console.log(files)
+
+            const front = files.find((file) => file.fieldname === 'front')
+            const back = files.find((file) => file.fieldname === 'back')
+            const top = files.find((file) => file.fieldname === 'top')
+            const bottom = files.find((file) => file.fieldname === 'bottom')
+
+            const queue = []
+
+            if (front) {
+                const path = `${baseDir}/images/${product.art_codigo}_front.png`
+                fs.writeFileSync(path,
+                    front.buffer,
+                    'binary'
+                );
+
+                const exist = await this.prisma.inv_articulo_imagen.findFirst({
+                    where: {
+                        img_articulo: product.art_codigo,
+                        img_type: 'front'
+                    }
+                })
+
+                if (exist) {
+                    queue.push(this.prisma.inv_articulo_imagen.updateMany({
+                        where: {
+                            img_articulo: product.art_codigo,
+                            img_type: 'front'
+                        },
+                        data: {
+                            img_imagen: path
+                        }
+                    }))
+                } else {
+                    queue.push(this.prisma.inv_articulo_imagen.create({
+                        data: {
+                            img_articulo: product.art_codigo,
+                            img_imagen: path,
+                            img_type: 'front',
+                            img_fecha_registro: new Date(),
+                        }
+                    }))
+                }
+            }
+
+            if (back) {
+                const path = `${baseDir}/images/${product.art_codigo}_back.png`
+                fs.writeFileSync(path,
+                    back.buffer,
+                    'binary'
+                );
+
+                const exist = await this.prisma.inv_articulo_imagen.findFirst({
+                    where: {
+                        img_articulo: product.art_codigo,
+                        img_type: 'back'
+                    }
+                })
+
+                if (exist) {
+                    queue.push(this.prisma.inv_articulo_imagen.updateMany({
+                        where: {
+                            img_articulo: product.art_codigo,
+                            img_type: 'back'
+                        },
+                        data: {
+                            img_imagen: path
+                        }
+                    }))
+                } else {
+                    queue.push(this.prisma.inv_articulo_imagen.create({
+                        data: {
+                            img_articulo: product.art_codigo,
+                            img_imagen: path,
+                            img_type: 'back',
+                            img_fecha_registro: new Date(),
+                        }
+                    }))
+                }
+            }
+
+            if (top) {
+                const path = `${baseDir}/images/${product.art_codigo}_top.png`
+                fs.writeFileSync(path,
+                    top.buffer,
+                    'binary'
+                );
+
+                const exist = await this.prisma.inv_articulo_imagen.findFirst({
+                    where: {
+                        img_articulo: product.art_codigo,
+                        img_type: 'top'
+                    }
+                })
+
+                if (exist) {
+                    queue.push(this.prisma.inv_articulo_imagen.updateMany({
+                        where: {
+                            img_articulo: product.art_codigo,
+                            img_type: 'top'
+                        },
+                        data: {
+                            img_imagen: path
+                        }
+                    }))
+                } else {
+                    queue.push(this.prisma.inv_articulo_imagen.create({
+                        data: {
+                            img_articulo: product.art_codigo,
+                            img_imagen: path,
+                            img_type: 'top',
+                            img_fecha_registro: new Date(),
+                        }
+                    }))
+                }
+
+
+            }
+
+            if (bottom) {
+                const path = `${baseDir}/images/${product.art_codigo}_bottom.png`
+                fs.writeFileSync(path,
+                    bottom.buffer,
+                    'binary'
+                );
+
+                const exist = await this.prisma.inv_articulo_imagen.findFirst({
+                    where: {
+                        img_articulo: product.art_codigo,
+                        img_type: 'bottom'
+                    }
+                })
+
+                if (exist) {
+                    queue.push(this.prisma.inv_articulo_imagen.updateMany({
+                        where: {
+                            img_articulo: product.art_codigo,
+                            img_type: 'bottom'
+                        },
+                        data: {
+                            img_imagen: path
+                        }
+                    }))
+                } else {
+                    queue.push(this.prisma.inv_articulo_imagen.create({
+                        data: {
+                            img_articulo: product.art_codigo,
+                            img_imagen: path,
+                            img_type: 'bottom',
+                            img_fecha_registro: new Date(),
+                        }
+                    }))
+                }
+            }
+
+            await Promise.all(queue)
+
 
 
 
@@ -535,8 +789,15 @@ export class ProductController {
             //     art_hts: parseInt(hts_item_number),
             //     art_fda_producto: parseInt(fda_product_code),
             // }
-            const mmaped = {
 
+            const images = await this.prisma.inv_articulo_imagen.findMany({
+                where: {
+                    img_articulo: product.art_codigo
+                }
+            })
+
+            const mmaped = {
+                id: product.art_codigo,
                 name: product.art_nombre,
                 sku: product.art_codigo_interno,
                 barcode: product.art_barcode,
@@ -578,7 +839,8 @@ export class ProductController {
                 fda_product_code: product.art_fda_producto,
                 volume_description: product.art_volumen,
                 accounting_account: product.art_cuenta,
-                
+                imagess: images
+
             }
 
             res.status(200)
@@ -586,6 +848,46 @@ export class ProductController {
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: "Error al obtener producto" });
+        }
+
+    }
+
+    getImage = async (req: Request, res: Response) => {
+        try {
+            const product = req.query.product as string
+            const type = req.query.type  as string
+            
+
+            if (!product) {
+                res.status(400).json({ error: "ID es requerido" });
+                return;
+            }
+
+            if (!type) {
+                res.status(400).json({ error: "Tipo de imagen es requerido" });
+                return;
+            }
+
+            const image = await this.prisma.inv_articulo_imagen.findFirst({
+                where: {
+                    img_articulo: Number(product),
+                    img_type: type
+                }
+            })
+
+            if(!image){
+                res.status(404).json({ error: "Imagen no encontrada" });
+                return;
+            }
+
+            //get buffer from image
+            res.status(200)
+            res.sendFile(image.img_imagen)
+
+     
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Error al obtener imagen" });
         }
 
     }

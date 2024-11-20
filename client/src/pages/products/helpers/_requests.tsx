@@ -3,10 +3,28 @@ import axios from "axios";
 const baseUrl = `${import.meta.env.VITE_API_URL}/store/products`;
 
 export async function create(values: any) {
-  return axios.post(`${baseUrl}/create`, values);
+  const form = new FormData();
+
+  for (const key in values) {
+
+    if (values.hasOwnProperty(key)) {
+      form.append(key, values[key]);
+    }
+  }
+  return axios.post(`${baseUrl}/create`, form);
 }
 export async function update(id: any, values: any) {
-  return axios.put(`${baseUrl}/${id}`, values);
+
+  const form = new FormData();
+
+  for (const key in values) {
+
+    if (values.hasOwnProperty(key)) {
+      form.append(key, values[key]);
+    }
+  }
+
+  return axios.put(`${baseUrl}/${id}`, form);
 }
 export async function get(id: any) {
   return axios.get(`${baseUrl}/${id}`);
@@ -20,6 +38,10 @@ export async function activateItem(id: any) {
   return axios.post(`${baseUrl}/${id}/activate`);
 }
 
+export async function getFile(idproduct: number, type: string){
+  return axios.get(`${baseUrl}/image?product=${idproduct}&type=${type}`, {responseType: 'blob'});
+
+}
 
 export async function approve(id: any, values: any) {
   return axios.post(`${baseUrl}/${id}/approve`, values);

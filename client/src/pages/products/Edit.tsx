@@ -4,6 +4,7 @@ import { Form, Formik } from "formik";
 import { initialValues, NewSchhecma } from "./helpers/_schemas";
 import Field from "formInputs/Field";
 import TextArea from "formInputs/TextArea";
+import Image from "formInputs/Image";
 
 import Select from "formInputs/Select";
 import { ListLoading } from "metronic/helpers/components/table/components/loading/ListLoading";
@@ -71,6 +72,13 @@ const EditDocument = () => {
                   overflowY: "scroll",
                   maxHeight: "80vh",
                 }}>
+                  
+                  <div className="d-flex justify-content-around mb-3">
+                    <Image form={formik} name="front" title="Frontal" />
+                    <Image form={formik} name="back" title="Trasera" />
+                    <Image form={formik} name="top" title="Arriba" />
+                    <Image form={formik} name="bottom" title="Abajo" />
+                  </div>
                   <h2>  Información General</h2>
 
                   <label className="col-sm-12 col-lg-2 col-form-label fw-bold fs-6 mt-4">
