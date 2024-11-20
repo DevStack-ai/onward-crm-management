@@ -2,6 +2,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { PageTitle } from "metronic/layout/core";
 import { ListWrapper } from "./List";
 import { NewDocumentWrappeer } from "./New";
+import { EditDocument } from "./Edit"
 
 
 // import { UsersNewWrapper } from "./NewUser"
@@ -31,6 +32,19 @@ const UsersPage = () => {
               <NewDocumentWrappeer />
             </>
           }
+        />
+
+        <Route
+          path="/:id/edit"
+          element={
+            <>
+              <PageTitle>
+                Producto/ Editar
+              </PageTitle>
+              <EditDocument />
+            </>
+          }
+
         />
 
       </Route>

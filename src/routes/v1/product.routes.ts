@@ -5,6 +5,10 @@ const router = Router();
 const controller = new ProductController();
 
 router.post('/create', controller.create);
+router.post("/:id/activate", controller.activate);
+router.put('/:id', controller.update);
+router.get('/:id', controller.get);
+router.delete('/:id', controller.delete);
 router.post("/table", controller.table);
 router.post('/', controller.list);
 

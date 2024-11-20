@@ -15,7 +15,9 @@ export class ProductController {
         const filter = req.body.filter || ''
 
 
-        let where = {}
+        let where: any = {
+            status: 1
+        }
 
         if (filter) {
             where = {
@@ -66,6 +68,7 @@ export class ProductController {
     table = async (req: Request, res: Response) => {
         const page = req.body.page
         const items = req.body.items
+        const filters = req.body.filters
 
         if (!page || !items) {
             res.status(400).json({ error: "Página y registros son requeridos" });
@@ -73,10 +76,23 @@ export class ProductController {
         }
 
         const skip = (page - 1) * items
+        let where: any = {
+            art_situacion: 1
+        }
+
+        if(filters.name){
+            where = {
+                ...where,
+                art_nombre: {
+                    contains: filters.name
+                }
+            }
+        }
 
         const products = await this.prisma.inv_articulo.findMany({
             skip: skip,
             take: items,
+            where: where,
             orderBy: {
                 art_nombre: 'asc'
             },
@@ -250,6 +266,326 @@ export class ProductController {
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: "Error al crear producto" });
+        }
+
+    }
+
+    update = async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id
+            const payload = req.body
+
+            if (!id) {
+                res.status(400).json({ error: "ID es requerido" });
+                return;
+            }
+
+            const productExists = await this.prisma.inv_articulo.findUnique({
+                where: {
+                    art_codigo: Number(id)
+                }
+            })
+
+            if (!productExists) {
+                res.status(404).json({ error: "Producto no encontrado" });
+                return;
+            }
+
+            const category = payload.category
+            const provider = payload.provider
+            const brand = payload.brand
+            const country = payload.country
+            const name = payload.name
+            const description = payload.description
+            const packing_description = payload.packing_description
+            const box_weight = payload.box_weight
+            const boxes_per_pallet = payload.boxes_per_pallet
+            const boxes_per_level = payload.boxes_per_level
+            const levels_per_pallet = payload.levels_per_pallet
+            const pallet_height = payload.pallet_height
+            const box_length = payload.box_length
+            const box_width = payload.box_width
+            const box_height = payload.box_height
+            const fda_number = payload.fda_number
+            const fce_cid = payload.fce_cid
+            const hts_item_number = payload.hts_item_number
+            const fda_product_code = payload.fda_product_code
+            const currency = payload.currency
+            const purchase_price_q = payload.purchase_price_q
+            const purchase_price_d = payload.purchase_price_d
+            const sale_price_d = payload.sale_price_d
+            const is_perishable = payload.is_perishable
+            const labels = payload.labels
+            const unit_box = payload.unit_box
+            const unit = payload.unit
+            const sku = payload.sku
+            const barcode = payload.barcode || ''
+            const accounting_account = payload.accounting_account || ''
+            const labels_size = payload.labels_size || ''
+            const participation = payload.participation || 0
+            const observations = payload.observations || ''
+            const life_time = payload.life_time || ''
+            const volume_description = payload.volume_description || ''
+
+            //inser in inv_articulo
+
+
+
+            const product = await this.prisma.inv_articulo.update({
+                where: {
+                    art_codigo: Number(id)
+                },
+                data: {
+                    art_nombre: name,
+                    art_codigo_interno: sku,
+                    art_barcode: barcode,
+                    art_descripcion: description,
+                    art_descripcion_2: packing_description,
+                    art_categoria: Number(category),
+                    art_marca: Number(brand),
+                    art_proveedor: Number(provider),
+                    art_pais: Number(country),
+                    art_moneda: Number(currency),
+                    art_unidad_medida: unit,
+                    art_dimesiones_unidad: unit_box,
+                    art_observaciones: observations,
+                    art_fce: Number(fce_cid),
+                    art_numero_fda: String(fda_number),
+                    art_perecedero: Number(is_perishable),
+                    art_tiempo_vida: life_time,
+
+                    art_etiquetas: Number(labels),
+                    art_dimensiones_etiquetas: labels_size,
+                    art_participacion: Number(participation),
+
+                    art_precio_compra: Number(purchase_price_q),
+                    art_precio_costo: Number(purchase_price_d),
+                    art_precio_venta: Number(sale_price_d),
+                    art_situacion: 1,
+
+                    art_volumen: volume_description,
+                    art_cuenta: accounting_account,
+                    art_cantidad: 0,
+
+                    art_largo: Number(box_length),
+                    art_ancho: Number(box_width),
+                    art_alto: Number(box_height),
+                    art_peso_caja: Number(box_weight),
+                    art_palet_caja: Number(boxes_per_pallet),
+                    art_cajas_nivel: parseInt(boxes_per_level),
+                    art_nivel_palets: parseInt(levels_per_pallet),
+                    art_alto_palets: parseInt(pallet_height),
+
+                    art_hts: parseInt(hts_item_number),
+                    art_fda_producto: parseInt(fda_product_code),
+                }
+            })
+
+
+
+            res.status(200)
+            res.json({ message: "Producto actualizado exitosamente", product: product.art_codigo })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Error al actualizar producto" });
+        }
+
+    }
+
+    delete = async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id
+
+            if (!id) {
+                res.status(400).json({ error: "ID es requerido" });
+                return;
+            }
+
+            const productExists = await this.prisma.inv_articulo.findUnique({
+                where: {
+                    art_codigo: Number(id)
+                }
+            })
+
+            if (!productExists) {
+                res.status(404).json({ error: "Producto no encontrado" });
+                return;
+            }
+
+            await this.prisma.inv_articulo.update({
+                where: {
+                    art_codigo: Number(id)
+                },
+                data: {
+                    art_situacion: 0
+                }
+            })
+
+            res.status(200)
+            res.json({ message: "Producto eliminado exitosamente" })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Error al eliminar producto" });
+        }
+
+    }
+
+    activate = async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id
+
+            if (!id) {
+                res.status(400).json({ error: "ID es requerido" });
+                return;
+            }
+
+            const productExists = await this.prisma.inv_articulo.findUnique({
+                where: {
+                    art_codigo: Number(id)
+                }
+            })
+
+            if (!productExists) {
+                res.status(404).json({ error: "Producto no encontrado" });
+                return;
+            }
+
+            await this.prisma.inv_articulo.update({
+                where: {
+                    art_codigo: Number(id)
+                },
+                data: {
+                    art_situacion: 1
+                }
+            })
+
+            res.status(200)
+            res.json({ message: "Producto activado exitosamente" })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Error al activar producto" });
+        }
+
+    }
+
+    get = async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id
+
+            if (!id) {
+                res.status(400).json({ error: "ID es requerido" });
+                return;
+            }
+
+            const product = await this.prisma.inv_articulo.findUnique({
+                where: {
+                    art_codigo: Number(id),
+                    art_situacion: 1
+                },
+            })
+
+            if (!product) {
+                res.status(404).json({ error: "Producto no encontrado" });
+                return;
+            }
+
+            // {
+            //     art_nombre: name,
+            //     art_codigo_interno: sku,
+            //     art_barcode: barcode,
+            //     art_descripcion: description,
+            //     art_descripcion_2: packing_description,
+
+            //     art_categoria: Number(category),
+            //     art_marca: Number(brand),
+            //     art_proveedor: Number(provider),
+            //     art_pais: Number(country),
+            //     art_moneda: Number(currency),
+
+            //     art_unidad_medida: unit,
+            //     art_dimesiones_unidad: unit_box,
+            //     art_observaciones: observations,
+            //     art_fce: Number(fce_cid),
+            //     art_numero_fda: String(fda_number),
+
+            //     art_perecedero: Number(is_perishable),
+            //     art_tiempo_vida: life_time,
+            //     art_etiquetas: Number(labels),
+            //     art_dimensiones_etiquetas: labels_size,
+            //     art_participacion: Number(participation),
+
+            //     art_precio_compra: Number(purchase_price_q),
+            //     art_precio_costo: Number(purchase_price_d),
+            //     art_precio_venta: Number(sale_price_d),
+            //     art_situacion: 1,
+            //     art_volumen: volume_description,
+
+            //     art_cuenta: accounting_account,
+            //     art_cantidad: 0,
+            //     art_largo: Number(box_length),
+            //     art_ancho: Number(box_width),
+            //     art_alto: Number(box_height),
+
+            //     art_peso_caja: Number(box_weight),
+            //     art_palet_caja: Number(boxes_per_pallet),
+            //     art_cajas_nivel: parseInt(boxes_per_level),
+            //     art_nivel_palets: parseInt(levels_per_pallet),
+            //     art_alto_palets: parseInt(pallet_height),
+
+            //     art_hts: parseInt(hts_item_number),
+            //     art_fda_producto: parseInt(fda_product_code),
+            // }
+            const mmaped = {
+
+                name: product.art_nombre,
+                sku: product.art_codigo_interno,
+                barcode: product.art_barcode,
+                description: product.art_descripcion,
+                packing_description: product.art_descripcion_2,
+
+                category: product.art_categoria,
+                brand: product.art_marca,
+                provider: product.art_proveedor,
+                country: product.art_pais,
+                currency: product.art_moneda,
+
+                unit: product.art_unidad_medida,
+                unit_box: product.art_dimesiones_unidad,
+                observations: product.art_observaciones,
+                fce_cid: product.art_fce,
+                fda_number: product.art_numero_fda,
+
+                is_perishable: product.art_perecedero,
+                life_time: product.art_tiempo_vida,
+                labels: product.art_etiquetas,
+                labels_size: product.art_dimensiones_etiquetas,
+                participation: product.art_participacion,
+
+                purchase_price_q: product.art_precio_compra,
+                purchase_price_d: product.art_precio_costo,
+                sale_price_d: product.art_precio_venta,
+                box_length: product.art_largo,
+                box_width: product.art_ancho,
+
+                box_height: product.art_alto,
+                box_weight: product.art_peso_caja,
+                boxes_per_pallet: product.art_palet_caja,
+                boxes_per_level: product.art_cajas_nivel,
+                levels_per_pallet: product.art_nivel_palets,
+
+                pallet_height: product.art_alto_palets,
+                hts_item_number: product.art_hts,
+                fda_product_code: product.art_fda_producto,
+                volume_description: product.art_volumen,
+                accounting_account: product.art_cuenta,
+                
+            }
+
+            res.status(200)
+            res.json(mmaped)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Error al obtener producto" });
         }
 
     }

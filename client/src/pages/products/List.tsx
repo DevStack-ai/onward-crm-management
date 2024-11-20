@@ -2,7 +2,7 @@ import { BasicTable } from "metronic/helpers/components/table/BasicTable";
 import { useBasicTable } from "metronic/helpers/components/table/useBasicTable";
 import { useEffect } from "react";
 import { columns } from "./helpers/_columns";
-// import { Search } from "metronic/helpers/components/table/components/header/ListSearchComponent";
+import { Search } from "metronic/helpers/components/table/components/header/ListSearchComponent";
 import { useSelector } from "react-redux";
 import { BasicTableState, ReduxState } from "../../providers";
 import * as actions from "../../redux/reducers/products/actions";
@@ -20,11 +20,14 @@ const ListWrapper = () => {
     <BasicTable
       {...helpers}
       headerAddButton
-      columnsList={columns}
+      columnsList={columns(helpers)}
       dataList={dataList}
     >
-     <>
-     </>
+      <>
+        <Search
+          onChange={(input: string) => helpers.setFilters({ name: input })}
+        />
+      </>
     </BasicTable>
   );
 };

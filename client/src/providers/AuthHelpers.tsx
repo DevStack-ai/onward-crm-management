@@ -70,45 +70,44 @@ export function setupAxios(axios: any) {
       }
       //check if method is DELETE
       if (config.method === "delete") {
-        const PromiseDelete = new Promise((resolve, reject) => {
-          const verifyAction = () => (
-            <div>
-              <div className="modal-body">
-                <div className="text-center">
-                  <h4 className="text-danger">¡Advertencia!</h4>
-                  <p>¿Estás seguro de eliminar este registro?</p>
+        try {
+
+          const key = "delete-item"
+          const PromiseDelete = new Promise((resolve, reject) => {
+            const verifyAction = () => (
+              <div>
+                <div className="card">
+                  <div className="text-center">
+                    <h4 className="text-danger">¡Advertencia!</h4>
+                    <p>¿Estás seguro de eliminar este registro?</p>
+                  </div>
+                </div>
+                <div className="modal-footer d-flex justify-content-center w-100">
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm me-2 mb-2 hover-elevate-down"
+                    onClick={() => reject("Cancelled by user")}>Cancelar</button>
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm me-2 mb-2 hover-elevate-down"
+                    onClick={() => resolve("Accepted By user")}>Eliminar</button>
                 </div>
               </div>
-              <div className="modal-footer d-flex justify-content-center w-100">
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-sm me-2 mb-2 hover-elevate-down"
-                  data-bs-dismiss="modal"
-                  onClick={() => reject("Cancelled by user")}>Cancelar</button>
-                <button
-                  type="button"
-                  className="btn btn-danger btn-sm me-2 mb-2 hover-elevate-down"
-                  data-bs-dismiss="modal"
-                  onClick={() => resolve("Accepted By user")}>Eliminar</button>
-              </div>
-            </div>
-          )
+            )
 
-          toast.error(verifyAction, { autoClose: false, icon: false })
-        })
-
-        // //add timeout to wait for user action
-
-
-        await PromiseDelete
-          .then(() => {
-            toast.success("Eliminando registro")
-            return config;
+            toast.error(verifyAction, { autoClose: false, icon: false, toastId: key })
           })
-          .catch(() => {
-            throw new axios.Cancel('Operation canceled by the user.');
-          })
+
+          await PromiseDelete
+          toast.dismiss(key)
+          toast.success("Eliminando registro")
+
+        } catch (error) {
+          console.log("error at delete", error)
+          throw new axios.Cancel('Operation canceled by the user.');
+        }
       }
+
       return config;
 
     },
