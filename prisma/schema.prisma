@@ -36,7 +36,7 @@ model sis_pais {
 
 model inv_articulo {
   art_codigo                Int                @id @default(autoincrement())
-  art_codigo_interno        String             @db.VarChar(15)
+  art_codigo_interno        String             @db.VarChar(100)
   art_pais                  Int
   art_barcode               String             @db.VarChar(100)
   art_categoria             Int?
