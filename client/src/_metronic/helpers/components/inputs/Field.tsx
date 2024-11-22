@@ -52,6 +52,8 @@ export default function Field({
             if(type === "text" && typeof e.target.value === "string") {
               const upper = e.target.value.toUpperCase();
               form.setFieldValue(name, upper);
+            }else{
+              form.setFieldValue(name, e.target.value);
             }
           }}
           type={type}
