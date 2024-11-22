@@ -60,6 +60,10 @@ app.get('*', (_req, res) => {
     return res.status(404).json({ message: `Method not found ${_req.path}` })
   }
 
+  //if is in http, redirect to https
+  if (_req.protocol === 'http') {
+    return res.redirect('https://' + _req.headers.host + _req.url)
+  }
   //make that site dont save cache
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
   res.setHeader('Pragma', 'no-cache')
