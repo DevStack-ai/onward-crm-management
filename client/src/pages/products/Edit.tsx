@@ -370,7 +370,7 @@ const EditDocument = () => {
                       form={formik}
                       name="fda_number"
                       placeholder="FDA NUMBER"
-                      type="number"
+                      type="text"
                     />
                   </div>
                   <label className="col-sm-12 col-lg-2 col-form-label required fw-bold fs-6 mt-4">
@@ -381,7 +381,7 @@ const EditDocument = () => {
                       form={formik}
                       name="fce_cid"
                       placeholder="FCE CID"
-                      type="number"
+                      type="text"
                     />
                   </div>
                   <label className="col-sm-12 col-lg-2 col-form-label required fw-bold fs-6 mt-4">
@@ -392,7 +392,7 @@ const EditDocument = () => {
                       form={formik}
                       name="hts_item_number"
                       placeholder="HTS ITEM NUMBER"
-                      type="number"
+                      type="text"
                     />
                   </div>
                   <label className="col-sm-12 col-lg-2 col-form-label required fw-bold fs-6 mt-4">
@@ -403,7 +403,7 @@ const EditDocument = () => {
                       form={formik}
                       name="fda_product_code"
                       placeholder="FDA PRODUCT CODE"
-                      type="number"
+                      type="text"
                     />
                   </div>
                   <div className="col-lg-12">
