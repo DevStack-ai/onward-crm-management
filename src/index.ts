@@ -18,7 +18,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from 'dayjs/plugin/timezone';
 import https from "https";
-
+import fs from "fs";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -73,8 +73,17 @@ app.listen(app.get('port'), () => {
 })
 
 
-// instance for 443
-const httpsServer = https.createServer(app)
-httpsServer.listen(443, () => {
-  logger.info(`Server is running on port 443`)
-})
+if (!process.env.SSL_KEY || !process.env.SSL_CERT) {
+
+  if (fs.existsSync(process.env.SSL_KEY) && fs.existsSync(process.env.SSL_CERT)) {
+
+    // instance for 443
+    const httpsServer = https.createServer({
+      key: fs.readFileSync(process.env.SSL_KEY),
+      cert: fs.readFileSync(process.env.SSL_CERT)
+    }, app)
+    httpsServer.listen(443, () => {
+      logger.info(`Server is running on port 443`)
+    })
+  }
+}
