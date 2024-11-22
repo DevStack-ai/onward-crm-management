@@ -73,7 +73,7 @@ app.listen(app.get('port'), () => {
 })
 
 
-if (!process.env.SSL_KEY || !process.env.SSL_CERT) {
+if (process.env.SSL_KEY && process.env.SSL_CERT) {
 
   if (fs.existsSync(process.env.SSL_KEY) && fs.existsSync(process.env.SSL_CERT)) {
 
