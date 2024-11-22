@@ -113,6 +113,10 @@ export class CustomerController {
         const customer = await this.prisma.shp_customer.findFirst({
             where: {
                 cli_codigo: Number(codigo)
+            },
+            include: {
+                cus_address: true,
+                cus_contact: true
             }
         })
 

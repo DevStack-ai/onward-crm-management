@@ -68,9 +68,9 @@ model inv_articulo {
   art_dimensiones_etiquetas String             @db.VarChar(150)
   art_participacion         Int
   art_numero_fda            String             @db.VarChar(150)
-  art_fce                   Int
-  art_hts                   Int
-  art_fda_producto          Int
+  art_fce                   String             @db.VarChar(150)
+  art_hts                   String             @db.VarChar(150)
+  art_fda_producto          String             @db.VarChar(150)
   art_observaciones         String             @db.Text
   art_usuario_update        BigInt?
   art_fecha_update          DateTime?          @db.DateTime(0)

@@ -8,8 +8,9 @@ import Field from "formInputs/Field";
 import { ListLoading } from "metronic/helpers/components/table/components/loading/ListLoading";
 
 import { useNavigate, useParams } from "react-router-dom";
-import { approveUser } from "./helpers/_requests";
+import { approveUser, getUser } from "./helpers/_requests";
 import { toast } from "react-toastify";
+import { useCallback, useEffect, useState } from "react";
 
 
 const ApproveUser = () => {
@@ -18,6 +19,24 @@ const ApproveUser = () => {
     // get the id from the url
     const params = useParams();
     const id = params.id;
+    const [user, setUser] = useState<any>(null);
+    const [email, setEmail] = useState<any>(null);
+
+    const fetchUser = useCallback(async () => {
+        if (id) {
+            const query = await getUser(Number(id));
+            const user = query.data;
+            const contacto = user?.cus_contact || [];
+            const def = contacto.find((c: any) => c.con_situacion === 1 && c.con_defecto === 1);
+            setEmail(def?.con_email || "");
+            setUser(user);
+        }
+    }, [id]);
+
+    useEffect(() => {
+        fetchUser();
+    }, [fetchUser]);
+
 
     async function onSubmit(values: any, _formikHelpers: any) {
         //check email
@@ -28,7 +47,7 @@ const ApproveUser = () => {
                 password: Base64.encode(values.password),
                 customer: Number(id)
             };
-           
+
             toast.loading("Aprobando usuario...");
             await approveUser(Number(id), ApproveValues)
             toast.dismiss();
@@ -42,10 +61,17 @@ const ApproveUser = () => {
         }
     }
 
+    if (!user) {
+        return <ListLoading />;
+    }
+
     return (
         <Formik
             validationSchema={ApproveUserSchema}
-            initialValues={initialValuesApprove}
+            initialValues={{
+                ...initialValuesApprove,
+                usermame: email
+            }}
             onSubmit={onSubmit}
         >
             {(formik) => {

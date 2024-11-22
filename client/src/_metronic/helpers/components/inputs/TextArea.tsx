@@ -38,16 +38,23 @@ export default function Field({
     return () => clearTimeout(timeout);
   }, [value]);
 
+  const props = form.getFieldProps(name)
 
   return (
     <div data-kt-password-meter="true">
       <div>
         <textarea
           placeholder={placeholder}
-          {...form.getFieldProps(name)}
+          {...props}
           {...args}
           type={type}
           name={name}
+          onChange={(e) => {
+            if(type === "text" && typeof e.target.value === "string") {
+              const upper = e.target.value.toUpperCase();
+              form.setFieldValue(name, upper);
+            }
+          }}
           value={type === "date" ? value.split("T")[0] : value}
           className={clsx(
             "form-control form-control-solid mb-3 mb-lg-0",

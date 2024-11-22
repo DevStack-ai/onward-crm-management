@@ -230,7 +230,7 @@ export class ProductController {
                     art_unidad_medida: unit,
                     art_dimesiones_unidad: unit_box,
                     art_observaciones: observations,
-                    art_fce: Number(fce_cid),
+                    art_fce: String(fce_cid),
                     art_numero_fda: String(fda_number),
                     art_perecedero: Number(is_perishable),
                     art_tiempo_vida: life_time,
@@ -257,8 +257,8 @@ export class ProductController {
                     art_nivel_palets: parseInt(levels_per_pallet),
                     art_alto_palets: parseInt(pallet_height),
 
-                    art_hts: parseInt(hts_item_number),
-                    art_fda_producto: parseInt(fda_product_code),
+                    art_hts: String(hts_item_number),
+                    art_fda_producto: String(fda_product_code),
                 }
             })
 
@@ -439,7 +439,7 @@ export class ProductController {
                     art_unidad_medida: unit,
                     art_dimesiones_unidad: unit_box,
                     art_observaciones: observations,
-                    art_fce: Number(fce_cid),
+                    art_fce: String(fce_cid),
                     art_numero_fda: String(fda_number),
                     art_perecedero: Number(is_perishable),
                     art_tiempo_vida: life_time,
@@ -466,8 +466,8 @@ export class ProductController {
                     art_nivel_palets: parseInt(levels_per_pallet),
                     art_alto_palets: parseInt(pallet_height),
 
-                    art_hts: parseInt(hts_item_number),
-                    art_fda_producto: parseInt(fda_product_code),
+                    art_hts: String(hts_item_number),
+                    art_fda_producto: String(fda_product_code),
                 }
             })
 
