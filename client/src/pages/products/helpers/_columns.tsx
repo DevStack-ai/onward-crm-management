@@ -24,6 +24,11 @@ export function getTag(situacion: number) {
 }
 const columns = (helpers): ReadonlyArray<Column<Object>> => [
   {
+    Header: "No",
+    id: "selection",
+    accessor: "no"
+  },
+  {
     Header: "Id",
     accessor: "art_codigo",
 
@@ -35,10 +40,16 @@ const columns = (helpers): ReadonlyArray<Column<Object>> => [
   {
     Header: "Nombre",
     accessor: "art_nombre",
+    Cell: ({ value }) => (
+      <div style={{ textOverflow: "ellipsis", textWrap: "wrap", maxWidth: "250px"}}>{value}</div>
+    )
   },
   {
     Header: "Descripción",
     accessor: "art_descripcion",
+    Cell: ({ value }) => (
+      <div style={{ textOverflow: "ellipsis", textWrap: "wrap", maxWidth: "250px"}}>{value}</div>
+    )
   },
   {
     Header: "Marca",

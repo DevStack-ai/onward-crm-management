@@ -48,9 +48,10 @@ export class ProductController {
             }
         })
 
-        const result = products.map((product) => {
+        const result = products.map((product, index) => {
             const img = images.find((image) => image.img_articulo === product.art_codigo)
             return {
+                no:  offset + Number(index) + 1,
                 ...product,
                 img_fecha_registro: 0,
                 art_usuario_update: 0,
@@ -123,10 +124,17 @@ export class ProductController {
 
         const count = await this.prisma.inv_articulo.count()
 
+        const result = products.map((product, index) => {
+            return {
+                no: skip + Number(index) + 1,
+                ...product,
+            }
+        })
+
         res.status(200)
         res.json({
             count: count,
-            rows: products,
+            rows: result,
             pages: Math.ceil(count / items)
         })
     }

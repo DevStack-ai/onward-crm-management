@@ -155,6 +155,7 @@ const DetailsWrapper = () => {
               <div className="col-lg-4 col-form-label fw-bold fs-6 mt-4">
                 {documentData.cli_inicio_sesion ? moment(documentData.cli_inicio_sesion).format("DD/MM/YYYY hh:mm A") : "N/A"}
               </div>
+           
 
             </div>
 

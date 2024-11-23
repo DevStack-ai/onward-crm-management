@@ -64,21 +64,21 @@ const ApproveUser = () => {
     if (!user) {
         return <ListLoading />;
     }
-
     return (
         <Formik
             validationSchema={ApproveUserSchema}
             initialValues={{
                 ...initialValuesApprove,
-                usermame: email
+                usermame: email,
+                password:  Math.random().toString(36).slice(-8),
             }}
             onSubmit={onSubmit}
         >
             {(formik) => {
                 return (
                     <Form placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        {/* {import.meta.env.MODE === "development" && (JSON.stringify(formik.values))}
-                        {import.meta.env.MODE === "development" && (JSON.stringify(formik.errors))} */}
+                        {import.meta.env.MODE === "development" && (JSON.stringify(formik.values))}
+                        {import.meta.env.MODE === "development" && (JSON.stringify(formik.errors))} 
                         <div className="px-10 pt-lg-10">
                             <form onSubmit={formik.handleSubmit}>
                                 <div className="row mb-6 ms-0 px-0">
@@ -104,10 +104,10 @@ const ApproveUser = () => {
                                             form={formik}
                                             name="password"
                                             placeholder="Contraseña"
-                                            type="password"
+                                            type="text"
                                         />
                                     </div>
-                                    <label className="col-sm-12 col-lg-2 col-form-label required fw-bold fs-6 mt-4">
+                                     <label className="col-sm-12 col-lg-2 col-form-label required fw-bold fs-6 mt-4">
                                         Confirmar contraseña
                                     </label>
                                     <div className="col-lg-4 fv-row mt-4 ">
@@ -115,9 +115,9 @@ const ApproveUser = () => {
                                             form={formik}
                                             name="confirm_password"
                                             placeholder="Confirmar contraseña"
-                                            type="password"
+                                            type="text"
                                         />
-                                    </div>
+                                    </div> 
                                 </div>
 
                                 <div className="text-right w-100 pt-lg-15 d-flex justify-content-end">
