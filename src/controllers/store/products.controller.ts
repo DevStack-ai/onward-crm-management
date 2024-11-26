@@ -732,7 +732,7 @@ export class ProductController {
 
     get = async (req: Request, res: Response) => {
         try {
-            const id = req.params.id
+            const id = req.params.id || req.query.id || req.params.product || req.query.product
 
             if (!id) {
                 res.status(400).json({ error: "ID es requerido" });
