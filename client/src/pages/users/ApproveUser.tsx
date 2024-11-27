@@ -91,6 +91,7 @@ const ApproveUser = () => {
                                             name="usermame"
                                             placeholder="Usuario"
                                             type="text"
+                                            nocaps
                                         />
                                     </div>
                                 </div>
@@ -105,6 +106,7 @@ const ApproveUser = () => {
                                             name="password"
                                             placeholder="Contraseña"
                                             type="text"
+                                            nocaps
                                         />
                                     </div>
                                      <label className="col-sm-12 col-lg-2 col-form-label required fw-bold fs-6 mt-4">
@@ -116,6 +118,7 @@ const ApproveUser = () => {
                                             name="confirm_password"
                                             placeholder="Confirmar contraseña"
                                             type="text"
+                                            nocaps
                                         />
                                     </div> 
                                 </div>

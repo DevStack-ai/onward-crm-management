@@ -49,7 +49,7 @@ export default function Field({
           {...props}
           {...args}
           onChange={(e) => {
-            if(type === "text" && typeof e.target.value === "string") {
+            if(type === "text" && typeof e.target.value === "string" && !args.nocaps) {
               const upper = e.target.value.toUpperCase();
               form.setFieldValue(name, upper);
             }else{

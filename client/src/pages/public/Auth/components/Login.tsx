@@ -36,7 +36,7 @@ export function Login() {
       try {
         const { data: auth } = await login(values.email, values.password);
         const { data: user } = await getUserByToken(auth.token);
-        
+
         saveAuth(auth);
         setCurrentUser(user);
 
@@ -113,12 +113,8 @@ export function Login() {
           {...formik.getFieldProps("password")}
           className={clsx(
             "form-control bg-transparent",
-            {
-              "is-invalid": formik.touched.password && formik.errors.password,
-            },
-            {
-              "is-valid": formik.touched.password && !formik.errors.password,
-            },
+            { "is-invalid": formik.touched.password && formik.errors.password, },
+            { "is-valid": formik.touched.password && !formik.errors.password, },
           )}
         />
         {formik.touched.password && formik.errors.password && (
