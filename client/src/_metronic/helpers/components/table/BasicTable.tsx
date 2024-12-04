@@ -22,6 +22,7 @@ type BasicTableProps = {
   customHeight?: number;
   customWidth?: number;
 
+  onRowClick?: (row: any) => void;
   children?: JSX.Element;
   toolbar?: JSX.Element;
 };
@@ -74,7 +75,7 @@ function BasicTable(props: BasicTableProps) {
                   <th
                     {...column.getHeaderProps({
                       className: column.id !== "actions"
-                        ? "text-start"
+                        ? "text-center"
                         : "text-end px-4",
                       style: (column.id !== "actions" && column.Header !== "No") ? { minWidth: "125px", maxWidth: "300px" } : {},
                     })}
@@ -91,7 +92,13 @@ function BasicTable(props: BasicTableProps) {
               {rows.map((row, i) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()} key={`row-${i}`} >
+                  <tr
+                    {...row.getRowProps()} key={`row-${i}`}
+                    onDoubleClick={(ev) => {
+                      if (props.onRowClick) {
+                        props.onRowClick(row.original);
+                      }
+                    }} >
                     {row.cells.map((cell, i) => (
                       <td {...cell.getCellProps()} key={`cell-${i}`}
                         className={clsx({

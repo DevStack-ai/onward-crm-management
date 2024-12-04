@@ -10,7 +10,7 @@ interface ProductProps {
 }
 
 export default function ProductItem({ product, onAdd }: ProductProps) {
-    const [quantity, setQuantity] = useState(product.art_cantidad ? 1 : 0)
+    const [quantity, setQuantity] = useState(0)
     const [preview, setPreview] = useState("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s")
 
     useEffect(() => {
@@ -55,11 +55,16 @@ export default function ProductItem({ product, onAdd }: ProductProps) {
                                 <a href="#" className='h3'>{product.art_nombre}</a>
                             </h6>
                             <div className='d-flex justify-content-between'>
-                                <select className="form-control form-control-solid"
+                                {/* <select className="form-control form-control-solid"
                                     defaultValue={quantity}
                                     onChange={(ev) => setQuantity(Number(ev.target.value))}>
                                     {[...Array(Number(product.art_cantidad) || "0")].map((v, idx) => (<option key={idx} value={(idx + 1)}>{v || (idx + 1)}</option>))}
-                                </select>
+                                </select> */}
+                                <div className="d-flex gap-3 align-items-center pointer" >
+                                    <div onClick={() => setQuantity(Math.max(0, quantity - Math.ceil(product.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
+                                    <div style={{ fontSize: "25px" }} >{quantity}</div>
+                                    <div onClick={() => setQuantity(quantity + Math.ceil(product.art_palet_caja / 2))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
+                                </div>
                                 <button
                                     className="btn btn-info"
                                     disabled={!product.art_cantidad}

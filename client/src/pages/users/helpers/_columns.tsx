@@ -84,6 +84,12 @@ const usersColumns: ReadonlyArray<Column<Object>> = [
               >
                 Aprobar
               </Dropdown.Item>}
+              {row.original.cli_usuario && <Dropdown.Item
+                as={Link}
+                to={`/users/details/${row.original.cli_codigo}/reset-password`}
+              >
+                Cambiar contraseña
+              </Dropdown.Item>}
 
               {/* <Dropdown.Item
                 as={Link}

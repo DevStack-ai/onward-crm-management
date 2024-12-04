@@ -68,7 +68,6 @@ export class CustomerController {
 
         const codigo = Number(req.params.id);
 
-        console.log({ payload })
         const username = payload.usermame
         const password = payload.password
 
@@ -100,6 +99,29 @@ export class CustomerController {
             message: "Cliente aprobado exitosamente",
             customer: customer.cli_codigo
         })
+    }
+
+    resetPassword = async (req: Request, res: Response) => {
+        const payload = req.body;
+        const codigo = Number(req.params.id);
+
+        const password = payload.password
+
+        const customer = await this.prisma.shp_customer.update({
+            where: {
+                cli_codigo: codigo
+            },
+            data: {
+                cli_password: password
+            }
+        })
+
+        res.status(200).json({
+            message: "Cliente aprobado exitosamente",
+            customer: customer.cli_codigo
+        })
+
+
     }
 
     get = async (req: Request, res: Response) => {

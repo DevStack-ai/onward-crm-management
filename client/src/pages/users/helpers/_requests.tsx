@@ -19,6 +19,11 @@ export async function approveUser(id: any, values: any) {
 
 }
 
+export async function changePassword(id: any, values: any) {
+  return axios.post(`${baseUrl}/${id}/reset-password`, values);
+
+}
+
 export async function checkAvailable(field: string, paylaod: any) {
   return axios.post(`${baseUrl}/available/${field}`, { ...paylaod });
 }

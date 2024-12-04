@@ -37,6 +37,13 @@ export const ApproveUserSchema = yup.object().shape({
         .oneOf([yup.ref('password'), ""], 'Las contraseñas no coinciden')
 })
 
+export const ChangeeUserSchema = yup.object().shape({
+    password: yup.string().required("Campo obligatorio"),
+    confirm_password: yup.string()
+        .required("Campo obligatorio")
+        .oneOf([yup.ref('password'), ""], 'Las contraseñas no coinciden')
+})
+
 export const initialValuesApprove = {
     usermame: "",
     password: "",

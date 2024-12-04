@@ -29,11 +29,6 @@ const columns = (helpers): ReadonlyArray<Column<Object>> => [
     accessor: "no"
   },
   {
-    Header: "Id",
-    accessor: "art_codigo",
-
-  },
-  {
     Header: "SKU",
     accessor: "art_codigo_interno",
   },
@@ -45,7 +40,7 @@ const columns = (helpers): ReadonlyArray<Column<Object>> => [
     )
   },
   {
-    Header: "Descripción",
+    Header: "Descripcion",
     accessor: "art_descripcion",
     Cell: ({ value }) => (
       <div style={{ textOverflow: "ellipsis", textWrap: "wrap", maxWidth: "250px"}}>{value}</div>
@@ -66,7 +61,7 @@ const columns = (helpers): ReadonlyArray<Column<Object>> => [
     }
   },
   {
-    Header: "Categoría",
+    Header: "Categoria",
     accessor: "inv_categoria",
     Cell: ({ value }) => {
       return (<div>{value ? value.cat_nombre : ""}</div>);

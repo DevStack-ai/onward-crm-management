@@ -192,12 +192,7 @@ export class CartController {
 
 
         if (cartItem && !replace) {
-            const stock = Number(product.art_cantidad) - cartItem.car_cantidad
-            if (cantidad > stock) {
-                res.status(400)
-                res.json({ message: "La cantidad supera el stock" })
-                return
-            }
+    
             const cart = await this.prisma.shp_cart.update({
                 where: {
                     car_codigo: cartItem.car_codigo
@@ -213,12 +208,7 @@ export class CartController {
         }
 
         if (cartItem && replace) {
-            const stock = Number(product.art_cantidad)
-            if (cantidad > stock) {
-                res.status(400)
-                res.json({ message: "La cantidad supera el stock" })
-                return
-            }
+  
             const cart = await this.prisma.shp_cart.update({
                 where: {
                     car_codigo: cartItem.car_codigo

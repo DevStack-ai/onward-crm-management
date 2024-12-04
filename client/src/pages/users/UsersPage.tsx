@@ -6,6 +6,7 @@ import { EditDocumentWrappeer } from "./UsersEdit";
 import { DetailsWrapper } from "./UsersDetails"
 
 import { ApproveUser } from "./ApproveUser"
+import { ChangePassword } from "./ApproveResetPssword"
 
 // contacts
 
@@ -66,6 +67,18 @@ const UsersPage = () => {
                 Cliente / Aprobar
               </PageTitle>
               <ApproveUser />
+            </>
+          }
+        />
+
+        <Route
+          path="/details/:id/reset-password"
+          element={
+            <>
+              <PageTitle>
+                Cliente / Cambiar contraseña
+              </PageTitle>
+              <ChangePassword />
             </>
           }
         />
