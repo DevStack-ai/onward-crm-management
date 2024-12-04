@@ -31,7 +31,7 @@ export default function Image({
 
 
     const [preview, setPreview] = useState<string | undefined>();
-
+    console.log(value)
     return (
         <div>
             {args.title && <div className="form-label text-center">{args.title}</div>}

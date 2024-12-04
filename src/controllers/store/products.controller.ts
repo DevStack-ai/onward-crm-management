@@ -774,11 +774,7 @@ export class ProductController {
             //     art_fda_producto: parseInt(fda_product_code),
             // }
 
-            const images = await this.prisma.inv_articulo_imagen.findMany({
-                where: {
-                    img_articulo: product.art_codigo
-                }
-            })
+     
 
             const mmaped = {
                 id: product.art_codigo,
@@ -823,7 +819,21 @@ export class ProductController {
                 fda_product_code: product.art_fda_producto,
                 volume_description: product.art_volumen,
                 accounting_account: product.art_cuenta,
-                imagess: images
+
+                front_image: product.front_image,
+                front_image_path: product.front_image_path,
+
+                back_image: product.back_image,
+                back_image_path: product.back_image_path,
+
+                ingredients: product.ingredients,
+                ingredients_path: product.ingredients_path,
+
+                tag: product.tag,
+                tag_path: product.tag_path,
+
+                zefra_tag: product.zefra_tag,
+                zefra_tag_path: product.zefra_tag_path,
 
             }
 
