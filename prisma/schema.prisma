@@ -35,48 +35,64 @@ model sis_pais {
 }
 
 model inv_articulo {
-  art_codigo                Int                @id @default(autoincrement())
-  art_codigo_interno        String             @db.VarChar(100)
+  art_codigo                Int       @id @default(autoincrement())
+  art_codigo_interno        String    @db.VarChar(100)
   art_pais                  Int
-  art_barcode               String             @db.VarChar(100)
+  art_barcode               String    @db.VarChar(100)
   art_categoria             Int?
   art_marca                 Int?
-  art_proveedor             Int?               @default(0)
-  art_nombre                String             @db.VarChar(100)
-  art_descripcion           String?            @db.Text
-  art_descripcion_2         String?            @db.Text
+  art_proveedor             Int?      @default(0)
+  art_nombre                String    @db.VarChar(100)
+  art_descripcion           String?   @db.Text
+  art_descripcion_2         String?   @db.Text
   art_perecedero            Int?
-  art_tiempo_vida           String?            @db.VarChar(150)
-  art_volumen               String?            @db.VarChar(250)
-  art_cuenta                String?            @db.VarChar(250)
-  art_cantidad              Decimal            @db.Decimal(10, 2)
-  art_unidad_medida         String?            @db.VarChar(250)
-  art_largo                 Decimal            @db.Decimal(10, 2)
-  art_ancho                 Decimal            @db.Decimal(10, 2)
-  art_alto                  Decimal            @db.Decimal(10, 2)
-  art_dimesiones_unidad     String             @db.VarChar(250)
+  art_tiempo_vida           String?   @db.VarChar(150)
+  art_volumen               String?   @db.VarChar(250)
+  art_cuenta                String?   @db.VarChar(250)
+  art_cantidad              Decimal   @db.Decimal(10, 2)
+  art_unidad_medida         String?   @db.VarChar(250)
+  art_largo                 Decimal   @db.Decimal(10, 2)
+  art_ancho                 Decimal   @db.Decimal(10, 2)
+  art_alto                  Decimal   @db.Decimal(10, 2)
+  art_dimesiones_unidad     String    @db.VarChar(250)
   art_moneda                Int
-  art_precio_compra         Decimal?           @default(0.00) @db.Decimal(10, 2)
-  art_precio_costo          Decimal?           @default(0.00) @db.Decimal(10, 2)
-  art_precio_venta          Decimal?           @default(0.00) @db.Decimal(10, 2)
-  art_peso_caja             Decimal            @db.Decimal(10, 2)
-  art_palet_caja            Decimal            @db.Decimal(10, 2)
+  art_precio_compra         Decimal?  @default(0.00) @db.Decimal(10, 2)
+  art_precio_costo          Decimal?  @default(0.00) @db.Decimal(10, 2)
+  art_precio_venta          Decimal?  @default(0.00) @db.Decimal(10, 2)
+  art_peso_caja             Decimal   @db.Decimal(10, 2)
+  art_palet_caja            Decimal   @db.Decimal(10, 2)
   art_cajas_nivel           Int
   art_nivel_palets          Int
-  art_alto_palets           Float              @db.Float
+  art_alto_palets           Float     @db.Float
   art_etiquetas             Int
-  art_dimensiones_etiquetas String             @db.VarChar(150)
+  art_dimensiones_etiquetas String    @db.VarChar(150)
   art_participacion         Int
-  art_numero_fda            String             @db.VarChar(150)
-  art_fce                   String             @db.VarChar(150)
-  art_hts                   String             @db.VarChar(150)
-  art_fda_producto          String             @db.VarChar(150)
-  art_observaciones         String             @db.Text
+  art_numero_fda            String    @db.VarChar(150)
+  art_fce                   String    @db.VarChar(150)
+  art_hts                   String    @db.VarChar(150)
+  art_fda_producto          String    @db.VarChar(150)
+  art_observaciones         String    @db.Text
   art_usuario_update        BigInt?
-  art_fecha_update          DateTime?          @db.DateTime(0)
-  art_situacion             Int
-  shp_cart                  shp_cart[]
-  shp_order_detail          shp_order_detail[]
+  art_fecha_update          DateTime? @db.DateTime(0)
+
+  ingredients      String? @db.MediumText
+  ingredients_path String? @db.MediumText
+
+  tag      String? @db.MediumText
+  tag_path String? @db.MediumText
+
+  zefra_tag      String? @db.MediumText
+  zefra_tag_path String? @db.MediumText
+
+  front_image      String? @db.VarChar(150)
+  front_image_path String? @db.VarChar(150)
+
+  back_image      String? @db.VarChar(150)
+  back_image_path String? @db.VarChar(150)
+
+  art_situacion    Int
+  shp_cart         shp_cart[]
+  shp_order_detail shp_order_detail[]
 
   inv_categoria inv_categoria? @relation(fields: [art_categoria], references: [cat_codigo])
   inv_proveedor fin_proveedor? @relation(fields: [art_proveedor], references: [prov_codigo])

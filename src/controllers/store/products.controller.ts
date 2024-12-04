@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import prisma from "../../db"
 import fs from "fs"
 import os from "os"
-import path from "path"
+import xlsx from "xlsx";
 export class ProductController {
     private prisma: PrismaClient;
     constructor() {
@@ -51,7 +51,7 @@ export class ProductController {
         const result = products.map((product, index) => {
             const img = images.find((image) => image.img_articulo === product.art_codigo)
             return {
-                no:  offset + Number(index) + 1,
+                no: offset + Number(index) + 1,
                 ...product,
                 img_fecha_registro: 0,
                 art_usuario_update: 0,
@@ -139,6 +139,119 @@ export class ProductController {
         })
     }
 
+    export = async (req: Request, res: Response) => {
+
+        const filters = req.body.filters
+        let where: any = {
+            art_situacion: 1
+        }
+
+        if (filters.name) {
+            where = {
+                ...where,
+                art_nombre: {
+                    contains: filters.name
+                }
+            }
+        }
+
+        const products = await this.prisma.inv_articulo.findMany({
+            where: where,
+            orderBy: {
+                art_nombre: 'asc'
+            },
+            include: {
+                inv_categoria: {
+                    select: {
+                        cat_nombre: true
+                    }
+                },
+                inv_proveedor: {
+                    select: {
+                        prov_nombre_comercial: true
+                    }
+                },
+                inv_marca: {
+                    select: {
+                        mar_nombre: true
+                    }
+                },
+                inv_pais: {
+                    select: {
+                        pai_nombre: true
+                    }
+                },
+                inv_moneda: {
+                    select: {
+                        mon_descripcion: true
+                    }
+                }
+            }
+        })
+
+
+        const result = products.map((product, index) => {
+            return {
+                No: Number(index) + 1,
+                SKU: product.art_codigo_interno,
+                Barcode: product.art_barcode,
+                Categoria: product.inv_categoria ? product.inv_categoria.cat_nombre : '',
+                Proveedor: product.inv_proveedor ? product.inv_proveedor.prov_nombre_comercial : '',
+                Marca: product.inv_marca ? product.inv_marca.mar_nombre : '',
+                Pais: product.inv_pais ? product.inv_pais.pai_nombre : '',
+                Nombre: product.art_nombre,
+                Descripcion: product.art_descripcion,
+                "Descripción para Packing List": product.art_descripcion_2,
+                "Descripción del volumen": product.art_volumen,
+                "¿Es producto perecedero?": product.art_perecedero ? 'Si' : 'No',
+                "Tiempo de vida": product.art_tiempo_vida,
+                Observaciones: product.art_observaciones,
+                "Peso por caja (kg)": product.art_peso_caja,
+                "Cajas por palet": product.art_palet_caja,
+                "Cajas por nivel": product.art_cajas_nivel,
+                "Niveles por palet": product.art_nivel_palets,
+                "Altura ya en el palet (mts.)": product.art_alto_palets,
+                "Unidad de Medida": product.art_unidad_medida,
+                "Largo del empaque (caja)": product.art_largo,
+                "Ancho del empaque (caja)": product.art_ancho,
+                "Alto del empaque (caja)": product.art_alto,
+                "Unidad de dimensiones empaque y estibación": product.art_dimesiones_unidad,
+                "FDA NUMBER": product.art_numero_fda,
+                "FCE CID": product.art_fce,
+                'HTS ITEM NUMBER': product.art_hts,
+                "FDA PRODUCT CODE": product.art_fda_producto,
+                "¿Etiquetas?": product.art_etiquetas ? 'Si' : 'No',
+                "Tamaño de etiquetas": product.art_dimensiones_etiquetas,
+                "Moneda": product.inv_moneda.mon_descripcion,
+                "Precio de Compra (Q)": product.art_precio_compra,
+                "Precio de Compra ($)": product.art_precio_costo,
+                "Precio de Venta ($)": product.art_precio_venta,
+                "Cuenta Contable": product.art_cuenta,
+                "% de Participación": product.art_participacion,
+            }
+        })
+
+        const columns = result.length ? Object.keys(result[0]) : []
+
+        const wb = xlsx.utils.book_new();
+        const ws = xlsx.utils.json_to_sheet(result, { header: columns });
+        //make columns width
+
+        //add auto filter
+        ws["!autofilter"] = { ref: `A1:${String.fromCharCode(65 + columns.length - 1)}1` }
+        // add author
+        const wscols = columns.map((item, _index) => {
+            return { wch: Math.max(20, item.length) }
+        })
+        ws["!cols"] = wscols
+        xlsx.utils.book_append_sheet(wb, ws, "Productos");
+        const buffer = xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        res.setHeader("Content-Disposition", "attachment; filename=Productos.xlsx");
+        res.end(buffer);
+
+    }
+
     create = async (req: Request, res: Response) => {
         try {
             const payload = req.body
@@ -217,6 +330,20 @@ export class ProductController {
             const life_time = payload.life_time || ''
             const volume_description = payload.volume_description || ''
 
+            const ingredients = payload.ingredients || ""
+            const ingredients_path = payload.ingredients_path || ""
+
+            const tag = payload.tag || ""
+            const tag_path = payload.tag_path || ""
+
+            const zefra_tag = payload.zefra_tag || ""
+            const zefra_tag_path = payload.zefra_tag_path || ""
+
+            const front_image = payload.front_image
+            const front_image_path = payload.front_image_path
+
+            const back_image = payload.back_image
+            const back_image_path = payload.back_image_path
             //inser in inv_articulo
 
 
@@ -267,94 +394,31 @@ export class ProductController {
 
                     art_hts: String(hts_item_number),
                     art_fda_producto: String(fda_product_code),
+
+                    ingredients: ingredients,
+                    ingredients_path: ingredients_path,
+
+                    tag: tag,
+                    tag_path: tag_path,
+
+                    zefra_tag: zefra_tag,
+                    zefra_tag_path: zefra_tag_path,
+
+                    front_image: front_image,
+                    front_image_path: front_image_path,
+
+                    back_image: back_image,
+                    back_image_path: back_image_path
                 }
             })
 
             //save at home /images
-            const baseDir = os.homedir()
-            if (!fs.existsSync(`${baseDir}/images`)) {
-                fs.mkdirSync(`${baseDir}/images`);
-            }
+      
 
-            const files = req.files as Express.Multer.File[]
-            
-            const front = files.find((file) => file.fieldname === 'front')
-            const back = files.find((file) => file.fieldname === 'back')
-            const top = files.find((file) => file.fieldname === 'top')
-            const bottom = files.find((file) => file.fieldname === 'bottom')
+         
 
-            const queue = []
 
-            if (front) {
-                const path = `${baseDir}/images/${product.art_codigo}_front.png`
-                fs.writeFileSync(path,
-                    front.buffer,
-                    'binary'
-                );
 
-                queue.push(this.prisma.inv_articulo_imagen.create({
-                    data: {
-                        img_articulo: product.art_codigo,
-                        img_imagen: path,
-                        img_type: 'front',
-                        img_fecha_registro: new Date(),
-                    }
-                }))
-            }
-
-            if (back) {
-                const path = `${baseDir}/images/${product.art_codigo}_back.png`
-                fs.writeFileSync(path,
-                    back.buffer,
-                    'binary'
-                );
-
-                queue.push(this.prisma.inv_articulo_imagen.create({
-                    data: {
-                        img_articulo: product.art_codigo,
-                        img_imagen: path,
-                        img_type: 'back',
-                        img_fecha_registro: new Date(),
-                    }
-                }))
-            }
-
-            if (top) {
-                const path = `${baseDir}/images/${product.art_codigo}_top.png`
-                fs.writeFileSync(path,
-                    top.buffer,
-                    'binary'
-                );
-
-                queue.push(this.prisma.inv_articulo_imagen.create({
-                    data: {
-                        img_articulo: product.art_codigo,
-                        img_imagen: path,
-                        img_type: 'top',
-                        img_fecha_registro: new Date(),
-                    }
-                })
-                )
-            }
-
-            if (bottom) {
-                const path = `${baseDir}/images/${product.art_codigo}_bottom.png`
-                fs.writeFileSync(path,
-                    bottom.buffer,
-                    'binary'
-                );
-
-                queue.push(this.prisma.inv_articulo_imagen.create({
-                    data: {
-                        img_articulo: product.art_codigo,
-                        img_imagen: path,
-                        img_type: 'bottom',
-                        img_fecha_registro: new Date(),
-                    }
-                }))
-            }
-
-            await Promise.all(queue)
 
 
 
@@ -425,8 +489,20 @@ export class ProductController {
             const life_time = payload.life_time || ''
             const volume_description = payload.volume_description || ''
 
-            //inser in inv_articulo
+            const ingredients = payload.ingredients || ""
+            const ingredients_path = payload.ingredients_path || ""
 
+            const tag = payload.tag || ""
+            const tag_path = payload.tag_path || ""
+
+            const zefra_tag = payload.zefra_tag || ""
+            const zefra_tag_path = payload.zefra_tag_path || ""
+            //inser in inv_articulo
+            const front_image = payload.front_image
+            const front_image_path = payload.front_image_path
+
+            const back_image = payload.back_image
+            const back_image_path = payload.back_image_path
 
 
             const product = await this.prisma.inv_articulo.update({
@@ -476,173 +552,25 @@ export class ProductController {
 
                     art_hts: String(hts_item_number),
                     art_fda_producto: String(fda_product_code),
+
+                    ingredients: ingredients,
+                    ingredients_path: ingredients_path,
+
+                    tag: tag,
+                    tag_path: tag_path,
+
+                    zefra_tag: zefra_tag,
+                    zefra_tag_path: zefra_tag_path,
+
+                    back_image: back_image,
+                    back_image_path: back_image_path,
+
+                    front_image: front_image,
+                    front_image_path: front_image_path,
                 }
             })
 
-            const baseDir = os.homedir()
-            if (!fs.existsSync(`${baseDir}/images`)) {
-                fs.mkdirSync(`${baseDir}/images`);
-            }
-
-            const files = req.files as Express.Multer.File[]
-            console.log(files)
-
-            const front = files.find((file) => file.fieldname === 'front')
-            const back = files.find((file) => file.fieldname === 'back')
-            const top = files.find((file) => file.fieldname === 'top')
-            const bottom = files.find((file) => file.fieldname === 'bottom')
-
-            const queue = []
-
-            if (front) {
-                const path = `${baseDir}/images/${product.art_codigo}_front.png`
-                fs.writeFileSync(path,
-                    front.buffer,
-                    'binary'
-                );
-
-                const exist = await this.prisma.inv_articulo_imagen.findFirst({
-                    where: {
-                        img_articulo: product.art_codigo,
-                        img_type: 'front'
-                    }
-                })
-
-                if (exist) {
-                    queue.push(this.prisma.inv_articulo_imagen.updateMany({
-                        where: {
-                            img_articulo: product.art_codigo,
-                            img_type: 'front'
-                        },
-                        data: {
-                            img_imagen: path
-                        }
-                    }))
-                } else {
-                    queue.push(this.prisma.inv_articulo_imagen.create({
-                        data: {
-                            img_articulo: product.art_codigo,
-                            img_imagen: path,
-                            img_type: 'front',
-                            img_fecha_registro: new Date(),
-                        }
-                    }))
-                }
-            }
-
-            if (back) {
-                const path = `${baseDir}/images/${product.art_codigo}_back.png`
-                fs.writeFileSync(path,
-                    back.buffer,
-                    'binary'
-                );
-
-                const exist = await this.prisma.inv_articulo_imagen.findFirst({
-                    where: {
-                        img_articulo: product.art_codigo,
-                        img_type: 'back'
-                    }
-                })
-
-                if (exist) {
-                    queue.push(this.prisma.inv_articulo_imagen.updateMany({
-                        where: {
-                            img_articulo: product.art_codigo,
-                            img_type: 'back'
-                        },
-                        data: {
-                            img_imagen: path
-                        }
-                    }))
-                } else {
-                    queue.push(this.prisma.inv_articulo_imagen.create({
-                        data: {
-                            img_articulo: product.art_codigo,
-                            img_imagen: path,
-                            img_type: 'back',
-                            img_fecha_registro: new Date(),
-                        }
-                    }))
-                }
-            }
-
-            if (top) {
-                const path = `${baseDir}/images/${product.art_codigo}_top.png`
-                fs.writeFileSync(path,
-                    top.buffer,
-                    'binary'
-                );
-
-                const exist = await this.prisma.inv_articulo_imagen.findFirst({
-                    where: {
-                        img_articulo: product.art_codigo,
-                        img_type: 'top'
-                    }
-                })
-
-                if (exist) {
-                    queue.push(this.prisma.inv_articulo_imagen.updateMany({
-                        where: {
-                            img_articulo: product.art_codigo,
-                            img_type: 'top'
-                        },
-                        data: {
-                            img_imagen: path
-                        }
-                    }))
-                } else {
-                    queue.push(this.prisma.inv_articulo_imagen.create({
-                        data: {
-                            img_articulo: product.art_codigo,
-                            img_imagen: path,
-                            img_type: 'top',
-                            img_fecha_registro: new Date(),
-                        }
-                    }))
-                }
-
-
-            }
-
-            if (bottom) {
-                const path = `${baseDir}/images/${product.art_codigo}_bottom.png`
-                fs.writeFileSync(path,
-                    bottom.buffer,
-                    'binary'
-                );
-
-                const exist = await this.prisma.inv_articulo_imagen.findFirst({
-                    where: {
-                        img_articulo: product.art_codigo,
-                        img_type: 'bottom'
-                    }
-                })
-
-                if (exist) {
-                    queue.push(this.prisma.inv_articulo_imagen.updateMany({
-                        where: {
-                            img_articulo: product.art_codigo,
-                            img_type: 'bottom'
-                        },
-                        data: {
-                            img_imagen: path
-                        }
-                    }))
-                } else {
-                    queue.push(this.prisma.inv_articulo_imagen.create({
-                        data: {
-                            img_articulo: product.art_codigo,
-                            img_imagen: path,
-                            img_type: 'bottom',
-                            img_fecha_registro: new Date(),
-                        }
-                    }))
-                }
-            }
-
-            await Promise.all(queue)
-
-
+    
 
 
             res.status(200)
@@ -651,6 +579,54 @@ export class ProductController {
             console.log(error)
             return res.status(500).json({ error: "Error al actualizar producto" });
         }
+
+    }
+
+    loadFile = async (req: Request, res: Response) => {
+        try {
+            const files = req.files as Express.Multer.File[]
+            const baseDir = os.homedir()
+
+
+            const file = files.find((file) => file.fieldname === 'file')
+
+            const path = `${baseDir}/files/${file.originalname}`
+            if (!fs.existsSync(`${baseDir}/files`)) {
+                fs.mkdirSync(`${baseDir}/files`);
+            }
+
+            //pdf file
+            fs.writeFileSync(path, file.buffer, 'binary');
+
+            //return location
+            res.status(200)
+            res.json({ path: path })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: "Error al cargar archivo" });
+        }
+
+    }
+
+    getFile = async (req: Request, res: Response) => {
+        const file = req.query.file
+        if (!file) {
+            res.status(400).json({ error: "Archivo es requerido" });
+            return;
+        }
+
+     
+        const baseDir = os.homedir()
+        const path = `${baseDir}/files/${file}`
+
+        if (!fs.existsSync(path)) {
+            res.status(404).json({ error: "Archivo no encontrado" });
+            return;
+        }
+
+
+        res.status(200)
+        res.sendFile(path)
 
     }
 
@@ -863,8 +839,8 @@ export class ProductController {
     getImage = async (req: Request, res: Response) => {
         try {
             const product = req.query.product as string
-            const type = req.query.type  as string
-            
+            const type = req.query.type as string
+
 
             if (!product) {
                 res.status(400).json({ error: "ID es requerido" });
@@ -883,7 +859,7 @@ export class ProductController {
                 }
             })
 
-            if(!image){
+            if (!image) {
                 res.status(404).json({ error: "Imagen no encontrada" });
                 return;
             }
@@ -892,7 +868,7 @@ export class ProductController {
             res.status(200)
             res.sendFile(image.img_imagen)
 
-     
+
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: "Error al obtener imagen" });

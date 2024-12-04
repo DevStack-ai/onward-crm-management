@@ -6,6 +6,7 @@ import { initialValues, NewSchhecma } from "./helpers/_schemas";
 import Field from "formInputs/Field";
 import TextArea from "formInputs/TextArea";
 import Image from "formInputs/Image";
+import File from "formInputs/File";
 
 
 import Select from "formInputs/Select";
@@ -44,7 +45,7 @@ const NewDocumentWrappeer = () => {
         return (
           <Form placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
             <div className="px-10 pt-lg-10">
-              {/* {import.meta.env.MODE === "development" && (JSON.stringify(formik.values, null, 2))} */}
+              {import.meta.env.MODE === "development" && (JSON.stringify(formik.values, null, 2))}
               <form onSubmit={formik.handleSubmit}>
                 <div className="row mb-6 ms-0 px-0" style={{
                   overflowY: "scroll",
@@ -52,10 +53,12 @@ const NewDocumentWrappeer = () => {
                 }}>
 
                   <div className="d-flex justify-content-around mb-3">
-                    <Image form={formik} name="front" title="Frontal" />
-                    <Image form={formik} name="back" title="Trasera" />
-                    <Image form={formik} name="top" title="Arriba" />
-                    <Image form={formik} name="bottom" title="Abajo" />
+                    <Image form={formik} name="front_image" title="Frontal" />
+                    <Image form={formik} name="back_image" title="Trasera" />
+                    <File form={formik} name="ingredients" title="Ingredientes" />
+                    <File form={formik} name="tag" title="Etiqueta" />
+                    <File form={formik} name="zefra_tag" title="Etiqueta versión Zebra" />
+
                   </div>
 
                   <h2>  Información General</h2>

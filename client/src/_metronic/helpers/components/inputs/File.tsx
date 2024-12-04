@@ -1,9 +1,8 @@
 import { FormikValues } from "formik";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-import { getFile } from "@/pages/products/helpers/_requests";
-import axios from "axios";
 import { loadFile } from "../../../../pages/products/helpers/_requests";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -16,7 +15,7 @@ type Props = {
     [key: string]: any;
 };
 
-export default function Image({
+export default function FIle({
     form,
     name,
     type = "text",
@@ -28,10 +27,6 @@ export default function Image({
     const isInvalid = form.touched[name] && form.errors[name];
 
     const ref = useRef<HTMLInputElement>(null);
-
-
-    const [preview, setPreview] = useState<string | undefined>();
-
     return (
         <div>
             {args.title && <div className="form-label text-center">{args.title}</div>}
@@ -41,14 +36,14 @@ export default function Image({
                         ref.current?.click();
                     }
                 }}
-                src={preview ? preview : `${import.meta.env.VITE_API_URL}/files?file=${value}`}
-                alt={`${args.title} preview`}
+                src={"https://cdn3.iconfinder.com/data/icons/muksis/128/pdf-512.png"}
+                alt="preview"
                 className={clsx(
                     "form-control form-control-solid mb-3 mb-lg-0",
                     { "is-invalid": isInvalid },
                     { "is-valid": isValid },
                 )}
-                style={{ width: "200px", height: "200px" }}
+                style={{ width: "200px" }}
             />
 
             <input
@@ -61,12 +56,7 @@ export default function Image({
                 onChange={async () => {
                     const file = (document.querySelector(`input[name=${name}]`) as HTMLInputElement)?.files?.[0];
                     if (file) {
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            setPreview(reader.result as string);
-
-                        };
-
+                        //change name of file to avoid conflicts, format: [name]_[timestamp].[extension]
                         const extension = file.name.split('.').pop();
                         const timestamp = new Date().getTime();
                         const newFileName = `${name}_${timestamp}.${extension}`;
@@ -76,15 +66,17 @@ export default function Image({
                         const path = query.data.path;
                         toast.dismiss()
                         toast.success("Archivo subido con éxito");
-
-                        reader.readAsDataURL(file);
                         form.setFieldValue(name, newFileName);
                         form.setFieldValue(`${name}_path`, path);
-
                     }
                 }}
                 disabled={form.isSubmitting || args.disabled}
             />
+            <div className="text-center">
+                {value && <a
+                    href={`${import.meta.env.VITE_API_URL}/files?file=${value}`}
+                    target="_blank" className="h3 btn-sm btn-secondary btn">Ver archivo</a>}
+            </div>
         </div>
 
     );

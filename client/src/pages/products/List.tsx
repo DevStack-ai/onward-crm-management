@@ -7,6 +7,9 @@ import { useSelector } from "react-redux";
 import { BasicTableState, ReduxState } from "../../providers";
 import * as actions from "../../redux/reducers/products/actions";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { downloadProducts } from "./helpers/_requests";
 
 const ListWrapper = () => {
   const users: BasicTableState = useSelector((state: ReduxState) => state.products);
@@ -28,11 +31,20 @@ const ListWrapper = () => {
         navigate(`/products/${row.art_codigo}/edit`);
       }}
     >
-      <>
+      <div className="d-flex align-items-center position-relative my-1">
+        <Button variant="secondary" className="mx-2" onClick={() => {
+          toast.promise(downloadProducts({ ...helpers.filters }), {
+            pending: "Descargando...",
+            success: "Descargado",
+            error: "Error al descargar"
+          });
+        }}>
+          Exportar
+        </Button>
         <Search
           onChange={(input: string) => helpers.setFilters({ name: input })}
         />
-      </>
+      </div >
     </BasicTable>
   );
 };

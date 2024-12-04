@@ -39,7 +39,7 @@ export interface Product {
     art_usuario_update: number
     art_situacion: number
     img?: string
-
+    front_image: string;
     quantity?: number
 
 }
