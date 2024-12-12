@@ -98,7 +98,18 @@ const AsideDefault = () => {
                   </span>
                 </div>
               </div>
- 
+              {hasRequiredRole(1, true) && (<AsideMenuItemWithSub
+                to="/admins"
+                title="Configuración"
+                icon="setting"
+              >
+                <AsideMenuItem
+                  to="/admins"
+                  title="Administradores"
+                  hasBullet
+                />
+              </AsideMenuItemWithSub>)}
+
               {hasRequiredRole(1, true) && (<AsideMenuItemWithSub
                 to="/users"
                 title="Tienda"

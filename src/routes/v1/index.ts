@@ -15,6 +15,7 @@ import country from "./country.routes";
 import provider from "./provider.routes";
 import currency from "./currency.routes";
 import files from "./files.routes";
+import admins from "./admin.routes";
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.use("/store/products", products)
 router.use("/store/cart", cart)
 router.use("/store/order", order)
 
+router.use("/admins", admins)
 router.use("/files", files)
 router.use("/orders", order)
 router.use("/auth", auth)
