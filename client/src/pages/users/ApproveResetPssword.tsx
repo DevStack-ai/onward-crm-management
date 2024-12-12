@@ -122,10 +122,10 @@ const ChangePassword = () => {
                                         disabled={formik.isSubmitting || !formik.isValid ||
                                             !formik.touched}
                                     >
-                                        <span className="indicator-label">Aprobar</span>
+                                        <span className="indicator-label">Actualizar</span>
                                         {(formik.isSubmitting) && (
                                             <span className="indicator-progress">
-                                                Aprobando...{" "}
+                                                Actualizando...{" "}
                                                 <span className="spinner-border spinner-border-sm align-middle ms-2">
                                                 </span>
                                             </span>
