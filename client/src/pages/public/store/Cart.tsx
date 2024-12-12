@@ -6,6 +6,7 @@ import Loading from "./components/Loading";
 import { toast } from "react-toastify";
 import { askModal } from "./components/ashModal";
 import { useNavigate } from "react-router-dom";
+import { KTIcon } from "metronic/helpers"
 
 interface CartProps {
     refresh: boolean,
@@ -56,7 +57,7 @@ export default function Cart(props: CartProps) {
             setTimeout(() => {
                 window.location.reload()
             }, 1000)
-           
+
         } catch (err) {
             toast.dismiss()
             toast.error("Error al eliminar del carrito")
@@ -64,7 +65,7 @@ export default function Cart(props: CartProps) {
         }
     }
 
-    async function modal(){
+    async function modal() {
         await askModal({
             mode: "warning",
             title: "Crear orden",
@@ -72,7 +73,7 @@ export default function Cart(props: CartProps) {
             confirmAction: submit,
             confirmText: "Crear orden",
             cancelText: "Cancelar",
-            cancelAction: () => {}
+            cancelAction: () => { }
 
         })
     }
@@ -124,14 +125,20 @@ export default function Cart(props: CartProps) {
                                         <th scope="row" className="text-center">{index + 1}</th>
                                         <td>{item.art_nombre}</td>
                                         <td>
-                                            <select className="form-control form-control-solid"
+
+                                            <div className="d-flex gap-3 align-items-center pointer" >
+                                                <div onClick={() => updateCart(item, Math.max(0, (item.quantity || 0) - Math.ceil(item.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
+                                                <div style={{ fontSize: "25px" }} >{(item.quantity || 0)}</div>
+                                                <div onClick={() => updateCart(item, (item.quantity || 0) + Math.ceil(item.art_palet_caja / 2))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
+                                            </div>
+                                            {/* <select className="form-control form-control-solid"
                                                 defaultValue={item.quantity}
                                                 onChange={(ev) => updateCart(item, Number(ev.target.value))}>
                                                 {[...Array(Number(item.art_cantidad) || "0")].map((v, idx) => (<option key={idx} value={(idx + 1)}>{v || (idx + 1)}</option>))}
-                                            </select>
+                                            </select> */}
                                         </td>
                                         <td>$ {item.art_precio_venta.toFixed(2)}</td>
-                                        <td>$ {((item.quantity || 1) * item.art_precio_venta).toFixed(2)}</td>
+                                        <td>$ {((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta).toFixed(2)}</td>
                                         <td>
                                             <button
                                                 className="btn btn-danger"
@@ -145,7 +152,7 @@ export default function Cart(props: CartProps) {
                                 <tr className="border-top">
 
                                     <td colSpan={4} className="text-right">Total</td>
-                                    <td>$ {list.reduce((acc, item) => acc + ((item.quantity || 1) * item.art_precio_venta), 0).toFixed(2)}</td>
+                                    <td>$ {list.reduce((acc, item) => acc + ((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta), 0).toFixed(2)}</td>
                                     <td>
                                         <button
                                             disabled={submitting}

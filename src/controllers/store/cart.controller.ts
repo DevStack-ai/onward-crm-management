@@ -99,7 +99,7 @@ export class CartController {
             return
         }
 
-        if (!cantidad) {
+        if (cantidad === undefined) {
             res.status(400)
             res.json({ message: "La cantidad es requerida" })
             return
