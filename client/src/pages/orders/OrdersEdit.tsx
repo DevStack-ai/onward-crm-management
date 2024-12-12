@@ -8,6 +8,7 @@ import { addCart, deleteCart } from '../public/store/helpers/_requests';
 import { numberToCurrency } from '../../utils';
 import { askModal } from '../public/store/components/ashModal';
 
+import { KTIcon } from "metronic/helpers"
 
 export function EditWrapper() {
   const navigate = useNavigate();
@@ -103,7 +104,11 @@ export function EditWrapper() {
                       <td>{item.art_nombre}</td>
                       <td>
                         <div className='d-flex align-items-center h-100 '>
-
+                          <div className="d-flex gap-3 align-items-center pointer" >
+                            <div onClick={() => updateCart(item, Math.max(0, (item.quantity || 0) - Math.ceil(item.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
+                            <div style={{ fontSize: "25px" }} >{(item.quantity || 0)}</div>
+                            <div onClick={() => updateCart(item, (item.quantity || 0) + Math.ceil(item.art_palet_caja / 2))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
+                          </div>
                           <select className="form-control form-control-solid w-15"
                             defaultValue={item.ord_cantidad}
                             onChange={(ev) => askModal({
@@ -124,7 +129,7 @@ export function EditWrapper() {
                       </td>
                       <td>$ {item.art_precio_venta.toFixed(2)}</td>
                       <td>{numberToCurrency(Number(item.ord_precio))}</td>
-                      <td>{numberToCurrency((item.quantity || 1) * item.ord_precio)}</td>
+                      <td>{numberToCurrency((item.quantity !== undefined ? item.quantity : 0) * item.ord_precio)}</td>
                       <td>
                         <button
                           className="btn btn-danger"
