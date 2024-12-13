@@ -38,7 +38,7 @@ export default function ProductItem({ product, onAdd }: ProductProps) {
                             </h6>
                             <br />
                             <label className="prod-desc">
-                                {product.art_codigo_interno}
+                                SKU:{product.art_codigo_interno}
                             </label>
                             <br />
 
