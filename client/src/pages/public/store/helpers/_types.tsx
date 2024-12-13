@@ -1,6 +1,6 @@
 export interface Product {
     art_codigo: number
-    art_codigo_numbererno: string
+    art_codigo_interno: string
     art_pais: number
     art_barcode: string
     art_categoria: number
@@ -41,6 +41,7 @@ export interface Product {
     img?: string
     front_image: string;
     quantity?: number
+    sku: string
 
 }
 

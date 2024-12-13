@@ -36,6 +36,16 @@ export default function ProductItem({ product, onAdd }: ProductProps) {
                             <h6 className="prod-title">
                                 <a href="#" className='h3'>{product.art_nombre}</a>
                             </h6>
+                            <br />
+                            <label className="prod-desc">
+                                {product.art_codigo_interno}
+                            </label>
+                            <br />
+
+                            <label className="prod-desc">
+                                {Math.ceil(product.art_palet_caja)} Unidades por palet
+                            </label>
+                            <br />
                             <div className='d-flex justify-content-between'>
                                 {/* <select className="form-control form-control-solid"
                                     defaultValue={quantity}
@@ -43,9 +53,9 @@ export default function ProductItem({ product, onAdd }: ProductProps) {
                                     {[...Array(Number(product.art_cantidad) || "0")].map((v, idx) => (<option key={idx} value={(idx + 1)}>{v || (idx + 1)}</option>))}
                                 </select> */}
                                 <div className="d-flex gap-3 align-items-center pointer" >
-                                    <div onClick={() => setQuantity(Math.max(0, quantity - Math.ceil(product.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
+                                    <div onClick={() => setQuantity(Math.max(0, quantity - Math.floor(product.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
                                     <div style={{ fontSize: "25px" }} >{quantity}</div>
-                                    <div onClick={() => setQuantity(quantity + Math.ceil(product.art_palet_caja / 2))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
+                                    <div onClick={() => setQuantity((quantity + Math.floor(product.art_palet_caja / 2)))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
                                 </div>
                                 <button
                                     className="btn btn-info"

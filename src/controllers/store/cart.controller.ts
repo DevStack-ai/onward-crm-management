@@ -147,17 +147,18 @@ export class CartController {
 
             const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
             //this are in cm, convert to feet
-            const cubicFeet = cubic / 28316.8466
+            const cubicFeet = cubic / 1000000
 
             return acc + (cubicFeet * item.car_cantidad)
         }, 0)
 
-        //cubic feet of new item
+        //cubic meter of new item
         const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
-        const cubicFeetItem = cubic / 28316.8466
+        // it is in cm, convert to meter 
+        const cubicsMetter = cubic / 1000000
 
-        //check if adding the item will exceed the cubic feet limit, 40 cubic feet
-        if (cubicFeet + (cubicFeetItem * cantidad) > (contenedor.tip_pies * 0.9)) {
+        //check if adding the item will exceed the cubic feet limit, 67.7mt3
+        if (cubicFeet + (cubicsMetter * cantidad) > (contenedor.tip_pies * 0.9)) {
             res.status(400)
             res.json({ message: "El carrito excede el limite de 40 pies cubicos" })
             return
@@ -170,7 +171,6 @@ export class CartController {
         }, 0)
 
         const newPallets = Math.ceil(cantidad / Number(product.art_palet_caja))
-        console.log(totalPallets)
         if ((totalPallets + newPallets) > contenedor.tip_palets) {
             res.status(400)
             res.json({ message: "El carrito excede el limite de 20 palets" })
@@ -289,8 +289,8 @@ export class CartController {
             const product = item.artiulo
 
             const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
-            //this are in cm, convert to feet
-            const cubicFeet = cubic / 28316.8466
+            //this are in cm, convert to  meter
+            const cubicFeet = cubic / 1000000
 
             return acc + (cubicFeet * item.car_cantidad)
         }, 0)
