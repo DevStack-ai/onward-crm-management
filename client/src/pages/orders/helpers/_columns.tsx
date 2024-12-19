@@ -66,32 +66,19 @@ const columns = (state, actions): ReadonlyArray<Column<Object>> => [
               Acciones
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              {/* <Dropdown.Item
+              <Dropdown.Item
                 as={Link}
                 to={`/orders/edit/${row.original.ord_codigo}`}
               >
                 Editar
               </Dropdown.Item>
-              <Dropdown.Item
+              {/* <Dropdown.Item
                 as={Link}
                 to={`/orders/details/${row.original.ord_codigo}`}
               >
                 Detalles
               </Dropdown.Item> */}
-              {actions.onApprove && <Dropdown.Item
-                onClick={async () => {
-                  if (actions.onApprove) actions.onApprove(row.original.ord_codigo);
-                }}
-              >
-                Aprobar
-              </Dropdown.Item>}
-              {actions.onReject && <Dropdown.Item
-                onClick={async () => {
-                  if (actions.onReject) actions.onReject(row.original.ord_codigo);
-                }}
-              >
-                Rechazar
-              </Dropdown.Item>}
+
             </Dropdown.Menu>
           </Dropdown>
         </div>
