@@ -168,7 +168,8 @@ export class OrderController {
                             select: {
                                 art_nombre: true,
                                 art_precio_venta: true,
-                                art_cantidad: true
+                                art_cantidad: true,
+                                art_palet_caja: true
                             }
                         }
                     }
@@ -188,9 +189,9 @@ export class OrderController {
                 ...item,
                 art_precio_venta: Number(item.article.art_precio_venta),
                 art_nombre: item.article.art_nombre,
-                art_cantidad: item.article.art_cantidad
+                art_cantidad: item.article.art_cantidad,
+                art_palet_caja: item.article.art_palet_caja
 
-                
             }
         })
 
@@ -204,14 +205,14 @@ export class OrderController {
     }
 
     updateOrder = async (req: Request, res: Response) => {
-        
+
         //update line an update price with same logic that cart controller and update total
         // const payload = {
         //     line: item.ord_codigo,
         //     quantity: quantity
         //   }
 
-    
+
 
         const order = await this.prisma.shp_order.findUnique({
             where: {
@@ -225,8 +226,9 @@ export class OrderController {
             })
         }
 
-        const ord_codigo = order.ord_codigo
+        const ord_codigo = req.body.ord_codigo
         const quantity = req.body.quantity
+
 
         const line = await this.prisma.shp_order_detail.findUnique({
             where: {
@@ -284,7 +286,7 @@ export class OrderController {
 
         await this.prisma.shp_order.update({
             where: {
-                ord_codigo: ord_codigo
+                ord_codigo: order.ord_codigo
             },
             data: {
                 ord_total: total.toFixed(2)

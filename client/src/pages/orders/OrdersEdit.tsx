@@ -105,31 +105,15 @@ export function EditWrapper() {
                       <td>
                         <div className='d-flex align-items-center h-100 '>
                           <div className="d-flex gap-3 align-items-center pointer" >
-                            <div onClick={() => updateCart(item, Math.max(0, (item.quantity || 0) - Math.ceil(item.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
-                            <div style={{ fontSize: "25px" }} >{(item.quantity || 0)}</div>
-                            <div onClick={() => updateCart(item, (item.quantity || 0) + Math.ceil(item.art_palet_caja / 2))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
+                            <div onClick={() => updateCart(item, Math.max(0, (item.ord_cantidad || 0) - Math.ceil(item.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
+                            <div style={{ fontSize: "25px" }} >{(item.ord_cantidad || 0)}</div>
+                            <div onClick={() => updateCart(item, (item.ord_cantidad || 0) + Math.ceil(item.art_palet_caja / 2))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
                           </div>
-                          <select className="form-control form-control-solid w-15"
-                            defaultValue={item.ord_cantidad}
-                            onChange={(ev) => askModal({
-                              mode: "warning",
-                              title: "Actualizar cantidad",
-                              content: "Cambiar la cantidad",
-                              confirmAction: () => updateCart(item, Number(ev.target.value)),
-                              confirmText: "Actualizar",
-                              cancelAction: () => { },
-                              cancelText: "Cancelar"
-                            })}>
-                            {[...Array(Number(item.art_cantidad) || "0")].map((v, idx) => (<option key={idx} value={(idx + 1)}>{v || (idx + 1)}</option>))}
-                          </select>
-
-                          de {item.art_cantidad}
                         </div>
-
                       </td>
                       <td>$ {item.art_precio_venta.toFixed(2)}</td>
                       <td>{numberToCurrency(Number(item.ord_precio))}</td>
-                      <td>{numberToCurrency((item.quantity !== undefined ? item.quantity : 0) * item.ord_precio)}</td>
+                      <td>{numberToCurrency((item.ord_cantidad !== undefined ? item.ord_cantidad : 0) * item.ord_precio)}</td>
                       <td>
                         <button
                           className="btn btn-danger"
