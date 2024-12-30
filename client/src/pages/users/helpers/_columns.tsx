@@ -10,16 +10,11 @@ import { toast } from "react-toastify";
 
 
 export function getTag(situacion: number) {
-  if (situacion === 2) {
-    return ["Activo", "success"];
-  }
-  if (situacion === 1) {
-    return ["Pendiente", "warning"];
-  }
-  if (situacion === 0) {
-    return ["Inactivo", "danger"];
-  }
 
+  if (situacion === 0) return ["Pendiente", "info"];
+  if (situacion === 1) return ["Enviado", "warning"];
+  if (situacion === 3) return ["Aprobado", "success"];
+  if (situacion === 2) return ["Rechazado", "danger"];
   return ["Desconocido", "dark"];
 
 }

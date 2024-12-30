@@ -66,6 +66,17 @@ export async function downloadProducts(filters: any) {
 
 }
 
+export async function exportCatalog(file: string) {
+  const query = await axios.post(`${baseUrl}/download`, { file: file }, { responseType: "blob" });
+  const url = window.URL.createObjectURL(new Blob([query.data]));
+  const link = document.createElement("a");
+  const date = moment().format("DDMMYYYYHHmm")
+  link.setAttribute("href", url);
+  link.setAttribute("download", `Productos${date}.${file}`);
+  link.click();
+
+}
+
 
 export async function loadFile(file: File, name: string) {
   const form = new FormData();

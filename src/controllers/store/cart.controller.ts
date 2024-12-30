@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import prisma from "../../db"
+import { round } from "../utils";
 
 
 export class CartController {
@@ -148,7 +149,9 @@ export class CartController {
             const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
             //this are in cm, convert to feet
             const cubicFeet = cubic / 1000000
-
+            if(item.car_codigo === cartItem?.car_codigo){
+                return acc
+            }
             return acc + (cubicFeet * item.car_cantidad)
         }, 0)
 
@@ -158,19 +161,22 @@ export class CartController {
         const cubicsMetter = cubic / 1000000
 
         //check if adding the item will exceed the cubic feet limit, 67.7mt3
-        if (cubicFeet + (cubicsMetter * cantidad) > (contenedor.tip_pies * 0.9)) {
+        if ((cubicFeet + (cubicsMetter * cantidad)) > (contenedor.tip_pies * 0.9)) {
             res.status(400)
-            res.json({ message: "El carrito excede el limite de 40 pies cubicos" })
+            res.json({ message: "El carrito excede el limite de espacio cubico" })
             return
         }
 
         //check that the total of pallets is less than 20
         const totalPallets = currentCart.reduce((acc, item) => {
             const product = item.artiulo
-            return acc + Math.ceil(item.car_cantidad / Number(product.art_palet_caja))
+            if(item.car_codigo === cartItem?.car_codigo){
+                return acc
+            }
+            return acc + round(item.car_cantidad / Number(product.art_palet_caja), 0.5)
         }, 0)
 
-        const newPallets = Math.ceil(cantidad / Number(product.art_palet_caja))
+        const newPallets = round(cantidad / Number(product.art_palet_caja), 0.5)
         if ((totalPallets + newPallets) > contenedor.tip_palets) {
             res.status(400)
             res.json({ message: "El carrito excede el limite de 20 palets" })
@@ -180,6 +186,9 @@ export class CartController {
         //check the weright of the cart
         const totalWeight = currentCart.reduce((acc, item) => {
             const product = item.artiulo
+            if(item.car_codigo === cartItem?.car_codigo){
+                return acc
+            }
             return acc + (Number(product.art_peso_caja) * item.car_cantidad)
         }, 0)
 
@@ -192,7 +201,7 @@ export class CartController {
 
 
         if (cartItem && !replace) {
-    
+
             const cart = await this.prisma.shp_cart.update({
                 where: {
                     car_codigo: cartItem.car_codigo
@@ -208,7 +217,7 @@ export class CartController {
         }
 
         if (cartItem && replace) {
-  
+
             const cart = await this.prisma.shp_cart.update({
                 where: {
                     car_codigo: cartItem.car_codigo
@@ -289,15 +298,32 @@ export class CartController {
             const product = item.artiulo
 
             const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
+
             //this are in cm, convert to  meter
             const cubicFeet = cubic / 1000000
 
             return acc + (cubicFeet * item.car_cantidad)
         }, 0)
+        const penalty_prices = await this.prisma.shp_price_penalty.findMany()
+
+        const totalMoney = cart.reduce((acc, item) => {
+
+            const product = item.artiulo
+            const percent_left = ((Number(item.car_cantidad) / Number(product.art_palet_caja))) * 100
+
+            const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
+            const penalty = penalty_item ? penalty_item.ppe_penalty : 0
+
+
+            const penalty_price = Number(product.art_precio_venta) * (Number(penalty) / 100)
+            const price = Number(product.art_precio_venta) + penalty_price
+
+            return acc + (price * item.car_cantidad)
+        }, 0)
 
 
         res.status(200)
-        res.json({ count, cubicFeet })
+        res.json({ count, cubicFeet, totalMoney })
     }
 
     getCartTotal = async (req: Request, res: Response) => {

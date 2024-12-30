@@ -4,6 +4,7 @@ import prisma from "../../db"
 import fs from "fs"
 import os from "os"
 import xlsx from "xlsx";
+import pdfkit from "pdfkit-table";
 export class ProductController {
     private prisma: PrismaClient;
     constructor() {
@@ -33,7 +34,7 @@ export class ProductController {
             take: take,
             where: where,
             orderBy: {
-                art_codigo: 'asc'
+                art_nombre: 'asc'
             }
         })
 
@@ -228,6 +229,11 @@ export class ProductController {
                 "Precio de Venta ($)": product.art_precio_venta,
                 "Cuenta Contable": product.art_cuenta,
                 "% de Participación": product.art_participacion,
+                "Imagen Frontal": product.front_image ? `https://onward-bpo.com/api/v1/files?file=${product.front_image}` : null,
+                "Imagen Trasera": product.back_image ? `https://onward-bpo.com/api/v1/files?file=${product.back_image}` : null,
+                "Ingredientes": product.ingredients_path ? `https://onward-bpo.com/api/v1/files?file=${product.ingredients_path}` : null,
+                "Tag": product.tag_path ? `https://onward-bpo.com/api/v1/files?file=${product.tag_path}` : null,
+                "Zefra Tag": product.zefra_tag_path ? `https://onward-bpo.com/api/v1/files?file=${product.zefra_tag_path}` : null
             }
         })
 
@@ -413,9 +419,9 @@ export class ProductController {
             })
 
             //save at home /images
-      
 
-         
+
+
 
 
 
@@ -570,7 +576,7 @@ export class ProductController {
                 }
             })
 
-    
+
 
 
             res.status(200)
@@ -615,7 +621,7 @@ export class ProductController {
             return;
         }
 
-     
+
         const baseDir = os.homedir()
         const path = `${baseDir}/files/${file}`
 
@@ -774,7 +780,7 @@ export class ProductController {
             //     art_fda_producto: parseInt(fda_product_code),
             // }
 
-     
+
 
             const mmaped = {
                 id: product.art_codigo,
@@ -836,9 +842,11 @@ export class ProductController {
                 zefra_tag_path: product.zefra_tag_path,
 
             }
+     
+
 
             res.status(200)
-            res.json(mmaped)
+            res.json({ ...mmaped })
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: "Error al obtener producto" });
@@ -884,5 +892,167 @@ export class ProductController {
             return res.status(500).json({ error: "Error al obtener imagen" });
         }
 
+    }
+
+    downloadProducts = async (req: Request, res: Response) => {
+        const file = req.body.file
+
+
+        if (!file) {
+            res.status(400).json({ error: "Archivo es requerido" });
+            return;
+        }
+
+        const products = await this.prisma.inv_articulo.findMany({
+            where: {
+                art_situacion: 1
+            },
+            orderBy: {
+                art_nombre: 'asc'
+            },
+            include: {
+                inv_categoria: {
+                    select: {
+                        cat_nombre: true
+                    }
+                },
+                inv_proveedor: {
+                    select: {
+                        prov_nombre_comercial: true
+                    }
+                },
+                inv_marca: {
+                    select: {
+                        mar_nombre: true
+                    }
+                },
+                inv_pais: {
+                    select: {
+                        pai_nombre: true
+                    }
+                },
+                inv_moneda: {
+                    select: {
+                        mon_descripcion: true
+                    }
+                }
+            }
+        })
+
+
+        const result = products.map((product, index) => {
+            return {
+                No: Number(index) + 1,
+                SKU: product.art_codigo_interno,
+                Categoria: product.inv_categoria ? product.inv_categoria.cat_nombre : '',
+                Marca: product.inv_marca ? product.inv_marca.mar_nombre : '',
+                Nombre: product.art_nombre,
+                "Tiempo de vida": product.art_tiempo_vida,
+                "Precio ($)": product.art_precio_venta,
+                "Imagen Frontal": product.front_image ? `https://onward-bpo.com/api/v1/files?file=${product.front_image}` : null,
+                "Imagen Trasera": product.back_image ? `https://onward-bpo.com/api/v1/files?file=${product.back_image}` : null,
+
+            }
+        })
+
+        if (file === "xlsx") {
+
+
+            const columns = result.length ? Object.keys(result[0]) : []
+
+            const wb = xlsx.utils.book_new();
+            const ws = xlsx.utils.json_to_sheet(result, { header: columns });
+            //make columns width
+
+            //add auto filter
+            ws["!autofilter"] = { ref: `A1:${String.fromCharCode(65 + columns.length - 1)}1` }
+            // add author
+            const wscols = columns.map((item, _index) => {
+                return { wch: Math.max(20, item.length) }
+            })
+            ws["!cols"] = wscols
+            xlsx.utils.book_append_sheet(wb, ws, "Productos");
+            const buffer = xlsx.write(wb, { type: "buffer", bookType: "xlsx" });
+            res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            res.setHeader("Content-Disposition", "attachment; filename=Productos.xlsx");
+            res.end(buffer);
+
+            return
+
+        }
+
+        if (file === "pdf") {
+            const doc = new pdfkit({ margin: 30, layout: 'landscape' });
+            let buffers: any[] = [];
+            doc.on('data', buffers.push.bind(buffers));
+            doc.on('end', () => {
+                const data = Buffer.concat(buffers);
+                res.status(200);
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', `attachment; filename="reporte.pdf"`);
+                res.setHeader('Content-Length', Buffer.byteLength(data));
+                res.end(data);
+            });
+
+            const headers = [
+                { label: "No", property: "No", headerColor: "#FFF" },
+                { label: "SKU", property: "SKU", headerColor: "#FFF" },
+                { label: "Categoria", property: "Categoria", headerColor: "#FFF" },
+                { label: "Marca", property: "Marca", headerColor: "#FFF" },
+                { label: "Nombre", property: "Nombre", headerColor: "#FFF" },
+                { label: "Tiempo de vida", property: "Tiempo de vida", headerColor: "#FFF" },
+                { label: "Precio ($)", property: "Precio ($)", headerColor: "#FFF" },
+
+            ]
+
+            const rows = result.map((product) => {
+                delete product["Imagen Frontal"]
+                delete product["Imagen Trasera"]
+                return Object.values(product).map(String)
+            })
+
+            console.log(rows)
+            doc.table({
+                headers: headers,
+                rows: rows,
+            }, {
+                columnsSize: [25, 50, 120, 120, 200, 100, 50],
+            })
+
+
+            doc.end();
+            return
+
+        }
+
+        res.status(400)
+        res.json({
+            error: "Archivo no soportado"
+        })
+
+    }
+
+    listProducts = async (req: Request, res: Response) => {
+        const ord_codig = req.body.ord_codig
+
+        //list all products that are not in the order
+        const products = await this.prisma.inv_articulo.findMany({
+            where: {
+                art_situacion: 1,
+                NOT: {
+                    shp_order_detail: {
+                        some: {
+                            ord_codigo: ord_codig,
+                        }
+                    }
+                }
+            },
+            orderBy: {
+                art_nombre: 'asc'
+            }
+        })
+
+        res.status(200)
+        res.json(products)
     }
 }

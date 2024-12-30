@@ -61,3 +61,11 @@ export interface Category {
     _id: string,
     name: string
 }
+
+
+export interface Costos {
+    costo_id: number
+    id: number
+    nombre: string
+    valor: number
+}

@@ -13,6 +13,7 @@ export default function Header(props: HeaderProps) {
     const { currentUser } = useAuth()
     const [count, setCount] = useState(0)
     const [cubicFeet, setCubicFeet] = useState(0)
+    const [totalOrder, setTotalOrder] = useState(0)
 
     const naviate = useNavigate()
 
@@ -20,8 +21,10 @@ export default function Header(props: HeaderProps) {
         const query = await getCartCount(currentUser?.cli_codigo || 0)
         const count = query.data.count as number
         const cubicFeet = query.data.cubicFeet as number
+        const totalMoney = query.data.totalMoney as number
         setCount(count)
         setCubicFeet(cubicFeet)
+        setTotalOrder(totalMoney)
 
     }
 
@@ -78,14 +81,21 @@ export default function Header(props: HeaderProps) {
                             </div>
                         </h1>
                         <div className='px-5 d-flex gap-5'>
+                            <div className='d-flex align-items-center pointer' onClick={() => naviate("/store/orders")}>
+                                <h2 className='mx-4'>
+                                    Mis Ordenes
+                                </h2>
+                            </div>
                             <div className='d-flex align-items-center pointer' onClick={() => naviate("/store")}>
                                 <KTIcon iconName='store' className='h1' style={{ fontSize: "30px" }} />
                                 <h2 className='mx-4'>
                                     Tienda
                                 </h2>
                             </div>
-                            <div className='d-flex pointer' onClick={() => naviate("/store/cart")}>
-                                {cubicFeet > 0 && <span className='badge badge-success' style={{ minWidth: "20px", height: "20px" }}>{cubicFeet.toFixed(2)} ft³</span>}
+                            <div className='d-flex pointer ' onClick={() => naviate("/store/cart")}>
+                                {totalOrder > 0 && <span className='mx-2' style={{ minWidth: "26px", height: "30px", fontSize: "24px" }}>$ {totalOrder.toFixed(2)}</span>}
+
+                                {cubicFeet > 0 && <span className='badge badge-success' style={{ minWidth: "26px", height: "30px", fontSize: "24px" }}>{cubicFeet.toFixed(2)} ft³</span>}
                                 <KTIcon iconName='handcart' className='h1' style={{ fontSize: "30px", }} />
                                 {count > 0 && <span className='badge badge-danger' style={{ minWidth: "20px", height: "20px" }}>{count}</span>}
                                 <h2 className='mx-4'>

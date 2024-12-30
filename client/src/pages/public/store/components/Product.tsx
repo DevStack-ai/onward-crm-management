@@ -23,7 +23,7 @@ export default function ProductItem({ product, onAdd }: ProductProps) {
                 <div className="card p-4">
 
                     <a href="#" className="product-img"><img
-                        src={product.front_image ? `${import.meta.env.VITE_API_URL}/files?file=${product.front_image}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"}
+                        src={product.front_image ? `https://onward-bpo.com/api/v1/files?file=${product.front_image}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"}
                         alt="producto"
                         width="150px" />
                     </a>

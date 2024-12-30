@@ -111,19 +111,21 @@ export default function Cart(props: CartProps) {
                         <table className="table table-striped border" style={{ overflowY: "scroll", maxHeight: "75vh" }}>
                             <thead>
                                 <tr>
-                                    <th scope="col" className="text-center">#</th>
-                                    <th scope="col">Producto</th>
-                                    <th scope="col">Cantidad</th>
-                                    <th scope="col">Precio</th>
-                                    <th scope="col">Total</th>
-                                    <th scope="col">Acciones</th>
+                                    <th scope="col" className="text-center" style={{ fontSize: "25px" }}>#</th>
+                                    <th scope="col" style={{ fontSize: "25px" }}>Imagen</th>
+                                    <th scope="col" style={{ fontSize: "25px" }}>Producto</th>
+                                    <th scope="col" style={{ fontSize: "25px" }}>Cantidad</th>
+                                    <th scope="col" style={{ fontSize: "25px" }}>Precio</th>
+                                    <th scope="col" style={{ fontSize: "25px" }}>Total</th>
+                                    <th scope="col" style={{ fontSize: "25px" }}>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {list.map((item, index) => (
                                     <tr key={index}>
                                         <th scope="row" className="text-center">{index + 1}</th>
-                                        <td>{item.art_nombre}</td>
+                                        <td><img src={item.front_image ? `https://onward-bpo.com/api/v1/files?file=${item.front_image}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"} alt="producto" width="100px" /></td>
+                                        <td style={{ fontSize: "25px", textWrap: "wrap" }}>{item.art_nombre}</td>
                                         <td>
 
                                             <div className="d-flex gap-3 align-items-center pointer" >
@@ -137,8 +139,8 @@ export default function Cart(props: CartProps) {
                                                 {[...Array(Number(item.art_cantidad) || "0")].map((v, idx) => (<option key={idx} value={(idx + 1)}>{v || (idx + 1)}</option>))}
                                             </select> */}
                                         </td>
-                                        <td>$ {item.art_precio_venta.toFixed(2)}</td>
-                                        <td>$ {((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta).toFixed(2)}</td>
+                                        <td style={{ fontSize: "25px" }}>$ {item.art_precio_venta.toFixed(2)}</td>
+                                        <td style={{ fontSize: "25px" }}>$ {((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta).toFixed(2)}</td>
                                         <td>
                                             <button
                                                 className="btn btn-danger"
@@ -151,8 +153,14 @@ export default function Cart(props: CartProps) {
                                 ))}
                                 <tr className="border-top">
 
-                                    <td colSpan={4} className="text-right">Total</td>
-                                    <td>$ {list.reduce((acc, item) => acc + ((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta), 0).toFixed(2)}</td>
+                                    <td style={{ fontSize: "25px" }} colSpan={3} className="text-right">Total</td>
+                                    <td style={{ fontSize: "25px", paddingLeft: "40px" }} >
+                                        {list.reduce((acc, item) => acc + (item.quantity !== undefined ? item.quantity : 0), 0)}
+                                    </td>
+                                    <td></td>
+                                    <td style={{ fontSize: "25px" }}>
+                                        $ {list.reduce((acc, item) => acc + ((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta), 0).toFixed(2)}
+                                    </td>
                                     <td>
                                         <button
                                             disabled={submitting}

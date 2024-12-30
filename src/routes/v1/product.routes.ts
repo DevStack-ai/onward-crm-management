@@ -6,6 +6,7 @@ const controller = new ProductController();
 
 router.post('/load-file', controller.loadFile);
 router.post('/export', controller.export);
+router.post('/download', controller.downloadProducts);
 router.post('/image', controller.getImage);
 router.post('/create', controller.create);
 router.post("/:id/activate", controller.activate);

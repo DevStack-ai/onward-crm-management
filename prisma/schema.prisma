@@ -34,6 +34,23 @@ model sis_pais {
   inv_articulo  inv_articulo[]
 }
 
+model costo_operativo {
+  cos_codigo    Int           @id @default(autoincrement())
+  cos_nombre    String        @db.VarChar(250)
+  cos_situacion Int           @default(1)
+  orden_costo   orden_costo[]
+}
+
+model orden_costo {
+  id              Int             @id @default(autoincrement())
+  ord_codigo      Int
+  cos_codigo      Int
+  ord_valor       Decimal         @db.Decimal(10, 2)
+  ord_situacion   Int
+  costo_operativo costo_operativo @relation(fields: [cos_codigo], references: [cos_codigo])
+  shp_order       shp_order       @relation(fields: [ord_codigo], references: [ord_codigo])
+}
+
 model inv_articulo {
   art_codigo                Int       @id @default(autoincrement())
   art_codigo_interno        String    @db.VarChar(100)
@@ -215,6 +232,7 @@ model shp_order {
   ord_situacion      Int
   cliente            shp_customer       @relation(fields: [ord_cliente], references: [cli_codigo])
   shp_order_detail   shp_order_detail[]
+  orden_costo        orden_costo[]
 
   @@index([ord_cliente], map: "shp_order_ord_cliente_fkey")
 }
