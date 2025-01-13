@@ -499,12 +499,19 @@ function CostoInput(costo: Costos & { fetchDocument: () => void }) {
   const params = useParams();
   const id = params.id;
 
-  const [value, setValue] = React.useState<number>(costo.valor)
+  const [value, setValue] = React.useState<any>(costo.valor)
   const [submitting, setSubmitting] = React.useState(false)
   const [edit, setEdit] = React.useState(false)
 
   async function updateToCosto() {
+    
     try {
+
+      if(isNaN(Number(value))) {
+        toast.error("Valor no valido")
+        return
+      }
+
       toast.loading("Actualizando costo")
       setSubmitting(true)
       await updateCosto(Number(id), costo.costo_id, value)
@@ -532,8 +539,9 @@ function CostoInput(costo: Costos & { fetchDocument: () => void }) {
       </div>
       <div className='col-2 d-flex'>
         {edit && <input
+          style={{ minWidth: "150px" }}
           className='form-control form-control-solid'
-          onChange={(ev) => setValue(Number(Number(ev.target.value).toFixed(2)))}
+          onChange={(ev) => setValue(ev.target.value)}
           type="number"
           value={value} />}
         {!edit && <span>{numberToCurrency(costo.valor)}</span>}
