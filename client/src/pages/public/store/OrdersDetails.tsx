@@ -2,16 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getOrder } from '../../orders/helpers/_requests';
 import Loading from '../store/components/Loading';
-import { OrderProduct } from '../store/helpers/_types';
+import {Costos,  OrderProduct } from '../store/helpers/_types';
 import { toast } from 'react-toastify';
 import { downloadOrder } from '../store/helpers/_requests';
 import { numberToCurrency } from '../../../utils';
 
 import moment from 'moment';
 import { getTag } from '../../orders/helpers/_columns';
-
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
 
 export function DetailsOrder() {
 
@@ -23,6 +20,7 @@ export function DetailsOrder() {
   const [isLoading, setIsLoading] = useState(true);
   const [values, setDocument] = useState<any>({});
   const [list, setList] = React.useState<OrderProduct[]>([])
+  const [costos, setCostos] = React.useState<Costos[]>([])
 
 
   const fetchDocument = useCallback(async () => {
@@ -30,7 +28,9 @@ export function DetailsOrder() {
     const query = await getOrder(id);
     const order = query.data || {}
     const details = order.shp_order_detail || []
+    const costos = order.costos || []
 
+    setCostos(costos)
 
     setDocument(order);
     setList(details)
@@ -45,6 +45,7 @@ export function DetailsOrder() {
 
 
   const [text, color] = getTag(values?.ord_situacion);
+  const costo_op_por_caja = Number((costos.reduce((acc, item) => acc + Number(item.valor), 0) / list.reduce((acc, item) => acc + Number(item.ord_cantidad), 0)).toFixed(2))
 
 
   return (
@@ -109,86 +110,66 @@ export function DetailsOrder() {
           </div>
         </div>
       </div>)}
-      <Tabs
-        defaultActiveKey="details"
-        id="uncontrolled-tab-example"
-        className="mb-3"
-      >
-        <Tab eventKey="details" title="Detalle">
-          <div>
-            <div className="mt-5">
+      {!isLoading && list.length > 0 && (
+        <>
+          <div className="card p-5 ">
+            <table className="table table-striped border" style={{ overflowY: "scroll", maxHeight: "75vh" }}>
+              <thead>
+                <tr>
+                  <th scope="col" style={{ fontSize: "18px" }} className="text-center">No.</th>
+                  <th scope="col" style={{ fontSize: "18px" }}>INTERNAL CODE</th>
+                  <th scope="col" style={{ fontSize: "18px" }}>Active Status</th>
+                  <th scope="col" style={{ fontSize: "18px" }}>Purchase Description</th>
+                  {/* <th scope="col" style={{ fontSize: "18px" }}>Cost Q</th>
+                  <th scope="col" style={{ fontSize: "18px" }}>Precio Venta FOB $</th>
+                  <th scope="col" style={{ fontSize: "18px" }}>Precio V USA $</th> */}
+                  {/* <th scope="col" style={{ fontSize: "18px" }}>BOX PER PALLET</th>
+                  <th scope="col" style={{ fontSize: "18px" }}>PALLETS</th>*/}
+                  <th scope="col" style={{ fontSize: "18px" }}>REQUESTED</th> 
+                  <th scope="col" style={{ fontSize: "18px" }}>COSTS $</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.map((item, index) => (
+                  <tr key={index}>
+                    <th style={{ fontSize: "18px" }} scope="row" className="text-center">{index + 1}</th>
+                    <td style={{ fontSize: "18px", textWrap: "wrap" }}>{item.art_codigo_interno}</td>
+                    <td style={{ fontSize: "18px" }}>Active</td>
+                    <td style={{ fontSize: "18px", textWrap: "wrap" }}>{item.art_nombre}</td>
+                    {/* <td style={{ fontSize: "18px" }}>{numberToCurrency(Number(item.art_precio_compra))}</td>
+                    <td style={{ fontSize: "18px" }}>{numberToCurrency(Number(item.art_precio_costo))}</td>
+                    <td style={{ fontSize: "18px" }}>{numberToCurrency(Number(item.art_precio_venta + costo_op_por_caja))}</td> */}
+                    {/* <td style={{ fontSize: "18px" }}>{item.art_palet_caja}</td>
+                    <td style={{ fontSize: "18px" }}>{Number(item.ord_cantidad / Number(item.art_palet_caja)).toFixed(1)}</td> */}
+                    <td style={{ fontSize: "18px" }}>{item.ord_cantidad}</td>
+                    <td style={{ fontSize: "18px" }}>{numberToCurrency(Number(item.ord_cantidad) * (Number(item.art_precio_venta + costo_op_por_caja)))}</td>
 
+                  </tr>
+                ))}
 
-              {!isLoading && list.length > 0 && (
-                <div className="card p-5 ">
+                <tr className="border-top">
 
-                  <table className="table table-striped border" style={{ overflowY: "scroll", maxHeight: "75vh" }}>
-                    <thead>
-                      <tr>
-                        <th scope="col" style={{ fontSize: "25px" }} className="text-center">#</th>
-                        <th scope="col" style={{ fontSize: "25px" }}>Imagen</th>
-                        <th scope="col" style={{ fontSize: "25px" }}>Producto</th>
-                        <th scope="col" style={{ fontSize: "25px" }}>Cantidad</th>
-                        <th scope="col" style={{ fontSize: "25px" }}>Precio final </th>
-                        <th scope="col" style={{ fontSize: "25px" }}>Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {list.map((item, index) => (
-                        <tr key={index}>
-                          <th style={{ fontSize: "25px" }} scope="row" className="text-center">{index + 1}</th>
-                          <td>
-                            <img
-                              src={item.front_image ? `https://onward-bpo.com/api/v1/files?file=${item.front_image}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"}
-                              alt="producto"
-                              width="100px" />
+                  <td style={{ fontSize: "18px" }} colSpan={4} className="text-right"></td>
 
-                          </td>
-                          <td style={{ fontSize: "25px", textWrap: "wrap" }}>{item.art_nombre}</td>
-                          <td>
-                            <div className='d-flex align-items-center h-100 '>
-                              <div className="d-flex gap-3 align-items-center pointer" >
-                                <div style={{ fontSize: "25px" }} >{(item.ord_cantidad || 0)}</div>
-                              </div>
-                            </div>
-                          </td>
-                          <td style={{ fontSize: "25px" }}>{numberToCurrency(Number(item.ord_precio))}</td>
-                          <td style={{ fontSize: "25px" }}>{numberToCurrency((item.ord_cantidad !== undefined ? item.ord_cantidad : 0) * item.ord_precio)}</td>
+                  {/* <td style={{ fontSize: "18px" }}>
+                    {list.reduce((acc, item) => acc + Number(item.ord_cantidad / Number(item.art_palet_caja)), 0).toFixed(1)}
+                  </td> */}
+                  <td style={{ fontSize: "18px" }}>
+                    {list.reduce((acc, item) => acc + Number(item.ord_cantidad), 0)}
+                  </td>
 
-
-                        </tr>
-                      ))}
-
-                      <tr className="border-top">
-
-                        <td style={{ fontSize: "25px" }} colSpan={3} className="text-right">Total</td>
-                        <td style={{ fontSize: "25px", paddingLeft: "40px" }} >
-                          {list.reduce((acc, item) => acc + (item.ord_cantidad !== undefined ? item.ord_cantidad : 0), 0)}
-                        </td>
-                        <td style={{ fontSize: "25px" }}>
-                          {numberToCurrency(list.reduce((acc, item) => acc + (item.art_precio_venta !== undefined ? item.art_precio_venta : 0), 0))}
-                        </td>
-                        <td style={{ fontSize: "25px" }}>
-                          {numberToCurrency(list.reduce((acc, item) => acc + (item.ord_precio !== undefined ? item.ord_precio : 0), 0))}
-                        </td>
-
-                        <td style={{ fontSize: "25px" }}>{numberToCurrency(
-                          list.reduce((acc, item) => acc + ((item.ord_cantidad !== undefined ? item.ord_cantidad : 0) * item.ord_precio), 0)
-                        )}</td>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </div>
-              )}
-
-            </div>
+                  <td style={{ fontSize: "18px" }}>{numberToCurrency(
+                    list.reduce((acc, item) => acc + (Number(item.ord_cantidad) * (Number(item.art_precio_venta + costo_op_por_caja))), 0)
+                  )}</td>
+                </tr>
+              </tbody>
+            </table>
 
           </div>
-        </Tab>
 
-      </Tabs>
+
+        </>
+      )}
     </div>
   );
 }
