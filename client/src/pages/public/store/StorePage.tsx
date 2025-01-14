@@ -9,6 +9,7 @@ import Orders from "./Orders";
 import "./store.css"
 import { useState } from "react";
 import Header from "./components/Header";
+import { DetailsOrder } from "./OrdersDetails";
 
 interface WrapperProps {
     refresh: boolean,
@@ -47,6 +48,7 @@ const StorePage = () => {
             <Route element={<Wrapper refresh={refresh} doRefresh={doRefresh} />}>
                 <Route path="cart" element={<Cart refresh={refresh} doRefresh={doRefresh} />} />
                 <Route path="orders" element={<Orders refresh={refresh} doRefresh={doRefresh} />} />
+                <Route path="orders/details/:id" element={<DetailsOrder />} />
                 <Route index element={<Store refresh={refresh} doRefresh={doRefresh} />} />
             </Route>
         </Routes>

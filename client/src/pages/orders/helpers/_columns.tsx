@@ -136,6 +136,12 @@ const PublicColumns = (state, actions): ReadonlyArray<Column<Object>> => [
               Acciones
             </Dropdown.Toggle>
             <Dropdown.Menu>
+              <Dropdown.Item
+                as={Link}
+                to={`/store/orders/details/${row.original.ord_codigo}`}
+              >
+                Ver Detalle
+              </Dropdown.Item>
               {row.original.ord_situacion === 1 && <Dropdown.Item
                 onClick={() => actions.approveToOrder(row.original.ord_codigo)}
               >
