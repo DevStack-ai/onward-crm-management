@@ -129,7 +129,6 @@ export function DetailsOrder() {
                         <th scope="col" style={{ fontSize: "25px" }}>Imagen</th>
                         <th scope="col" style={{ fontSize: "25px" }}>Producto</th>
                         <th scope="col" style={{ fontSize: "25px" }}>Cantidad</th>
-                        <th scope="col" style={{ fontSize: "25px" }}>Precio base</th>
                         <th scope="col" style={{ fontSize: "25px" }}>Precio final </th>
                         <th scope="col" style={{ fontSize: "25px" }}>Total</th>
                       </tr>
@@ -153,7 +152,6 @@ export function DetailsOrder() {
                               </div>
                             </div>
                           </td>
-                          <td style={{ fontSize: "25px" }}>$ {item.art_precio_venta.toFixed(2)}</td>
                           <td style={{ fontSize: "25px" }}>{numberToCurrency(Number(item.ord_precio))}</td>
                           <td style={{ fontSize: "25px" }}>{numberToCurrency((item.ord_cantidad !== undefined ? item.ord_cantidad : 0) * item.ord_precio)}</td>
 
