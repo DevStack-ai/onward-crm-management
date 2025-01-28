@@ -36,7 +36,7 @@ export class CartController {
             }
         })
 
-        const penalty_prices = await this.prisma.shp_price_penalty.findMany()
+        // const penalty_prices = await this.prisma.shp_price_penalty.findMany()
 
 
         // const price_penalty_
@@ -47,11 +47,11 @@ export class CartController {
 
             const percent_left = ((Number(item.car_cantidad) / Number(product.art_palet_caja))) * 100
 
-            const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
-            const penalty = penalty_item ? penalty_item.ppe_penalty : 0
+            // const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
+            const penalty = 0 //penalty_item ? penalty_item.ppe_penalty : 0
 
 
-            const penalty_price = Number(product.art_precio_venta) * (Number(penalty) / 100)
+            const penalty_price = 0 // Number(product.art_precio_venta) * (Number(penalty) / 100)
             const price = Number(product.art_precio_venta) + penalty_price
 
             //calculate palet 
@@ -149,7 +149,7 @@ export class CartController {
             const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
             //this are in cm, convert to feet
             const cubicFeet = cubic / 1000000
-            if(item.car_codigo === cartItem?.car_codigo){
+            if (item.car_codigo === cartItem?.car_codigo) {
                 return acc
             }
             return acc + (cubicFeet * item.car_cantidad)
@@ -170,7 +170,7 @@ export class CartController {
         //check that the total of pallets is less than 20
         const totalPallets = currentCart.reduce((acc, item) => {
             const product = item.artiulo
-            if(item.car_codigo === cartItem?.car_codigo){
+            if (item.car_codigo === cartItem?.car_codigo) {
                 return acc
             }
             return acc + round(item.car_cantidad / Number(product.art_palet_caja), 0.5)
@@ -186,7 +186,7 @@ export class CartController {
         //check the weright of the cart
         const totalWeight = currentCart.reduce((acc, item) => {
             const product = item.artiulo
-            if(item.car_codigo === cartItem?.car_codigo){
+            if (item.car_codigo === cartItem?.car_codigo) {
                 return acc
             }
             return acc + (Number(product.art_peso_caja) * item.car_cantidad)
@@ -304,18 +304,18 @@ export class CartController {
 
             return acc + (cubicFeet * item.car_cantidad)
         }, 0)
-        const penalty_prices = await this.prisma.shp_price_penalty.findMany()
+        // const penalty_prices = await this.prisma.shp_price_penalty.findMany()
 
         const totalMoney = cart.reduce((acc, item) => {
 
             const product = item.artiulo
-            const percent_left = ((Number(item.car_cantidad) / Number(product.art_palet_caja))) * 100
+            // const percent_left = ((Number(item.car_cantidad) / Number(product.art_palet_caja))) * 100
 
-            const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
-            const penalty = penalty_item ? penalty_item.ppe_penalty : 0
+            // const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
+            // const penalty = penalty_item ? penalty_item.ppe_penalty : 0
 
 
-            const penalty_price = Number(product.art_precio_venta) * (Number(penalty) / 100)
+            const penalty_price = 0 //Number(product.art_precio_venta) * (Number(penalty) / 100)
             const price = Number(product.art_precio_venta) + penalty_price
 
             return acc + (price * item.car_cantidad)

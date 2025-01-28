@@ -36,7 +36,7 @@ export class OrderController {
                 car_cliente: cliente.cli_codigo
             }
         })
-        const penalty_prices = await this.prisma.shp_price_penalty.findMany()
+        // const penalty_prices = await this.prisma.shp_price_penalty.findMany()
 
         const cartItems = cart.map((item) => item.car_articulo)
         const products = await this.prisma.inv_articulo.findMany({
@@ -62,12 +62,12 @@ export class OrderController {
 
             const product = products.find((product) => product.art_codigo === item.car_articulo)
 
-            const percent_left = ((Number(item.car_cantidad) / Number(product.art_palet_caja))) * 100
+            // const percent_left = ((Number(item.car_cantidad) / Number(product.art_palet_caja))) * 100
 
-            const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
-            const penalty = penalty_item ? penalty_item.ppe_penalty : 0
+            // const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
+            const penalty = 0// penalty_item ? penalty_item.ppe_penalty : 0
 
-            const penalty_price = Number(product.art_precio_venta) * (Number(penalty) / 100)
+            const penalty_price = 0// Number(product.art_precio_venta) * (Number(penalty) / 100)
             const price = Number(product.art_precio_venta) + penalty_price
 
             total += Number(price * item.car_cantidad)
@@ -431,13 +431,13 @@ export class OrderController {
             }
         })
 
-        const percent_left = ((Number(quantity) / Number(product.art_palet_caja))) * 100
-        const penalty_prices = await this.prisma.shp_price_penalty.findMany()
+        // const percent_left = ((Number(quantity) / Number(product.art_palet_caja))) * 100
+        // const penalty_prices = await this.prisma.shp_price_penalty.findMany()
 
-        const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
-        const penalty = penalty_item ? penalty_item.ppe_penalty : 0
+        // const penalty_item = penalty_prices.find(penalty => Number(penalty.ppe_percentage) <= percent_left)
+        const penalty = 0 // penalty_item ? penalty_item.ppe_penalty : 0
 
-        const penalty_price = Number(product.art_precio_venta) * (Number(penalty) / 100)
+        const penalty_price = 0 //Number(product.art_precio_venta) * (Number(penalty) / 100)
         const price = Number(product.art_precio_venta) + penalty_price
 
         const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
