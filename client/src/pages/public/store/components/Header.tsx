@@ -3,6 +3,7 @@ import { useAuth } from "../../../../providers"
 import { useEffect, useState } from "react"
 import { getCartCount } from "../helpers/_requests"
 import { useNavigate } from "react-router-dom"
+import { numberToCurrency } from "../../../../utils"
 
 interface HeaderProps {
     refresh?: boolean
@@ -93,9 +94,8 @@ export default function Header(props: HeaderProps) {
                                 </h2>
                             </div>
                             <div className='d-flex pointer ' onClick={() => naviate("/store/cart")}>
-                                {totalOrder > 0 && <span className='mx-2' style={{ minWidth: "26px", height: "30px", fontSize: "24px" }}>$ {totalOrder.toFixed(2)}</span>}
-
-                                {cubicFeet > 0 && <span className='badge badge-success' style={{ minWidth: "26px", height: "30px", fontSize: "24px" }}>{cubicFeet.toFixed(2)} ft³</span>}
+                                {totalOrder > 0 && <span className='mx-2' style={{ minWidth: "26px", height: "30px", fontSize: "20px" }}>{numberToCurrency(totalOrder)}</span>}
+                                {/* {cubicFeet > 0 && <span className='badge badge-success' style={{ minWidth: "26px", height: "30px", fontSize: "24px" }}>{cubicFeet.toFixed(2)} ft³</span>} */}
                                 <KTIcon iconName='handcart' className='h1' style={{ fontSize: "30px", }} />
                                 {count > 0 && <span className='badge badge-danger' style={{ minWidth: "20px", height: "20px" }}>{count}</span>}
                                 <h2 className='mx-4'>

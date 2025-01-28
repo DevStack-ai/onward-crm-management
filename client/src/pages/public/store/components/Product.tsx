@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Product } from "../helpers/_types"
 import { KTIcon } from "metronic/helpers"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 interface ProductProps {
     product: Product,
@@ -10,7 +11,7 @@ interface ProductProps {
 }
 
 export default function ProductItem({ product, onAdd }: ProductProps) {
-    const [quantity, setQuantity] = useState(0)
+    const [quantity, setQuantity] = useState<any>(0)
 
 
 
@@ -53,14 +54,37 @@ export default function ProductItem({ product, onAdd }: ProductProps) {
                                     {[...Array(Number(product.art_cantidad) || "0")].map((v, idx) => (<option key={idx} value={(idx + 1)}>{v || (idx + 1)}</option>))}
                                 </select> */}
                                 <div className="d-flex gap-3 align-items-center pointer" >
-                                    <div onClick={() => setQuantity(Math.max(0, quantity - Math.floor(product.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
+                                    {/* <div onClick={() => setQuantity(Math.max(0, quantity - 1))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
                                     <div style={{ fontSize: "25px" }} >{quantity}</div>
-                                    <div onClick={() => setQuantity((quantity + Math.floor(product.art_palet_caja / 2)))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
+                                    <div onClick={() => setQuantity(quantity + 1)}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div> */}
+                                    <input
+                                        type="number"
+                                        className="form-control form-control-solid"
+                                        value={quantity}
+                                        onChange={(ev) => setQuantity(Number(ev.target.value))} />
                                 </div>
                                 <button
                                     className="btn btn-info"
                                     disabled={!product.art_cantidad}
-                                    onClick={() => onAdd({ ...product, art_cantidad: quantity })}>
+                                    onClick={() => {
+                                        //val;idate quantity is an integer number 
+                                        if (!quantity || quantity < 1) {
+                                            toast.error("La cantidad debe ser mayor a 0")
+                                            return 
+                                        }
+
+                                        if(isNaN(Number(quantity))){
+                                            toast.error("La cantidad debe ser un numero")
+                                            return 
+                                        }
+
+                                        if(quantity % 1 !== 0){
+                                            toast.error("La cantidad debe ser un numero entero")
+                                            return 
+                                        }
+
+                                        onAdd({ ...product, art_cantidad: Number(quantity) })
+                                    }}>
                                     <KTIcon iconName='handcart' className='h1' style={{ fontSize: "20px" }} />
                                 </button>
                             </div>

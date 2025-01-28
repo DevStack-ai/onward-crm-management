@@ -21,6 +21,8 @@ export default function Cart(props: CartProps) {
     const [list, setList] = React.useState<CartProduct[]>([])
     const [loading, setIsLoading] = React.useState(true)
     const [submitting, setSubmitting] = React.useState(false)
+    const [editing, setEditing] = React.useState<any>(false)
+    const [quantity, setQuantity] = React.useState(0)
 
     const fetchData = React.useCallback(async () => {
         const query = await getCart(currentUser?.cli_codigo || 0)
@@ -127,19 +129,61 @@ export default function Cart(props: CartProps) {
                                         <th scope="row" className="text-center">{index + 1}</th>
                                         <td><img src={item.front_image ? `https://onward-bpo.com/api/v1/files?file=${item.front_image}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXxZR0_1ISIJx_T4oB5-5OJVSNgSMFLe8eCw&s"} alt="producto" width="100px" /></td>
                                         <td style={{ fontSize: "25px", textWrap: "wrap" }}>{item.art_nombre}</td>
-                                        <td>
+                                        {(!editing || editing !== item.car_codigo) && <td style={{ fontSize: "25px" }}>
+                                            {item.quantity}
+                                            <span onClick={() => {
+                                                setEditing(item.car_codigo)
+                                                setQuantity(item.quantity || 0)
+                                            }}
+                                                style={{ cursor: "pointer" }}>
+                                                <KTIcon iconName="pencil" style={{ fontSize: "25px" }} />
+                                            </span>
+                                        </td>}
+                                        {(editing === item.car_codigo) && <td style={{ fontSize: "25px" }}>
+                                            <input
+                                                type="number"
+                                                className="form-control form-control-solid"
+                                                value={quantity}
+                                                onChange={(ev) => setQuantity(Number(ev.target.value))} />
+                                            <div className="d-flex gap-2">
+                                                <button className="btn btn-success btn-sm" onClick={() => {
+                                                    //val;idate quantity is an integer number 
+                                                    if (!quantity || quantity < 1) {
+                                                        toast.error("La cantidad debe ser mayor a 0")
+                                                        return
+                                                    }
 
-                                            <div className="d-flex gap-3 align-items-center pointer" >
-                                                <div onClick={() => updateCart(item, Math.max(0, (item.quantity || 0) - Math.ceil(item.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
-                                                <div style={{ fontSize: "25px" }} >{(item.quantity || 0)}</div>
-                                                <div onClick={() => updateCart(item, (item.quantity || 0) + Math.ceil(item.art_palet_caja / 2))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>
+                                                    if (isNaN(Number(quantity))) {
+                                                        toast.error("La cantidad debe ser un numero")
+                                                        return
+                                                    }
+
+                                                    if (quantity % 1 !== 0) {
+                                                        toast.error("La cantidad debe ser un numero entero")
+                                                        return
+                                                    }
+
+                                                    updateCart(item, quantity)
+                                                    setEditing(false)
+                                                }}>Guardar</button>
+                                                <button className="btn btn-secondary btn-sm" onClick={() => setEditing(false)}>Cancelar</button>
                                             </div>
-                                            {/* <select className="form-control form-control-solid"
+                                        </td>}
+
+                                        {/* <div onClick={() => updateCart(item, Math.max(0, (item.quantity || 0) - 1))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>
+                                                <div style={{ fontSize: "25px" }} >{(item.quantity || 0)}</div>
+                                                <div onClick={() => updateCart(item, (item.quantity || 0) + 1)}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div> */}
+                                        {/* <input
+                                                    type="number"
+                                                    className="form-control form-control-solid"
+                                                    value={item.quantity}
+                                                    onChange={(ev) => updateCart(item, Number(ev.target.value))} /> */}
+
+                                        {/* <select className="form-control form-control-solid"
                                                 defaultValue={item.quantity}
                                                 onChange={(ev) => updateCart(item, Number(ev.target.value))}>
                                                 {[...Array(Number(item.art_cantidad) || "0")].map((v, idx) => (<option key={idx} value={(idx + 1)}>{v || (idx + 1)}</option>))}
                                             </select> */}
-                                        </td>
                                         <td style={{ fontSize: "25px" }}>{numberToCurrency(item.art_precio_venta.toFixed(2))}</td>
                                         <td style={{ fontSize: "25px" }}>{numberToCurrency(((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta))}</td>
                                         <td>

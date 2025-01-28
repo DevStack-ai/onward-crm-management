@@ -26,7 +26,7 @@ export class CartController {
             }
         })
 
-        const codigos = products.map((product) => product.art_codigo)
+        // const codigos = products.map((product) => product.art_codigo)
 
       
 
@@ -135,29 +135,29 @@ export class CartController {
         })
 
         //calculate cubic feet of cart
-        const cubicFeet = currentCart.reduce((acc, item) => {
-            const product = item.artiulo
+        // const cubicFeet = currentCart.reduce((acc, item) => {
+        //     const product = item.artiulo
 
-            const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
-            //this are in cm, convert to feet
-            const cubicFeet = cubic / 1000000
-            if (item.car_codigo === cartItem?.car_codigo) {
-                return acc
-            }
-            return acc + (cubicFeet * item.car_cantidad)
-        }, 0)
+        //     const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
+        //     //this are in cm, convert to feet
+        //     const cubicFeet = cubic / 1000000
+        //     if (item.car_codigo === cartItem?.car_codigo) {
+        //         return acc
+        //     }
+        //     return acc + (cubicFeet * item.car_cantidad)
+        // }, 0)
 
         //cubic meter of new item
-        const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
+        // const cubic = Number(product.art_largo) * Number(product.art_ancho) * Number(product.art_alto)
         // it is in cm, convert to meter 
-        const cubicsMetter = cubic / 1000000
+        // const cubicsMetter = cubic / 1000000
 
         //check if adding the item will exceed the cubic feet limit, 67.7mt3
-        if ((cubicFeet + (cubicsMetter * cantidad)) > (contenedor.tip_pies * 0.9)) {
-            res.status(400)
-            res.json({ message: "El carrito excede el limite de espacio cubico" })
-            return
-        }
+        // if ((cubicFeet + (cubicsMetter * cantidad)) > (contenedor.tip_pies * 0.9)) {
+        //     res.status(400)
+        //     res.json({ message: "El carrito excede el limite de espacio cubico" })
+        //     return
+        // }
 
         //check that the total of pallets is less than 20
         const totalPallets = currentCart.reduce((acc, item) => {
