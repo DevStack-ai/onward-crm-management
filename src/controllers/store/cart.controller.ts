@@ -28,13 +28,7 @@ export class CartController {
 
         const codigos = products.map((product) => product.art_codigo)
 
-        const images = await this.prisma.inv_articulo_imagen.findMany({
-            where: {
-                img_articulo: {
-                    in: codigos,
-                }
-            }
-        })
+      
 
         // const penalty_prices = await this.prisma.shp_price_penalty.findMany()
 
@@ -43,7 +37,6 @@ export class CartController {
 
         const cartList = cart.map((item) => {
             const product = products.find((product) => product.art_codigo === item.car_articulo)
-            const img = images.find((image) => image.img_articulo === product?.art_codigo)
 
             const percent_left = ((Number(item.car_cantidad) / Number(product.art_palet_caja))) * 100
 
@@ -65,8 +58,7 @@ export class CartController {
                 percent_left: percent_left,
                 car_codigo: item.car_codigo,
                 palet_percent: penalty,
-
-                img: img ? img.img_imagen : null
+                front_image: product.front_image,
             }
         })
 

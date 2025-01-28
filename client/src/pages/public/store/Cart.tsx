@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { askModal } from "./components/ashModal";
 import { useNavigate } from "react-router-dom";
 import { KTIcon } from "metronic/helpers"
+import { numberToCurrency } from "../../../utils";
 
 interface CartProps {
     refresh: boolean,
@@ -139,8 +140,8 @@ export default function Cart(props: CartProps) {
                                                 {[...Array(Number(item.art_cantidad) || "0")].map((v, idx) => (<option key={idx} value={(idx + 1)}>{v || (idx + 1)}</option>))}
                                             </select> */}
                                         </td>
-                                        <td style={{ fontSize: "25px" }}>$ {item.art_precio_venta.toFixed(2)}</td>
-                                        <td style={{ fontSize: "25px" }}>$ {((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta).toFixed(2)}</td>
+                                        <td style={{ fontSize: "25px" }}>{numberToCurrency(item.art_precio_venta.toFixed(2))}</td>
+                                        <td style={{ fontSize: "25px" }}>{numberToCurrency(((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta))}</td>
                                         <td>
                                             <button
                                                 className="btn btn-danger"
@@ -159,7 +160,9 @@ export default function Cart(props: CartProps) {
                                     </td>
                                     <td></td>
                                     <td style={{ fontSize: "25px" }}>
-                                        $ {list.reduce((acc, item) => acc + ((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta), 0).toFixed(2)}
+                                        {numberToCurrency(
+                                            list.reduce((acc, item) => acc + ((item.quantity !== undefined ? item.quantity : 0) * item.art_precio_venta), 0)
+                                        )}
                                     </td>
                                     <td>
                                         <button
