@@ -110,7 +110,6 @@ export default function Cart(props: CartProps) {
 
                 {!loading && list.length > 0 && (
                     <div className="card p-5 ">
-
                         <table className="table table-striped border" style={{ overflowY: "scroll", maxHeight: "75vh" }}>
                             <thead>
                                 <tr>

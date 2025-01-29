@@ -31,6 +31,9 @@ export function EditWrapper() {
   const [newProduct, setNewProduct] = React.useState<any>({})
   const [costos, setCostos] = React.useState<Costos[]>([])
 
+  const [editing, setEditing] = React.useState<any>(false)
+  const [quantity, setQuantity] = React.useState(0)
+
 
   const fetchDocument = useCallback(async () => {
     setIsLoading(true);
@@ -226,15 +229,47 @@ export function EditWrapper() {
 
                           </td>
                           <td style={{ fontSize: "25px", textWrap: "wrap" }}>{item.art_nombre}</td>
-                          <td>
-                            <div className='d-flex align-items-center h-100 '>
-                              <div className="d-flex gap-3 align-items-center pointer" >
-                                {values?.ord_situacion === 0 && <div onClick={() => !submitting && updateCart(item, Math.max(0, (item.ord_cantidad || 0) - Math.floor(item.art_palet_caja / 2)))}><KTIcon iconName="minus" style={{ fontSize: "25px" }} /></div>}
-                                <div style={{ fontSize: "25px" }} >{(item.ord_cantidad || 0)}</div>
-                                {values?.ord_situacion === 0 && <div onClick={() => !submitting && updateCart(item, (item.ord_cantidad || 0) + Math.floor(item.art_palet_caja / 2))}><KTIcon iconName="plus" style={{ fontSize: "25px" }} /></div>}
-                              </div>
+                          {(!editing || editing !== item.art_codigo) && (values?.ord_situacion === 0) && <td style={{ fontSize: "25px" }}>
+                            {item.ord_cantidad}
+                            <span onClick={() => {
+                              setEditing(item.art_codigo)
+                              setQuantity(item.ord_cantidad || 0)
+                            }}
+                              style={{ cursor: "pointer" }}>
+                              <KTIcon iconName="pencil" style={{ fontSize: "25px" }} />
+                            </span>
+                          </td>}
+                          {(editing === item.art_codigo) && <td style={{ fontSize: "25px" }}>
+                            <input
+                              type="number"
+                              className="form-control form-control-solid"
+                              value={quantity}
+                              onChange={(ev) => setQuantity(Number(ev.target.value))} />
+                            <div className="d-flex gap-2">
+                              <button className="btn btn-success btn-sm" onClick={() => {
+                                //val;idate quantity is an integer number 
+                                if (!quantity || quantity < 1) {
+                                  toast.error("La cantidad debe ser mayor a 0")
+                                  return
+                                }
+
+                                if (isNaN(Number(quantity))) {
+                                  toast.error("La cantidad debe ser un numero")
+                                  return
+                                }
+
+                                if (quantity % 1 !== 0) {
+                                  toast.error("La cantidad debe ser un numero entero")
+                                  return
+                                }
+
+                                updateCart(item, quantity)
+                                setEditing(false)
+                              }}>Guardar</button>
+                              <button className="btn btn-secondary btn-sm" onClick={() => setEditing(false)}>Cancelar</button>
                             </div>
-                          </td>
+                          </td>}
+
                           <td style={{ fontSize: "25px" }}>$ {item.art_precio_venta.toFixed(2)}</td>
                           <td style={{ fontSize: "25px" }}>{numberToCurrency(Number(item.ord_precio))}</td>
                           <td style={{ fontSize: "25px" }}>{numberToCurrency((item.ord_cantidad !== undefined ? item.ord_cantidad : 0) * item.ord_precio)}</td>
@@ -504,10 +539,10 @@ function CostoInput(costo: Costos & { fetchDocument: () => void }) {
   const [edit, setEdit] = React.useState(false)
 
   async function updateToCosto() {
-    
+
     try {
 
-      if(isNaN(Number(value))) {
+      if (isNaN(Number(value))) {
         toast.error("Valor no valido")
         return
       }
